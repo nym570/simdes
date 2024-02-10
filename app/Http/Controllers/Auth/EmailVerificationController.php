@@ -13,7 +13,7 @@ class EmailVerificationController extends Controller
 	 */
 	public function create(Request $request)
 	{
-		return $request->user()->hasVerifiedEmail()
+		return auth()->guard('web')->user()->hasVerifiedEmail()
 			? redirect()->intended(RouteServiceProvider::HOME)
 			: view('auth.email.verify-email');
 	}
@@ -23,11 +23,11 @@ class EmailVerificationController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		if ($request->user()->hasVerifiedEmail()) {
+		if (auth()->guard('web')->user()->hasVerifiedEmail()) {
 			return redirect()->intended(RouteServiceProvider::HOME);
 		}
 
-		$request->user()->sendEmailVerificationNotification();
+		auth()->guard('web')->user()->sendEmailVerificationNotification();
 
 		return back()->with('success', __('Email verifikasi telah dikirimkan ke pengguna'));
 	}

@@ -5,18 +5,36 @@
 		</a>
 	</div>
 
+	@guest
 	<div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
-		<!-- Search -->
 		<div class="navbar-nav align-items-center">
 			<div class="nav-item d-flex align-items-center">
-				<i class="bx bx-search fs-4 lh-0"></i>
-				<input type="text" class="form-control border-0 shadow-none" placeholder="Search..." aria-label="Search..." />
+				<p class="mt-3" style="font-size: calc(0.3em + 1vw);">Selamat Datang! Silahkan Masuk untuk Mendapat Layanan</p>
 			</div>
 		</div>
-		<!-- /Search -->
+		@endguest
+	@auth
+	<div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
+		<div class="navbar-nav align-items-center">
+			<div class="nav-item d-flex align-items-center">
+				<p class="mt-3 fs-5">Selamat Datang!</p>
+			</div>
+		</div>
+	@endauth
 
 		<ul class="navbar-nav flex-row align-items-center ms-auto">
 			<!-- Place this tag where you want the button to render. -->
+
+			@guest
+			<!-- User -->
+			<li class="nav-item">
+				<a class=" btn btn-primary" role="button" href="/login">
+						<i class="bx bx-log-in bx-sm d-none d-md-inline"></i>
+						<span>Masuk</span>
+				</a>
+			</li>
+			<!--/ User -->
+			@endguest
 
 			@auth
 			<!-- User -->
@@ -37,7 +55,7 @@
 								</div>
 								<div class="flex-grow-1">
 									<span class="fw-semibold d-block">
-										{{ user()->name }}
+										{{ user()->nama }}
 									</span>
 									<small class="text-muted">
 										User

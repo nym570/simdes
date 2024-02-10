@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules;
 use App\Models\User;
+use Illuminate\Validation\Rules\Password as Pswd;
 use Spatie\Permission\Models\Role;
 
 class PasswordResetController extends Controller
@@ -38,7 +39,7 @@ class PasswordResetController extends Controller
 		$request->validate([
 			'token' => ['required'],
 			'email' => ['required', 'email'],
-			'password' => ['required', 'confirmed', Password::min(8)->letters()->numbers()],
+			'password' => ['required', 'confirmed', Pswd::min(8)->letters()->numbers()],
 		]);
 
 		// Here we will attempt to reset the user's password. If it is successful we

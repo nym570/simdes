@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
 use App\Models\User;
+use App\Models\Admin;
 use App\Models\Desa;
 use App\Models\Dusun;
 use App\Models\RW;
@@ -45,6 +46,9 @@ class RouteServiceProvider extends ServiceProvider
 
         Route::bind('user', function ($value, $route) {
             return $this->getModel(User::class, $value);
+        });
+        Route::bind('admin', function ($value, $route) {
+            return $this->getModel(Admin::class, $value);
         });
         Route::bind('desa', function ($value, $route) {
             return $this->getModel(Desa::class, $value);

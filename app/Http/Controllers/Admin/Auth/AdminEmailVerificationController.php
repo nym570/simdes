@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\Admin\Auth;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -13,9 +13,9 @@ class AdminEmailVerificationController extends Controller
 	 */
 	public function create(Request $request)
 	{
-		return $request->user()->hasVerifiedEmail()
-			? redirect()->intended(RouteServiceProvider::HOME)
-			: view('auth.email.verify-email');
+		return auth()->guard('admin')->user()->hasVerifiedEmail()
+			? redirect()->intended(RouteServiceProvider::ADMIN_HOME)
+			: view('admin.auth.email.verify-email');
 	}
 
 	/**
@@ -23,12 +23,12 @@ class AdminEmailVerificationController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		if ($request->user()->hasVerifiedEmail()) {
-			return redirect()->intended(RouteServiceProvider::HOME);
+		if (auth()->guard('admin')->user()->hasVerifiedEmail()) {
+			return redirect()->intended(RouteServiceProvider::ADMIN_HOME);
 		}
 
-		$request->user()->sendEmailVerificationNotification();
+		auth()->guard('admin')->user()->sendEmailVerificationNotification();
 
-		return back()->with('success', __('A new verification link has been sent to the email address you provided during registration.'));
+		return back()->with('success', __('Email verifikasi berhasil terkirim'));
 	}
 }

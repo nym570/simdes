@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Models\Admin;
 use App\Models\Desa;
 use Spatie\Permission\Models\Role;
 use Illuminate\Database\Seeder;
@@ -48,7 +49,7 @@ class DatabaseSeeder extends Seeder
 	private function user()
 	{
 		//User::factory(10)->create();
-		$admin = User::updateOrCreate
+		$admin = Admin::updateOrCreate
 			([
 				'username' => 'admin',
 				'nik' => '3515000000000000',
@@ -79,7 +80,7 @@ class DatabaseSeeder extends Seeder
 	}
 	private function role()
 	{
-		Role::create(['name' => 'admin','category' => 'admin']);
+		Role::create(['name' => 'admin','category' => 'admin', 'guard_name'=> 'admin']);
 		Role::create(['name' => 'warga','category' => 'warga']);
 		Role::create(['name' => 'kepala desa','category' => 'kepala desa']);
 		Role::create(['name' => 'ppid','category' => 'aparat desa']);

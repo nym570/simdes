@@ -5,6 +5,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\DesaController;
 use App\Http\Controllers\Admin\AdminHomeController;
 use App\Http\Controllers\WilayahIndoController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MasterDesaController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,10 +20,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/admin', [AdminHomeController::class,'index'])->name('admin.home')->middleware(['admin.auth']);
+Route::get('/', [DashboardController::class,'index'])->name('home');
+
+Route::get('/admin', [AdminHomeController::class,'index'])->name('admin.home')->middleware(['admin.auth','admin.verified']);
 
 
-Route::controller(UserController::class)->middleware('admin.auth')->name('users.')->group(function () {
+
+
+Route::controller(UserController::class)->middleware(['admin.auth','admin.verified'])->name('users.')->group(function () {
 	Route::get('/admin/users', 'index')->name('index');
 	Route::post('/admin/users', 'store')->name('store');
 	Route::post('/admin/users/{user}/reset-pass', 'reset-pass')->name('reset-pass');
@@ -35,13 +40,13 @@ Route::controller(UserController::class)->middleware('admin.auth')->name('users.
 	Route::post('/users/{user}/role', 'role')->name('role');
 });
 
-Route::controller(DesaController::class)->middleware('admin.auth')->name('m.desa.')->group(function () {
+Route::controller(DesaController::class)->middleware(['admin.auth','admin.verified'])->name('m.desa.')->group(function () {
 	Route::get('/admin/desa', 'index')->name('index');
 	Route::put('/admin/desa/{desa}/update', 'update')->name('update');
 	Route::put('/admin/desa/{desa}/update-deskripsi', 'updateDesc')->name('deskripsi');
 	
 });
-Route::controller(DesaController::class)->middleware('admin.auth')->name('m.lkd.')->group(function () {
+Route::controller(DesaController::class)->middleware(['admin.auth','admin.verified'])->name('m.lkd.')->group(function () {
 	Route::get('/admin/desa/kemasyarakatan', 'lkd')->name('index');
 	Route::get('/admin/desa/kemasyarakatan/dusun-list', 'getDusun')->name('getDusun');
 	Route::get('/admin/desa/kemasyarakatan/rw-list', 'getRW')->name('getRW');
@@ -57,7 +62,7 @@ Route::bind('role', function ($id, $route) {
 });
 
 
-Route::controller(RoleController::class)->middleware('admin.auth')->name('roles.')->group(function () {
+Route::controller(RoleController::class)->middleware(['admin.auth','admin.verified'])->name('roles.')->group(function () {
 	Route::get('/admin/roles', 'index')->name('index');
 	Route::get('/admin/roles/get', 'get')->name('get');
 	Route::get('/admin/roles/{role}/show', 'show')->name('show');
@@ -66,13 +71,13 @@ Route::controller(RoleController::class)->middleware('admin.auth')->name('roles.
 	Route::post('/admin/roles/add-many', 'addMany')->name('add-many');
 });
 
-Route::controller(WilayahIndoController::class)->name('wilayah.')->group(function () {
+Route::controller(WilayahIndoController::class)->middleware(['auth'])->name('wilayah.')->group(function () {
 	Route::get('/get-prov', 'getProv')->name('get-prov');
 	Route::get('/get-kab', 'getKab')->name('get-kab');
 	Route::get('/get-kec', 'getKec')->name('get-kec');
 	Route::get('/get-des', 'getDes')->name('get-des');
 });
-Route::controller(MasterDesaController::class)->name('master-desa.')->group(function () {
+Route::controller(MasterDesaController::class)->middleware(['auth'])->name('master-desa.')->group(function () {
 	Route::get('/get-dusun', 'getDusun')->name('get-dusun');
 	Route::get('/get-RW', 'getRW')->name('get-rw');
 	Route::get('/get-RT', 'getRT')->name('get-rt');

@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use App\Models\Admin;
 use App\Models\Desa;
 use App\Models\Dusun;
 use App\Models\RW;
@@ -41,6 +42,10 @@ return [
         ],
         User::class => [
             'salt' => User::class.'users-desa',
+            'length' => 7,
+        ],
+        Admin::class => [
+            'salt' => Admin::class.'users-desa',
             'length' => 7,
         ],
         Desa::class => [

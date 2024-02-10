@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
-use App\Models\User;
+use App\Models\Admin;
 use Spatie\Permission\Models\Role;
 
 class AdminPasswordRequestController extends Controller
@@ -36,7 +36,7 @@ class AdminPasswordRequestController extends Controller
 			'email' => ['required', 'email'],
 		]);
 		
-		$user = User::query()->where('username', $request->input('username'))->where('email', $request->input('email')) ->get()->first();
+		$user = Admin::query()->where('username', $request->input('username'))->where('email', $request->input('email')) ->get()->first();
 		if(is_null($user)){
 			return back()->with('error', __('kombinasi username dan email tidak ditemukan'))->withInput($request->only('email','username'));
 		}

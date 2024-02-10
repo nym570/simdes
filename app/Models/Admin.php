@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -11,18 +10,13 @@ use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use App\Http\Traits\Hashidable;
 
-class User extends Authenticatable implements MustVerifyEmail
+class Admin extends Authenticatable 
 {
-	use HasApiTokens, HasFactory, Notifiable, HasRoles, Hashidable;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles, Hashidable;
+    protected $table = 'users';
+    protected $guarded = ['id'];
 
-	/**
-	 * The attributes that are mass assignable.
-	 *
-	 * @var array<int, string>
-	 */
-	protected $guarded = ['id'];
-
-	/**
+    /**
 	 * The attributes that should be hidden for serialization.
 	 *
 	 * @var array<int, string>

@@ -13,7 +13,7 @@
 		<ul class="navbar-nav flex-row align-items-center ms-auto">
 			<!-- Place this tag where you want the button to render. -->
 
-			@auth
+			@auth('admin')
 			<!-- User -->
 			<li class="nav-item navbar-dropdown dropdown-user dropdown">
 				<a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
@@ -32,7 +32,7 @@
 								</div>
 								<div class="flex-grow-1">
 									<span class="fw-semibold d-block">
-										{{ user()->name }}
+										{{  auth()->guard('admin')->user()->nama }}
 									</span>
 									<small class="text-muted">
 										User

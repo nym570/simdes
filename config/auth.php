@@ -42,6 +42,11 @@ return [
             'provider' => 'users',
             'remember' => 7200
         ],
+        'admin' => [
+            'driver' => 'session',
+            'provider' => 'admins',
+            'remember' => 7200
+        ],
     ],
 
     /*
@@ -65,6 +70,10 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
+        ],
+        'admins' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Admin::class,
         ],
 
         // 'users' => [

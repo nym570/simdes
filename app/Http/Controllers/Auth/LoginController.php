@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class LoginController extends Controller
 {
@@ -17,7 +18,7 @@ class LoginController extends Controller
 	 */
 	public function create()
 	{
-		return view('auth.login');
+		return view('auth.login',["title"=> 'Login Pengguna']);
 	}
 
 	/**
@@ -28,12 +29,19 @@ class LoginController extends Controller
 	 */
 	public function store(LoginRequest $request)
 	{
-		$request->authenticate();
+		$user = User::where('username',$request['username']) -> first();
+		if(!$user->hasRole('admin')){
+			$request->authenticate();
+			$request->session()->regenerate();
 
-		$request->session()->regenerate();
-
-		session()->flash('success', __('Welcome ' . request()->user()->name));
-		return redirect()->intended(RouteServiceProvider::HOME);
+			session()->flash('success', __('Selamat Datang ' . auth()->guard('web')->user()->nama));
+			return redirect()->intended(RouteServiceProvider::HOME);
+			
+		}
+		else{
+			return redirect()->route('login')
+			->withError('Username pengguna tidak ditemukan');
+		}
 	}
 
 	/**
@@ -46,10 +54,11 @@ class LoginController extends Controller
 	{
 		Auth::guard('web')->logout();
 
-		$request->session()->invalidate();
+		if(!Auth::guard('admin')->check()){
+			$request->session()->invalidate();
+			$request->session()->regenerateToken();
+		}
 
-		$request->session()->regenerateToken();
-
-		return redirect('/login')->with('success', __('Thanks for sign in. have a nice day.'));
+		return redirect('/login')->with('success', __('Anda berhasil keluar'));
 	}
 }
