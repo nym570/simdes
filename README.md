@@ -1,22 +1,30 @@
-# Laravel 9 Starter Project
+# Simdes Skripsi Project
 
-Hi, This repository contains a Laravel Starter with Admin LTE to make it easier for programmers to create projects.
+Project ini untuk sistem informasi manajemen desa yang meliputi
+- Admin Pane
+- User Pane
+- Role/User Management
+- Dusun/RW/RT Management
+- Kependudukan
+- Kelompok Rumah Tangga
 
-[![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/ntbk-source/laravel-sneat/issues)
 
-## What's inside?
+## Tentang Sistem
 
--   Required PHP 8
--   Laravel ^9.x - [laravel.com/docs/9.x](https://laravel.com/docs/9.x)
--   Sneat admin template bootstrap 5 - [https://demos.themeselection.com/sneat-bootstrap-html-admin-template-free/html/](https://demos.themeselection.com/sneat-bootstrap-html-admin-template-free/html/)
+-   PHP 8.2
+-   Laravel 10
+-   Template bootstrap 5 - [Free Template Sneat](https://demos.themeselection.com/sneat-bootstrap-html-admin-template-free/html/)
+-   Wilayah Indonesia API - [cahyadsn](https://api.cahyadsn.com/)
+-   Yajra Datatable - [yajrabox](https://yajrabox.com/docs/laravel-datatables/10.0/)
+-   hash route id - [vinkla/hashids](https://github.com/vinkla/laravel-hashids)
 
-## What next?
+## Cara Penggunaan?
 
 Clone Or Download this repository
 
 ```shell
 # Clone Repository
-$ git clone https://github.com/ntbk-source/laravel-sneat.git
+$ git clone https://github.com/nym570/simdes.git
 ```
 
 After clone or download this repository, next step is install all dependency required by laravel and laravel-mix.
@@ -34,14 +42,8 @@ $ cp .env.example .env
 # create laravel key
 $ php artisan key:generate
 # laravel migrate
-$ php artisan migrate
+$ php artisan migrate:fresh --seed
 ```
-
-## Donate
-
-You can support me at [Saweria](https://saweria.co/bayutriwibowo)
-
-<a href="https://buymeacoffee.com/bayutriwibowo" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
 
 ## How does it look?
 
@@ -52,8 +54,4 @@ You can support me at [Saweria](https://saweria.co/bayutriwibowo)
     <img src="https://telegra.ph/file/faadaa93f402cf174d5d5.png" width="80%" height="auto" />
 </p>
 
-## Donate
-
-You can support me at [Saweria](https://saweria.co/bayutriwibowo)
-
-<a href="https://buymeacoffee.com/bayutriwibowo" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
+190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
