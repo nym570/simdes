@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Models\Warga;
 use App\Models\Admin;
 use App\Models\Desa;
 use Spatie\Permission\Models\Role;
@@ -22,6 +23,7 @@ class DatabaseSeeder extends Seeder
 	{
 		
 		$this->desa();
+		$this->warga();
 		$this->role();
 		$this->user();
 		
@@ -52,11 +54,8 @@ class DatabaseSeeder extends Seeder
 		$admin = Admin::updateOrCreate
 			([
 				'username' => 'admin',
-				'nik' => '3515000000000000',
-				'no_kk' => '3515000000000000',
 				'nama' => 'Admin Desa',
 				'email' => 'simdes794@gmail.com',
-				'no_telp' => '62895621061193',
 				'password' => Hash::make('password'),
 			]);
 		$admin->assignRole('admin');
@@ -64,11 +63,8 @@ class DatabaseSeeder extends Seeder
 		$kades = User::updateOrCreate
 			([
 				'username' => 'laili',
-				'nik' => '3515000000000001',
-				'no_kk' => '3515000000000001',
 				'nama' => 'Laili Fatqulia',
 				'email' => 'laililili45@gmail.com',
-				'no_telp' => '62895621061193',
 				'password' => Hash::make('password'),
 			]);
 		$kades->assignRole(['warga']);
@@ -76,6 +72,11 @@ class DatabaseSeeder extends Seeder
 		$users = User::factory(18)->create()->each(function ($user) {
             $user->assignRole('Warga'); 
         });
+		
+	}
+	private function warga()
+	{
+		Warga::factory(50)->create();
 		
 	}
 	private function role()

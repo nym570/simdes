@@ -31,7 +31,10 @@ class AppServiceProvider extends ServiceProvider
         Paginator::useBootstrap();
         config(['app.locale' => 'id']);
 	    Carbon::setLocale('id');
-        $desa = Desa::get()->first();
-        View::share('desa',$desa);
+        if (! app()->runningInConsole()) {
+            $desa = Desa::get()->first();
+            View::share('desa',$desa);
+        }
+        
     }
 }

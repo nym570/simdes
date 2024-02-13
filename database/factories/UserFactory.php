@@ -5,6 +5,7 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Warga;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
@@ -20,11 +21,9 @@ class UserFactory extends Factory
     {
         return [
             'username' => $this->faker->username(),
-            'nama' => $this->faker->name(),
-            'nik' => $this->faker->unique()->nik(),
-            'no_kk' => $this->faker->unique()->nik(),
+            'nama' =>$this->faker->name(),
+            'nik' => Warga::factory(1)->create()->value('nik'),
             'email' => $this->faker->unique()->safeEmail(),
-            'no_telp' => $this->faker->unique()->phoneNumber(),
             'password' => Hash::make('password'), // password
         ];
     }

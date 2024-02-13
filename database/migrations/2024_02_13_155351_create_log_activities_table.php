@@ -11,13 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('dusun', function (Blueprint $table) {
+        Schema::create('log_activities', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->unsignedBigInteger('kepala_dusun');
-            $table->foreign('kepala_dusun')->references('id')->on('roles')->constrained();
-            $table->string('kepala_dusun_nik');
-            $table->foreign('kepala_dusun_nik')->references('nik')->on('warga')->constrained();
+            $table->string('subject_type');
+            $table->unsignedBigInteger('subject_id');
+            $table->string('causer_type');
+            $table->unsignedBigInteger('causer_id');
+            $table->string('keterangan');
             $table->timestamps();
         });
     }
@@ -27,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('dusun');
+        Schema::dropIfExists('log_activities');
     }
 };

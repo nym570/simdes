@@ -16,16 +16,16 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('username')->unique();
-            $table->string('nik')->unique();
-            $table->string('no_kk');
+            $table->string('nik')->nullable();
             $table->string('nama');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('no_telp');
             $table->enum('status',['aktif','nonaktif'])->default('aktif');
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
+
+            $table->foreign('nik')->references('nik')->on('warga');
         });
     }
 
