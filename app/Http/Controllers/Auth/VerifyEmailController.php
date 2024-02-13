@@ -22,19 +22,14 @@ class VerifyEmailController extends Controller
 	public function __invoke(EmailVerificationRequest $request)
 	{
 		
-		if(->hasVerifiedEmail()){
+		if($request->user()->hasVerifiedEmail()){
 			return redirect()->intended(RouteServiceProvider::HOME . '?verified=1');
 		}
 		else{
-			$user->markEmailAsVerified();
-			event(new Verified($user));
+			$request->user()->markEmailAsVerified();
+			event(new Verified($request->user()));
 			session()->flash('success', __('Akun berhasil di aktivasi'));
-			if ($user->hasRole('admin')) {
-				return redirect()->intended(RouteServiceProvider::ADMIN_HOME . '?verified=1');
-			}
-			else {
 				return redirect()->intended(RouteServiceProvider::HOME . '?verified=1');
-			}
 		}
 
 
