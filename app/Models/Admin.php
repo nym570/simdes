@@ -9,10 +9,13 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use App\Http\Traits\Hashidable;
+use App\Notifications\AdminEmailVerificationNotification;
+use App\Notifications\AdminResetPassword;
+use Illuminate\Auth\Passwords\CanResetPassword;
 
 class Admin extends Authenticatable 
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles, Hashidable;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles, Hashidable, CanResetPassword;
     protected $table = 'users';
     protected $guarded = ['id'];
 
@@ -34,4 +37,14 @@ class Admin extends Authenticatable
 	protected $casts = [
 		'email_verified_at' => 'datetime',
 	];
+	public function sendEmailVerificationNotification()
+    {
+        // We override the default notification and will use our own
+        $this->notify(new AdminEmailVerificationNotification());
+    }
+
+	public function sendPasswordResetNotification($token)
+	{
+		$this->notify(new AdminResetPassword($token));
+	}
 }

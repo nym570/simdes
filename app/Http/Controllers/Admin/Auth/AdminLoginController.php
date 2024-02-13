@@ -31,12 +31,15 @@ class AdminLoginController extends Controller
 	 */
 	public function store(AdminLoginRequest $request)
 	{
+		
 		$user = Admin::where('username',$request['username']) -> first();
 		if($user->hasRole('admin')){
+			
 			$request->authenticate();
 			$request->session()->regenerate();
 
 			session()->flash('success', __('Selamat Datang ' . auth()->guard('admin')->user()->nama));
+			
 			return redirect()->intended(RouteServiceProvider::ADMIN_HOME);
 			
 		}

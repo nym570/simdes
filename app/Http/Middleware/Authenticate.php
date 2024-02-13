@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
 use Spatie\Permission\Models\Role;
 use Auth;
+use Illuminate\Support\Facades\Route;
 
 class Authenticate extends Middleware
 {
@@ -19,19 +20,11 @@ class Authenticate extends Middleware
      */
     protected function redirectTo($request)
     {
-        if (! $request->expectsJson()) {
+        if(Route::is('admin.*')){
+            return route('admin.login');
+            }
             return route('login');
-        }
-    }
-    public function handle($request, Closure $next,...$guards)
-    {
-
-        if (auth()->guard('web')->check()) {
-            return $next($request);
-            
-        }
-        return redirect(route('login'));
-        
+           }
     }
     
-}
+

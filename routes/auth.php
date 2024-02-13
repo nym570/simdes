@@ -5,6 +5,8 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admin\Auth\AdminLoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\Admin\Auth\AdminVerifyEmailController;
+use App\Http\Controllers\Admin\Auth\AdminPasswordResetController;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\PasswordRequestController;
 use App\Http\Controllers\Admin\Auth\AdminPasswordRequestController;
@@ -31,24 +33,34 @@ Route::post('/forgot-password', [PasswordRequestController::class, 'store'])
     ->name('password.email');
 
 Route::get('/reset-password/{token}', [PasswordResetController::class, 'create'])
-    ->middleware(['guest:web,admin'])
+    ->middleware(['guest:web'])
     ->name('password.reset');
+Route::get('admin/reset-password/{token}', [AdminPasswordResetController::class, 'create'])
+    ->middleware(['guest:admin'])
+    ->name('admin.password.reset');
 
 Route::post('/reset-password', [PasswordResetController::class, 'store'])
-    ->middleware(['guest:web,admin'])
+    ->middleware(['guest:web'])
     ->name('password.update');
+    Route::post('admin/reset-password', [AdminPasswordResetController::class, 'store'])
+    ->middleware(['guest:admin'])
+    ->name('admin.password.update');
 
 Route::get('/verify-email', [EmailVerificationController::class, 'create'])
-    ->middleware('auth')
+    ->middleware(['auth:web'])
     ->name('verification.notice');
 
 Route::post('/email/verification-notification', [EmailVerificationController::class, 'store'])
-    ->middleware(['auth', 'throttle:6,1'])
+    ->middleware(['auth:web', 'throttle:6,1'])
     ->name('verification.send');
 
 Route::get('/verify-email/{id}/{hash}', [VerifyEmailController::class, '__invoke'])
-    ->middleware([ 'signed', 'throttle:6,1'])
+    ->middleware([ 'auth:web','signed', 'throttle:6,1'])
     ->name('verification.verify');
+
+Route::get('/admin/verify-email/{id}/{hash}', [AdminVerifyEmailController::class, '__invoke'])
+    ->middleware([ 'auth:admin','signed', 'throttle:6,1'])
+    ->name('admin.verification.verify');
 
 Route::get('/admin/login', [AdminLoginController::class, 'create'])->name('admin.login')->middleware('guest:admin');
 Route::post('/admin/login', [AdminLoginController::class, 'store'])->name('admin.login')->middleware('guest:admin');

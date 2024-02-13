@@ -7,6 +7,8 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Models\Admin;
+use App\Models\User;
+use Illuminate\Http\Request;
 
 class VerifyEmailController extends Controller
 {
@@ -19,11 +21,8 @@ class VerifyEmailController extends Controller
 
 	public function __invoke(EmailVerificationRequest $request)
 	{
-		$user = Admin::where('id',$request->id)->first();
-		if ($user->hasVerifiedEmail()&&$user->hasRole('admin')) {
-			return redirect()->intended(RouteServiceProvider::ADMIN_HOME . '?verified=1');
-		}
-		else if($user->hasVerifiedEmail()){
+		
+		if(->hasVerifiedEmail()){
 			return redirect()->intended(RouteServiceProvider::HOME . '?verified=1');
 		}
 		else{

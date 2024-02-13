@@ -1,5 +1,5 @@
 
-@extends('admin.layouts.auth')
+@extends('layouts.auth')
 @section('container')
 	<h4 class="mb-2">{{ is_null($desa) ?  __('Sistem Manajemen Desa') : __('Sistem Manajemen Desa '.$desa->desa)}}</h4>
 	<p class="mb-4">
@@ -9,8 +9,8 @@
 	<form id="formAuthentication" class="mb-3" action="{{ route('login') }}" method="POST">
 		@csrf
 		<div class="mb-3">
-			<x-label for="username" :value="__('username')" />
-			<x-input type="text" name="username" id="username" :value="old('username')" :placeholder="__('Masukkan username')" autofocus />
+			<x-label for="username" :value="__('nik/username')" />
+			<x-input type="text" name="username" id="username" :value="old('username')" :placeholder="__('Masukkan NIK (username) anda')" autofocus />
 			<x-invalid error="username" />
 		</div>
 		<div class="mb-3 form-password-toggle">
@@ -40,5 +40,12 @@
 			<x-button type="submit" class="btn btn-primary d-grid w-100" :value="__('Masuk')" onClickDisabled />
 		</div>
 	</form>
+
+	<p class="text-center">
+		<span>{{ __('Belum punya akun?') }}</span>
+		<a href="{{ route('register') }}">
+			<span>{{ __('Daftar') }}</span>
+		</a>
+	</p>
 @endsection
 

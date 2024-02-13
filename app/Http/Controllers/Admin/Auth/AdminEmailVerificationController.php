@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin\Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
+use Illuminate\Auth\Notifications\VerifyEmail;
+use Illuminate\Notifications\Messages\MailMessage;
 
 class AdminEmailVerificationController extends Controller
 {
@@ -25,8 +27,9 @@ class AdminEmailVerificationController extends Controller
 	{
 		if (auth()->guard('admin')->user()->hasVerifiedEmail()) {
 			return redirect()->intended(RouteServiceProvider::ADMIN_HOME);
+			
 		}
-
+		
 		auth()->guard('admin')->user()->sendEmailVerificationNotification();
 
 		return back()->with('success', __('Email verifikasi berhasil terkirim'));

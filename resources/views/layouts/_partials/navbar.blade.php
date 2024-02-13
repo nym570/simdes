@@ -98,7 +98,7 @@
 <script>
 	function logout() {
 		event.preventDefault()
-		swalConfirm('Are you sure?', "This will stop your login session!", 'Yes, logout now!', () => {
+		swalConfirm('Apakah anda yakin?', "Anda akan keluar dari akun", 'Ya! Keluar', () => {
 			document.getElementById('logout-form').submit();
 		});
 	}

@@ -6,11 +6,12 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules;
+use Illuminate\Validation\Rules\Password;
+use Spatie\Permission\Models\Role;
 
 class RegisterController extends Controller
 {
@@ -21,7 +22,7 @@ class RegisterController extends Controller
 	 */
 	public function create()
 	{
-		return view('auth.register');
+		return view('auth.register', ['title'=>'Buat Akun']);
 	}
 
 	/**
@@ -34,23 +35,24 @@ class RegisterController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		$request->validate([
-			'name' => ['required', 'string', 'max:255'],
-			'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-			'password' => ['required', 'confirmed', Rules\Password::defaults()],
-			'terms' => ['required'],
+		$request['username'] = $request['nik'];
+		$validated = $request->validate([
+			'nama' => ['required','string'],
+			'email' => ['required','string','email','unique:users,email'],
+			'username' => ['required', 'string','unique:users,username'],
+            'nik' => ['required', 'string','size:16'],
+            'no_kk' => ['required', 'string','size:16'],
+            'no_telp' => ['required', 'string','regex:/62[0-9]+$/u'],
+			'password' => ['required', 'string','confirmed',Password::min(8)->letters()->numbers()],
 		]);
 
-		$user = User::create([
-			'name' => $request->name,
-			'email' => $request->email,
-			'password' => Hash::make($request->password),
-		]);
+		$validated['password'] = Hash::make($validated['password']);
 
-		event(new Registered($user));
+		$user = User::create($validated);
+		$user->assignRole('warga');
+		$user->sendEmailVerificationNotification();
 
-		Auth::login($user);
-
-		return redirect(RouteServiceProvider::HOME);
+		return to_route('login')->withSuccess('Registrasi Berhasil');
+		
 	}
 }

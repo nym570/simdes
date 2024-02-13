@@ -8,6 +8,7 @@ use App\Http\Requests\Auth\LoginRequest;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Spatie\Permission\Models\Role;
 
 class LoginController extends Controller
 {
@@ -30,7 +31,7 @@ class LoginController extends Controller
 	public function store(LoginRequest $request)
 	{
 		$user = User::where('username',$request['username']) -> first();
-		if(!$user->hasRole('admin')){
+		if($user->hasRole('warga')){
 			$request->authenticate();
 			$request->session()->regenerate();
 

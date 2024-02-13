@@ -75,7 +75,7 @@
 <script>
 	function logout() {
 		event.preventDefault()
-		swalConfirm('Apakah anda yakin?', "Anda akan keluar dari akun", 'Ya! Keluar', () => {
+		swalConfirm('Apakah anda yakin?', "Anda akan keluar dari akun admin", 'Ya! Keluar', () => {
 			document.getElementById('logout-form').submit();
 		});
 	}

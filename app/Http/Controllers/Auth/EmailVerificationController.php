@@ -15,7 +15,7 @@ class EmailVerificationController extends Controller
 	{
 		return auth()->guard('web')->user()->hasVerifiedEmail()
 			? redirect()->intended(RouteServiceProvider::HOME)
-			: view('auth.email.verify-email');
+			: view('auth.email.verify-email',['title'=>'Verifikasi Email']);
 	}
 
 	/**

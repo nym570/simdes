@@ -71,7 +71,7 @@ class DatabaseSeeder extends Seeder
 				'no_telp' => '62895621061193',
 				'password' => Hash::make('password'),
 			]);
-		$kades->assignRole('kepala desa');
+		$kades->assignRole(['warga']);
 
 		$users = User::factory(18)->create()->each(function ($user) {
             $user->assignRole('Warga'); 

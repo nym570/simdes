@@ -1,4 +1,5 @@
-<x-auth-layout title="Verification email">
+@extends('admin.layouts.auth')
+@section('container')
 	<h4 class="mb-2">
 		{{ __('Verifikasi Email') }}
 	</h4>
@@ -32,4 +33,4 @@
 		}
 	</script>
 	@endpush
-</x-auth-layout>
+@endsection

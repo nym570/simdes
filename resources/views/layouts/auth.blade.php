@@ -74,7 +74,7 @@
 						<!-- /Logo -->
 						
 						<x-alert />
-						{{ $slot }}
+						@yield('container')
 					</div>
 				</div>
 			</div>

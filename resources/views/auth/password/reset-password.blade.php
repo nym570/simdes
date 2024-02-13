@@ -1,4 +1,5 @@
-<x-auth-layout title="Reset password">
+@extends('layouts.auth')
+@section('container')
 	<h4 class="mb-2">
 		{{ __('Reset Password') }}
 	</h4>
@@ -43,4 +44,4 @@
 	</form>
 
 
-</x-auth-layout>
+@endsection
