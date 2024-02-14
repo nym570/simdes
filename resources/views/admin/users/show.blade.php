@@ -57,12 +57,14 @@
 							<label for="selectpickerMultiple" class="form-label">Username</label>
 							<select id="selectpickerMultiple" class="selectpicker w-100" data-style="btn-default" multiple data-icon-base="bx" data-live-search="true" data-tick-icon="bx-check text-primary" title="Pilih satu atau lebih pengguna baru" required name="roles[]">
 								@forelse ($roles->keys() as $category)
+									@if($category == 'aparat desa')
 									<optgroup label="{{$category}}">
 										@forelse($roles[$category] as $item)
 											<option value="{{$item->name}}" {{$user->getRoleNames()->contains($item->name) ? 'selected' : ''}}>{{$item->name}}</option>
 										@empty
 										@endforelse
 									  </optgroup>
+									@endif
 								@empty
 								@endforelse
 							</select>
@@ -92,43 +94,26 @@
 			@csrf
 			<div class="modal-body">
 				<div class="row">
+					<div class="col mb-3">
+						<x-label for="nik" :value="__('NIK')" />
+						<x-input type="text" name="nik" id="nik" :placeholder="__('NIK 16 digit')" value="{{old('nik')? old('nik') : $user->nik}}" readonly/>
+						<x-invalid error="nik" />
+					  </div>
+				  </div>
+				<div class="row">
 				  <div class="col mb-3">
 					<x-label for="username" :value="__('Username')" />
 					<x-input type="text" name="username" id="username" :placeholder="__('Username disarankan menggunakan nik')" value="{{old('username')? old('username') : $user->username}}" />
 					<x-invalid error="username" />
 				  </div>
 				</div>
-				<div class="row">
-				  <div class="col mb-3">
-					<x-label for="nama" :value="__('Nama Lengkap')" />
-					<x-input type="text" name="nama" id="nama" :placeholder="__('Nama lengkap sesuai ktp tanpa gelar')" value="{{old('nama')? old('nama') : $user->nama}}" />
-					<x-invalid error="nama" />
-				  </div>
-				</div>
-				<div class="row g-2">
-				  <div class="col mb-0">
-					<x-label for="nik" :value="__('NIK')" />
-					<x-input type="text" name="nik" id="nik" :placeholder="__('NIK 16 digit')" value="{{old('nik')? old('nik') : $user->nik}}" />
-					<x-invalid error="nik" />
-				  </div>
-				  <div class="col mb-0">
-					<x-label for="no_kk" :value="__('No Kartu Keluarga')" />
-					<x-input type="text" name="no_kk" id="no_kk" :placeholder="__('No pada KK 16 digit')" value="{{old('no_kk')? old('no_kk') : $user->no_kk}}" />
-					<x-invalid error="no_kk" />
-				  </div>
-				</div>
+				
+				
 				<div class="row">
 				  <div class="col mb-3">
 					<x-label for="email" :value="__('Email')" />
 					<x-input type="email" name="email" id="email" :placeholder="__('Email valid untuk pemberitahuan')" value="{{old('email')? old('email') : $user->email}}" />
 					<x-invalid error="email" />
-				  </div>
-				</div>
-				<div class="row">
-				  <div class="col mb-3">
-						<x-label for="no_telp" :value="__('No HP')" />
-						<x-input type="text" name="no_telp" id="no_telp" :placeholder="__('628xxxxxxxxx')" value="{{old('no_telp')? old('no_telp') : $user->no_telp}}" />
-						<x-invalid error="no_telp" />
 				  </div>
 				</div>
 			  </div>

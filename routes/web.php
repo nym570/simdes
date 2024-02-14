@@ -29,6 +29,8 @@ Route::get('/admin', [AdminHomeController::class,'index'])->name('admin.home')->
 
 Route::controller(UserController::class)->middleware(['admin.auth','admin.verified'])->name('users.')->group(function () {
 	Route::get('/admin/users', 'index')->name('index');
+	Route::post('/admin/users/check-nik', 'validateNIK')->name('nik');
+	Route::post('/admin/users/check-kk', 'validateKK')->name('kk');
 	Route::post('/admin/users', 'store')->name('store');
 	Route::post('/admin/users/{user}/reset-pass', 'reset-pass')->name('reset-pass');
 	Route::get('/admin/users/{user}/show', 'show')->name('show');
@@ -71,13 +73,13 @@ Route::controller(RoleController::class)->middleware(['admin.auth','admin.verifi
 	Route::post('/admin/roles/add-many', 'addMany')->name('add-many');
 });
 
-Route::controller(WilayahIndoController::class)->middleware(['auth'])->name('wilayah.')->group(function () {
+Route::controller(WilayahIndoController::class)->name('wilayah.')->group(function () {
 	Route::get('/get-prov', 'getProv')->name('get-prov');
 	Route::get('/get-kab', 'getKab')->name('get-kab');
 	Route::get('/get-kec', 'getKec')->name('get-kec');
 	Route::get('/get-des', 'getDes')->name('get-des');
 });
-Route::controller(MasterDesaController::class)->middleware(['auth'])->name('master-desa.')->group(function () {
+Route::controller(MasterDesaController::class)->name('master-desa.')->group(function () {
 	Route::get('/get-dusun', 'getDusun')->name('get-dusun');
 	Route::get('/get-RW', 'getRW')->name('get-rw');
 	Route::get('/get-RT', 'getRT')->name('get-rt');

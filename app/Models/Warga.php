@@ -13,6 +13,6 @@ class Warga extends Model
 
     public function user()
     {
-        return $this->hasOne(User::class);
+        return $this->hasOne(User::class,'foreign_key', 'nik');
     }
 }

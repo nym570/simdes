@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Validation\Rules\Password;
+use App\Http\Requests\UserRequest;
+use App\Rules\ValidateKK;
+use App\Rules\NIKExist;
 
 class UserRequest extends FormRequest
 {
@@ -31,9 +34,8 @@ class UserRequest extends FormRequest
             'nama' => ['required','string'],
 			'email' => ['required','string','email','unique:users,email'],
 			'username' => ['required', 'string','unique:users,username'],
-            'nik' => ['required', 'string','size:16'],
-            'no_kk' => ['required', 'string','size:16'],
-            'no_telp' => ['required', 'string','regex:/62[0-9]+$/u'],
+            'nik' => ['required', 'string','size:16','unique:users,nik',new NIKExist],
+            'no_kk' => ['required', 'string','size:16',new ValidateKK($this->nik)],
 			'password' => ['required', 'string','confirmed',Password::min(8)->letters()->numbers()],
 		];
     }

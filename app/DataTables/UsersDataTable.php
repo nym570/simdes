@@ -43,7 +43,7 @@ class UsersDataTable extends DataTable
      */
     public function query(User $model): QueryBuilder
     {
-        return $model->newQuery();
+        return $model->newQuery()->with(['warga'])->select('users.*');
     }
 
     /**
@@ -73,12 +73,10 @@ class UsersDataTable extends DataTable
                     ->title('#')
                     ->orderable(false)
                     ->searchable(false),
-            Column::make('nama'),
             Column::make('username'),
             Column::make('nik'),
+            Column::make('warga.nama')->title('nama')->data('warga.nama'),
             Column::make('email'),
-            Column::make('no_telp')
-                    ->title('Telp'),
             Column::make('status'),
             Column::computed('action')
                   ->exportable(false)

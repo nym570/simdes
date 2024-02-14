@@ -21,7 +21,6 @@ class UserFactory extends Factory
     {
         return [
             'username' => $this->faker->username(),
-            'nama' =>$this->faker->name(),
             'nik' => Warga::factory(1)->create()->value('nik'),
             'email' => $this->faker->unique()->safeEmail(),
             'password' => Hash::make('password'), // password

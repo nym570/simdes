@@ -51,21 +51,29 @@ class DatabaseSeeder extends Seeder
 	private function user()
 	{
 		//User::factory(10)->create();
-		$admin = Admin::updateOrCreate
+		$admin1 = Admin::updateOrCreate
 			([
-				'username' => 'admin',
+				'username' => 'admin1',
 				'nama' => 'Admin Desa',
 				'email' => 'simdes794@gmail.com',
-				'password' => Hash::make('password'),
+				'password' => Hash::make('admin12345'),
 			]);
-		$admin->assignRole('admin');
+		$admin1->assignRole('admin');
+		$admin2 = Admin::updateOrCreate
+			([
+				'username' => 'admin2',
+				'nama' => 'Admin lain',
+				'email' => '222011794@stis.ac.id',
+				'password' => Hash::make('admin12345'),
+			]);
+		$admin2->assignRole('admin');
 
 		$kades = User::updateOrCreate
 			([
 				'username' => 'laili',
-				'nama' => 'Laili Fatqulia',
+				'nik' => Warga::factory(1)->create()->value('nik'),
 				'email' => 'laililili45@gmail.com',
-				'password' => Hash::make('password'),
+				'password' => Hash::make('password12345'),
 			]);
 		$kades->assignRole(['warga']);
 

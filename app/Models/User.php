@@ -43,6 +43,6 @@ class User extends Authenticatable implements MustVerifyEmail
 
 	public function warga()
     {
-        return $this->belongsTo(Warga::class,'foreign_key', 'nik');
+        return $this->belongsTo(Warga::class,'nik', 'nik');
     }
 }

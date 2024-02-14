@@ -16,7 +16,7 @@ use Illuminate\Auth\Passwords\CanResetPassword;
 class Admin extends Authenticatable 
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles, Hashidable, CanResetPassword;
-    protected $table = 'users';
+    protected $table = 'admin';
     protected $guarded = ['id'];
 
     /**

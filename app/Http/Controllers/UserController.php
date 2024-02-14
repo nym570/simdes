@@ -3,12 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Warga;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use DataTables;
 use App\DataTables\UsersDataTable;
 use App\Http\Requests\UserRequest;
 use Spatie\Permission\Models\Role;
+use App\Rules\ValidateKK;
+use App\Rules\NIKExist;
+
 
 class UserController extends Controller
 {
@@ -41,9 +45,26 @@ class UserController extends Controller
 	 * @param  \Illuminate\Http\Request  $request
 	 * @return \Illuminate\Http\Response
 	 */
-	public function store(UserRequest $request)
+	public function validateKK(Request $request){
+		$nik = $request['nik'];
+		$request->validate([
+            'no_kk' => ['required', 'string','size:16',new ValidateKK($nik)],
+		]);
+		
+	}
+	public function validateNIK(Request $request){
+		
+		$request->validate([
+            'nik' => ['required', 'string','size:16','unique:users,nik',new NIKExist],
+		]);
+		
+	}
+	 public function store(UserRequest $request)
 	{
+		
 		$validated = $request->validated();
+		
+		
 
 		$validated['password'] = Hash::make($validated['password']);
 
@@ -52,7 +73,7 @@ class UserController extends Controller
 
 		$user->sendEmailVerificationNotification();
 
-		return to_route('users.index')->withSuccess('Data pengguna berhasil ditambahkan');
+		return back()->withSuccess('Data pengguna berhasil ditambahkan');
 	}
 
 	/**
@@ -92,9 +113,7 @@ class UserController extends Controller
 			'nama' => ['required','string'],
 			'email' => ['required','string','email','unique:users,email,'. $user->id],
 			'username' => ['required', 'string','unique:users,username,'. $user->id],
-            'nik' => ['required', 'string','size:16'],
-            'no_kk' => ['required', 'string','size:16'],
-            'no_telp' => ['required', 'string','regex:/62[0-9]+$/u'],
+            // 'no_telp' => ['required', 'string','regex:/62[0-9]+$/u'],
 		]);
 		$email = $user->email;
 		

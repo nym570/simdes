@@ -33,7 +33,7 @@ class AdminLoginController extends Controller
 	{
 		
 		$user = Admin::where('username',$request['username']) -> first();
-		if($user->hasRole('admin')){
+		if($user->hasRole('admin')&&$user['status']=='aktif'){
 			
 			$request->authenticate();
 			$request->session()->regenerate();
