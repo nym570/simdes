@@ -6,7 +6,10 @@
                 <a href="{{ route('roles.index') }}" class="btn btn-dark">
                     {{ __('Kembali') }}
                 </a>
-                @if(!($role->category == 'kepala desa'||$role->category == 'kepala dusun'||$role->category == 'ketua RW'||$role->category == 'ketua RT'))
+                @if($role->category != 'warga')
+						
+				
+                @if(!($role->category == 'pemimpin'))
                     <a href="{{ route('roles.index') }}" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUser">
                         {{ __('+ Tambah User') }}
                     </a>
@@ -28,7 +31,7 @@
                                             <label for="selectpickerMultiple" class="form-label">Username</label>
                                             <select id="selectpickerMultiple" class="selectpicker w-100" data-style="btn-default" multiple data-icon-base="bx" data-live-search="true" data-tick-icon="bx-check text-primary" title="Pilih satu atau lebih pengguna baru" required name="users[]">
                                                 @foreach($allUsers as $user)
-                                                    <option data-tokens="{{$user->username}}" value="{{$user->username}}">{{$user->username}} | {{$user->nama}}</option>
+                                                    <option data-tokens="{{$user->username}}" value="{{$user->username}}">{{$user->username}} | {{$user->warga->nama}}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -64,7 +67,7 @@
                                             <label for="selectpickerLiveSearch" class="form-label">Username</label>
                                             <select id="selectpickerLiveSearch" class="selectpicker w-100" data-style="btn-default" data-live-search="true" title="Pilih pengguna baru" required name="user">
                                                 @foreach($allUsers as $user)
-                                                    <option data-tokens="{{$user->username}}" value="{{$user->username}}">{{$user->username}} | {{$user->nama}}</option>
+                                                    <option data-tokens="{{$user->username}}" value="{{$user->username}}">{{$user->username}} | {{$user->warga->nama}}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -104,9 +107,9 @@
                                     <div class="row">
                                         <div class="col mb-3">
                                             <label for="selectpickerLiveSearch" class="form-label">{{$role->name}} Baru</label>
-                                            <select id="selectpickerLiveSearch" class="selectpicker w-100" data-style="btn-default" data-live-search="true" title="Pilih pengguna baru" required name="userbaru">
+                                            <select id="selectpickerLiveSearch" class="selectpicker w-100" data-style="btn-default" data-live-search="true" title="Pilih pengguna baru" required name="user">
                                                 @foreach($allUsers as $user)
-                                                    <option data-tokens="{{$user->username}}" value="{{$user->username}}">{{$user->username}} | {{$user->nama}}</option>
+                                                    <option data-tokens="{{$user->username}}" value="{{$user->username}}">{{$user->username}} | {{$user->warga->nama}}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -122,6 +125,7 @@
                     </div>
                 @endif
                     
+                @endif
                 @endif
             </div>
 

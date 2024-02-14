@@ -16,10 +16,8 @@ return new class extends Migration
             $table->string('name')->unique();
             $table->unsignedBigInteger('dusun_id');
             $table->foreign('dusun_id')->references('id')->on('dusun')->constrained();
-            $table->unsignedBigInteger('ketua_rw');
-            $table->foreign('ketua_rw')->references('id')->on('roles')->constrained();
-            $table->string('ketua_rw_nik');
-            $table->foreign('ketua_rw_nik')->references('nik')->on('warga')->constrained();
+            $table->unsignedBigInteger('ketua_rw')->nullable();
+            $table->foreign('ketua_rw')->references('id')->on('roles')->constrained()->onDelete('set null');
             $table->timestamps();
         });
     }

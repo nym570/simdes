@@ -22,15 +22,19 @@ class DatabaseSeeder extends Seeder
 	public function run()
 	{
 		
-		$this->desa();
-		$this->warga();
 		$this->role();
+		$this->warga();
 		$this->user();
+		$this->desa();
+		
+		
+		
 		
 	}
 
 	private function desa()
 	{
+		$role = Role::create(['name' => 'kepala desa','category' => 'pemimpin','status' => 'desa']);
 		$desa = Desa::updateOrCreate
 			([
 				'kode_wilayah' => '',
@@ -42,6 +46,7 @@ class DatabaseSeeder extends Seeder
 				'email_desa' => '',
 				'no_telp' => '',
 				'deskripsi' => '',
+				'kepala_desa' => $role->id,
 			]);
 		
 		
@@ -89,13 +94,12 @@ class DatabaseSeeder extends Seeder
 	}
 	private function role()
 	{
-		Role::create(['name' => 'admin','category' => 'admin', 'guard_name'=> 'admin']);
-		Role::create(['name' => 'warga','category' => 'warga']);
-		Role::create(['name' => 'kepala desa','category' => 'kepala desa']);
-		Role::create(['name' => 'ppid','category' => 'aparat desa']);
-		Role::create(['name' => 'pemerintahan','category' => 'aparat desa']);
-		Role::create(['name' => 'layanan','category' => 'aparat desa']);
-		Role::create(['name' => 'bpd','category' => 'aparat desa']);
+		Role::create(['name' => 'admin','category' => 'admin','status' => 'admin', 'guard_name'=> 'admin']);
+		Role::create(['name' => 'warga','category' => 'warga','status' => 'warga',]);
+		Role::create(['name' => 'ppid','category' => 'ppid','status' => 'desa']);
+		Role::create(['name' => 'kependudukan','category' => 'kependudukan','status' => 'desa']);
+		Role::create(['name' => 'layanan','category' => 'layanan','status' => 'desa']);
+		Role::create(['name' => 'bpd','category' => 'bpd','status' => 'desa']);
 		
 	}
 }

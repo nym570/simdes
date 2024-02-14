@@ -40,12 +40,12 @@ return [
         'web' => [
             'driver' => 'session',
             'provider' => 'users',
-            'remember' => 7200
+            'remember' => 2880
         ],
         'admin' => [
             'driver' => 'session',
             'provider' => 'admins',
-            'remember' => 7200
+            'remember' => 14400
         ],
     ],
 

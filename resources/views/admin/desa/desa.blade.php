@@ -18,6 +18,12 @@
 							<button type="button" class="btn btn-warning mb-4" data-bs-toggle="modal" data-bs-target="#editDesa">
 								Edit Profil Desa
 							</button>
+							<button class="btn btn-dark mb-4 open_modal" value="{{$desa->kepala_desa}}"> Kepala Desa</button>
+
+							
+
+
+							
 							
 							
 							
@@ -52,6 +58,43 @@
 
 		</div>
 	</div>
+
+
+	<!-- Modal -->
+<div class="modal fade" id="AssignRole" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+	<div class="modal-content">
+		<div class="modal-header">
+		<h5 class="modal-title" id="judulModal"></h5>
+		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		</div>
+		<form id="formRole" class="mb-3" action="{{ route('roles.add-one') }}" data-remote="true" method="POST">
+			@csrf
+			<div class="modal-body">
+				<x-input type="text" name="role" id="roleLKD"  value="" class="d-none" />
+				<div class="row">
+					<div class="col mb-3">
+						<x-input type="text" name="user" id="userLKD"  value="" placeholder="Tidak Ditemukan" readonly />
+					</div>
+				</div>
+				<div class="row">
+					<div class="col mb-3">
+						<label for="selectpickerLiveSearch" class="form-label">Username</label>
+						<select id="selectpickerLiveSearch" class="selectpicker w-100" data-style="btn-default" data-live-search="true" title="Pilih pengguna baru" required name="user">
+							
+						</select>
+					</div>
+				</div>
+				
+			</div>
+			<div class="modal-footer">
+				<x-button type="submit" class="btn btn-primary d-grid w-100" :value="__('Assign')"/>
+			</div>
+		</form>
+	</div>
+	</div>
+</div>
+
 
 	<!-- Modal -->
 	<div class="modal fade" id="deskripsiDesa" tabindex="-1" aria-hidden="true">
@@ -205,7 +248,11 @@
 		</div>
 	</div>
 	
-	
+
+
+
+
+
 
 
 	<script>
@@ -228,6 +275,7 @@
 					},
 				})
 		});
+		
 	</script>
 	<script>
 		$(function(){
@@ -246,6 +294,10 @@
 						$('#kabupaten').html(msg);
 						$('#kabupaten').selectpicker('render');
 					},
+					error: function (xhr) {
+						var err = JSON.parse(xhr.responseText);
+						alert(err.message);
+					}
 					
 				})
 			});
@@ -266,6 +318,10 @@
 						$('#kecamatan').html(msg);
 						$('#kecamatan').selectpicker('render');
 					},
+					error: function (xhr) {
+						var err = JSON.parse(xhr.responseText);
+						alert(err.message);
+					}
 					
 				})
 			});
@@ -286,6 +342,10 @@
 						$('#desa').selectpicker('render');
 						
 					},
+					error: function (xhr) {
+						var err = JSON.parse(xhr.responseText);
+						alert(err.message);
+					}
 					
 				})
 			});
@@ -298,6 +358,60 @@
 			});
 		})
 	</script>
+
+<script>
+		
+	$(document).on('click','.open_modal',function(){
+			let id= $(this).val();
+			
+			var ajax1 = $.ajax({
+				type : 'GET',
+				url: "{{route('roles.get')}}",
+				data : {id_role:id},
+				success: function(msg){
+					let data = JSON.parse(msg);
+					$('#judulModal').text('Assign role: '+data['role'].name);
+					$('#formRole').attr('action', data['link']);
+					$('#roleLKD').val(data['role'].name);
+					if(data['user']){
+						$('#userLKD').val(data['user'].username);
+					}
+					else{
+						$('#userLKD').val('');
+					}
+					
+					
+				},
+				error: function (xhr) {
+						var err = JSON.parse(xhr.responseText);
+						alert(err.message);
+					}
+				
+				
+			});
+			var ajax2 = $.ajax({
+				type : 'GET',
+				url: "{{route('roles.user-list')}}",
+				data : {id_role:id},
+				success: function(msg){
+					$('#selectpickerLiveSearch').selectpicker('destroy');
+					$('#selectpickerLiveSearch').html(msg);
+					$('#selectpickerLiveSearch').selectpicker('render');
+				},
+				error: function (xhr) {
+						var err = JSON.parse(xhr.responseText);
+						alert(err.message);
+					}
+				
+				
+			});
+			$.when(ajax1, ajax2).done(function(data, data1) {
+				$('#AssignRole').modal('show');
+			});
+			
+		}); 
+			
+</script>
 
 
 

@@ -33,7 +33,7 @@ class AdminLoginController extends Controller
 	{
 		
 		$user = Admin::where('username',$request['username']) -> first();
-		if($user->hasRole('admin')&&$user['status']=='aktif'){
+		if($user['status']=='aktif'){
 			
 			$request->authenticate();
 			$request->session()->regenerate();
@@ -45,7 +45,7 @@ class AdminLoginController extends Controller
 		}
 		else{
 			return redirect()->route('admin.login')
-			->withError('Username yang anda masukkan bukan admin');
+			->withError('Username yang anda masukkan bukan admin aktif');
 		}
 		
 		

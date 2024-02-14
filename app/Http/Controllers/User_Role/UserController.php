@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\User_Role;
 
 use App\Models\User;
 use App\Models\Warga;
@@ -12,6 +12,8 @@ use App\Http\Requests\UserRequest;
 use Spatie\Permission\Models\Role;
 use App\Rules\ValidateKK;
 use App\Rules\NIKExist;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\Controller;
 
 
 class UserController extends Controller
@@ -47,16 +49,26 @@ class UserController extends Controller
 	 */
 	public function validateKK(Request $request){
 		$nik = $request['nik'];
-		$request->validate([
+		$validator = Validator::make($request->all(), [
             'no_kk' => ['required', 'string','size:16',new ValidateKK($nik)],
-		]);
+        ]);
+ 
+        if ($validator->fails()) {
+            return response()->json(['error'=>$validator->errors()->all()]);
+        }
+	
 		
 	}
 	public function validateNIK(Request $request){
-		
-		$request->validate([
+		$validator = Validator::make($request->all(), [
             'nik' => ['required', 'string','size:16','unique:users,nik',new NIKExist],
-		]);
+        ]);
+ 
+        if ($validator->fails()) {
+            return response()->json(['error'=>$validator->errors()->all()]);
+        }
+	
+		
 		
 	}
 	 public function store(UserRequest $request)
@@ -85,8 +97,7 @@ class UserController extends Controller
 	public function show(User $user)
 	{
 		$title = 'Profil '.$user->username;
-		$roles =  Role::get()->groupBy('category');
-		return view('admin.users.show', compact(['user','title','roles']));
+		return view('admin.users.show', compact(['user','title']));
 	}
 
 	/**

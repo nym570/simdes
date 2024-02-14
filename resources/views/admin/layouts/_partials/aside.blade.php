@@ -43,10 +43,18 @@
 			  Manajemen Pengguna
 			</div></a>
 			<ul class="menu-sub">
+				<li class="menu-item {{ menuIsActive('admin-list.*') }}">
+					<a href="{{ route('admin-list.index') }}" class="menu-link">
+						
+						<div data-i18n="Admin">
+							{{ __('Admin') }}
+						</div>
+					</a>
+				</li>
 				<li class="menu-item {{ menuIsActive('users.*') }}">
 					<a href="{{ route('users.index') }}" class="menu-link">
 						
-						<div data-i18n="Manajemen Pengguna">
+						<div data-i18n="Pengguna">
 							{{ __('Pengguna') }}
 						</div>
 					</a>

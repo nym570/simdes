@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Desa;
 
 use App\Models\Desa;
 use App\Models\Dusun;
@@ -28,7 +28,8 @@ class DesaController extends Controller
     public function index()
     {
         $title = 'Manajemen Profil Desa';
-        return view('admin.desa.desa',compact('title'));
+
+		return view('admin.desa.desa', compact(['title']));
     }
     public function lkd(DusunDataTable $dusunDT, RWDataTable $rwDT, RTDataTable $rtDT)
     {
@@ -61,9 +62,9 @@ class DesaController extends Controller
     {
         $data = $request->validate([
 			'name' => ['required','string'],
-			'nama_kepala_dusun' => ['required','string'],
 		]);
-        $role = Role::create(['name' => $request->name,'category'=>'kepala dusun']);
+        $data['name'] = 'Dusun '.$data['name'];
+        $role = Role::create(['name' => $request->name,'category'=>'pemimpin','status' => 'dusun']);
         $data['kepala_dusun'] = $role->id;
         $dusun = Dusun::create($data);
         
@@ -73,12 +74,11 @@ class DesaController extends Controller
     {
         $data = $request->validate([
 			'name' => ['required','integer'],
-			'nama_ketua_rw' => ['required','string'],
             'dusun_id' => ['required']
 		]);
         $data['name'] = 'RW '.str_pad($data['name'], 2, '0', STR_PAD_LEFT);
         
-        $role = Role::create(['name' => $data['name'],'category'=>'ketua RW']);
+        $role = Role::create(['name' => $data['name'],'category'=>'pemimpin','status' => 'rw']);
         $data['ketua_rw'] = $role->id;
         RW::create($data);
         
@@ -89,13 +89,12 @@ class DesaController extends Controller
     {
         $data = $request->validate([
 			'name' => ['required','integer'],
-			'nama_ketua_rt' => ['required','string'],
             'rw_id' => ['required']
 		]);
         $rw = RW::where('id',$data['rw_id'])->first();
         $data['name'] = $rw->name.'/RT '.str_pad($data['name'], 2, '0', STR_PAD_LEFT);
         
-        $role = Role::create(['name' => $data['name'],'category'=>'ketua RT']);
+        $role = Role::create(['name' => $data['name'],'category'=>'pemimpin','status' =>'rt']);
         $data['ketua_rt'] = $role->id;
         RT::create($data);
         

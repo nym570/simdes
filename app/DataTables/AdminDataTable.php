@@ -2,7 +2,7 @@
 
 namespace App\DataTables;
 
-use Spatie\Permission\Models\Role;
+use App\Models\Admin;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Services\DataTable;
@@ -11,9 +11,8 @@ use Yajra\DataTables\Html\Editor\Editor;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
-use Vinkla\Hashids\Facades\Hashids;
 
-class RolesDataTable extends DataTable
+class AdminDataTable extends DataTable
 {
     /**
      * Build the DataTable class.
@@ -24,9 +23,12 @@ class RolesDataTable extends DataTable
     {
         return (new EloquentDataTable($query))
         ->addColumn('action', function($row){
-   
-            $btn = ' <a href='.route("roles.show",Hashids::encode($row->id)).' class="btn btn-sm btn-success my-1"> Lihat</a>';
-             return $btn;
+            $btn = ' <a href="" class="btn btn-sm btn-success my-1"> Lihat</a>';
+                if($row->id != auth()->guard('admin')->user()->id){
+                    $btn = $btn.' <button href='.route("admin-list.status",$row).' class="btn btn-sm btn-'.($row->status=="aktif"?"dark":"primary").' my-1" onclick="change(this)">'.($row->status=="aktif"?"nonaktifkan":"aktifkan").' </button>';
+             
+                }
+                return $btn;
              
         })
         ->rawColumns(['action'])    
@@ -37,9 +39,9 @@ class RolesDataTable extends DataTable
     /**
      * Get the query source of dataTable.
      */
-    public function query(Role $model): QueryBuilder
+    public function query(Admin $model): QueryBuilder
     {
-        return $model->newQuery()->where('guard_name','web')->select('roles.*');
+        return $model->newQuery();
     }
 
     /**
@@ -48,14 +50,14 @@ class RolesDataTable extends DataTable
     public function html(): HtmlBuilder
     {
         return $this->builder()
-                    ->setTableId('roles-table')
+                    ->setTableId('admin-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
                     ->orderBy(1)
                     ->selectStyleSingle()
                     ->parameters([
                         'dom'          => 'Bfrtip',
-                        'buttons'      => ['pdf','excel', 'print'],
+                        'buttons'      => ['pdf','excel', 'print', 'reload'],
                     ]);
     }
 
@@ -69,15 +71,14 @@ class RolesDataTable extends DataTable
                     ->title('#')
                     ->orderable(false)
                     ->searchable(false),
-            Column::make('name')
-                    ->title('nama'),
-            Column::make('category')
-                    ->title('kategori'),
+            Column::make('username'),
+            Column::make('nama'),
+            Column::make('email'),
+            Column::make('status'),
             Column::computed('action')
                   ->exportable(false)
                   ->printable(false)
                   ->addClass('text-center'),
-            
         ];
     }
 
@@ -86,6 +87,6 @@ class RolesDataTable extends DataTable
      */
     protected function filename(): string
     {
-        return 'Roles_' . date('YmdHis');
+        return 'Admin_' . date('YmdHis');
     }
 }

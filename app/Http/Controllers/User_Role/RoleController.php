@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\User_Role;
 
 use Spatie\Permission\Models\Role;
 use App\Models\User;
@@ -12,6 +12,7 @@ use DB;
 use Illuminate\Support\Arr;
 use DataTables;
 use App\DataTables\RolesDataTable;
+use App\Http\Controllers\Controller;
 
 class RoleController extends Controller
 {
@@ -23,6 +24,7 @@ class RoleController extends Controller
 
     public function index(RolesDataTable $dataTable)
     {
+
         $title = 'Manajemen Role';
 		 return $dataTable->render('admin.roles.index',compact('title'));
     }
@@ -52,8 +54,18 @@ class RoleController extends Controller
     {
         $users = User::role($role->name)->where('status','aktif')->paginate(10);
         $title = 'Role : '.$role->name;
-        $allUsers = User::withoutRole($role->name)->get();
-		return view('admin.roles.show', compact(['role','allUsers','users','title']));
+        
+		return view('admin.roles.show', compact(['role','users','title']));
+    }
+    public function userWithout(Request $request){
+        $id = $request->only('id_role');
+        $role = Role::where('id',$id)->first();
+        $category = Role::where('category',$role->category)->where('category','!=','warga')->where('guard_name','web')->pluck('name')->toArray();
+        $allUsers = User::with('warga')->withoutRole($category)->get();
+        foreach($allUsers as $item){
+            echo "<option data-tokens='".$item->username."' value='".$item->username."'>".$item->username.' | '.$item->warga->nama."</option>";
+        }
+        
     }
     public function get(Request $request)
     {
@@ -69,6 +81,7 @@ class RoleController extends Controller
             'role' => $role,
             'user' => $user,
             'link' => $url,
+           
         ];
 		return json_encode($data);
     }

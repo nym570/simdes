@@ -20,4 +20,8 @@ class Dusun extends Model
     {
         return $this->hasOne(Role::class);
     }
+    public function warga()
+    {
+        return $this->belongsTo(Warga::class,'kepala_dusun_nik', 'nik');
+    }
 }

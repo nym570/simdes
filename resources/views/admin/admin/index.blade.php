@@ -3,13 +3,13 @@
 	<div class="card">
 		<div class="card-body">
 			<h5 class="card-title">
-				{{ __('Daftar Pengguna') }}
+				{{ __('Daftar Admin') }}
 			</h5>
 
 			<div class="mb-4">
 				<!-- Button trigger modal -->
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUser">
-	Tambah Pengguna
+	Tambah Admin
   </button>
   
   <!-- Modal -->
@@ -17,10 +17,10 @@
 	<div class="modal-dialog" role="document">
 	  <div class="modal-content">
 		<div class="modal-header">
-		  <h5 class="modal-title" id="exampleModalLabel1">Tambah Pengguna Baru</h5>
+		  <h5 class="modal-title" id="exampleModalLabel1">Tambah Admin</h5>
 		  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 		</div>
-		<form id="formAuthentication" class="mb-3" action="{{ route('users.store') }}" data-remote="true" method="POST">
+		<form id="formAuthentication" class="mb-3" action="{{ route('admin-list.store') }}" data-remote="true" method="POST">
 			@csrf
 			<input type="hidden" id="token" value="{{ csrf_token() }}">
 			<div class="modal-body">
@@ -34,25 +34,11 @@
 				<div class="row">
 				  <div class="col mb-3">
 					<x-label for="nama" :value="__('Nama Lengkap*')" />
-					<x-input type="text" name="nama" id="nama" :placeholder="__('Nama lengkap sesuai ktp tanpa gelar')" :value="old('nama')" />
+					<x-input type="text" name="nama" id="nama" :placeholder="__('Nama lengkap')" :value="old('nama')" />
 					<x-invalid error="nama" />
 				  </div>
 				</div>
-				<div class="row g-2 mb-3">
-				  <div class="col">
-					<x-label for="nik" :value="__('NIK*')" />
-					<x-input type="text" name="nik" id="nik" :placeholder="__('NIK 16 digit')" :value="old('nik')" />
-					<x-invalid error="nik" />
-					<p><small class="text-danger" id="error_check_nik"></small></p>
-				  </div>
-				  <div class="col">
-					<x-label for="no_kk" :value="__('No Kartu Keluarga*')" />
-					<x-input type="text" name="no_kk" id="no_kk" :placeholder="__('No pada KK 16 digit')" :value="old('no_kk')" readonly/>
-					<x-invalid error="no_kk" />
-					<p><small class="text-danger" id="error_check_kk"></small></p>
-				  </div>
-				  
-				</div>
+				
 				<div class="row">
 				  <div class="col mb-3">
 					<x-label for="email" :value="__('Email*')" />
@@ -90,7 +76,7 @@
   </div>
 			</div>
 
-			@include('admin.users._partials.table')
+			@include('admin.admin._partials.table')
 
 		</div>
 	</div>

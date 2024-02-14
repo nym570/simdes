@@ -14,10 +14,8 @@ return new class extends Migration
         Schema::create('dusun', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->unsignedBigInteger('kepala_dusun');
-            $table->foreign('kepala_dusun')->references('id')->on('roles')->constrained();
-            $table->string('kepala_dusun_nik');
-            $table->foreign('kepala_dusun_nik')->references('nik')->on('warga')->constrained();
+            $table->unsignedBigInteger('kepala_dusun')->nullable();
+            $table->foreign('kepala_dusun')->references('id')->on('roles')->constrained()->onDelete('set null');
             $table->timestamps();
         });
     }

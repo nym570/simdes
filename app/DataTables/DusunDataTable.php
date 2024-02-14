@@ -76,8 +76,7 @@ class DusunDataTable extends DataTable
                   ->title('#')
                   ->orderable(false)
                   ->searchable(false),      
-            Column::make('name')
-                  ->title('nama'),
+            Column::make('name')->title('Dusun'),
             Column::computed('action')
                   ->exportable(false)
                   ->printable(false)

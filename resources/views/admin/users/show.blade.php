@@ -9,7 +9,6 @@
 				<!-- Button trigger modal -->
     <a href="{{route('users.index')}}" class="btn btn-dark"> Kembali </a>
 	<button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#EditUser"> Edit </button>
-	<button  class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#EditRole"> Atur Role</button>
 	<!-- Icon Dropdown -->
 <div class="btn-group">
 	<button type="button" class="btn btn-light btn-icon rounded-pill dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
@@ -41,45 +40,7 @@
 	@endforelse
   </div>
 
-	<!-- Modal -->
-	<div class="modal fade" id="EditRole" tabindex="-1" aria-hidden="true">
-		<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-			<h5 class="modal-title" id="exampleModalLabel1">Atur Role</h5>
-			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<form id="formAuthentication" class="mb-3" action="{{ route('users.role',$user) }}" data-remote="true" method="POST">
-				@csrf
-				<div class="modal-body">
-					<div class="row">
-						<div class="mb-3">
-							<label for="selectpickerMultiple" class="form-label">Username</label>
-							<select id="selectpickerMultiple" class="selectpicker w-100" data-style="btn-default" multiple data-icon-base="bx" data-live-search="true" data-tick-icon="bx-check text-primary" title="Pilih satu atau lebih pengguna baru" required name="roles[]">
-								@forelse ($roles->keys() as $category)
-									@if($category == 'aparat desa')
-									<optgroup label="{{$category}}">
-										@forelse($roles[$category] as $item)
-											<option value="{{$item->name}}" {{$user->getRoleNames()->contains($item->name) ? 'selected' : ''}}>{{$item->name}}</option>
-										@empty
-										@endforelse
-									  </optgroup>
-									@endif
-								@empty
-								@endforelse
-							</select>
-						</div>
-						
-					</div>
-				</div>
-				<div class="modal-footer">
-					<x-button type="submit" class="btn btn-primary d-grid w-100" :value="__('Atur Role')"/>
-				</div>
-			</form>
-		</div>
-		</div>
-	</div>
-
+	
   
   <!-- Modal -->
   <div class="modal fade" id="EditUser" tabindex="-1" aria-hidden="true">

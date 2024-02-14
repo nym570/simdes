@@ -1,12 +1,13 @@
 <?php
 
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\RoleController;
-use App\Http\Controllers\DesaController;
+use App\Http\Controllers\User_Role\UserController;
+use App\Http\Controllers\User_Role\AdminController;
+use App\Http\Controllers\User_Role\RoleController;
+use App\Http\Controllers\Desa\DesaController;
 use App\Http\Controllers\Admin\AdminHomeController;
-use App\Http\Controllers\WilayahIndoController;
+use App\Http\Controllers\Desa\WilayahIndoController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\MasterDesaController;
+use App\Http\Controllers\Desa\MasterDesaController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -42,10 +43,17 @@ Route::controller(UserController::class)->middleware(['admin.auth','admin.verifi
 	Route::post('/users/{user}/role', 'role')->name('role');
 });
 
+Route::controller(AdminController::class)->middleware(['admin.auth','admin.verified'])->name('admin-list.')->group(function () {
+	Route::get('/admin/admin', 'index')->name('index');
+	Route::post('/admin/admin', 'store')->name('store');
+	Route::put('/admin/admin/{admin}/status', 'status')->name('status');
+});
+
 Route::controller(DesaController::class)->middleware(['admin.auth','admin.verified'])->name('m.desa.')->group(function () {
 	Route::get('/admin/desa', 'index')->name('index');
 	Route::put('/admin/desa/{desa}/update', 'update')->name('update');
 	Route::put('/admin/desa/{desa}/update-deskripsi', 'updateDesc')->name('deskripsi');
+
 	
 });
 Route::controller(DesaController::class)->middleware(['admin.auth','admin.verified'])->name('m.lkd.')->group(function () {
@@ -67,6 +75,7 @@ Route::bind('role', function ($id, $route) {
 Route::controller(RoleController::class)->middleware(['admin.auth','admin.verified'])->name('roles.')->group(function () {
 	Route::get('/admin/roles', 'index')->name('index');
 	Route::get('/admin/roles/get', 'get')->name('get');
+	Route::get('/admin/roles/user-list', 'userWithout')->name('user-list');
 	Route::get('/admin/roles/{role}/show', 'show')->name('show');
 	Route::post('/admin/roles/{user}/update', 'update')->name('update');
 	Route::post('/admin/roles/add-one', 'addOne')->name('add-one');

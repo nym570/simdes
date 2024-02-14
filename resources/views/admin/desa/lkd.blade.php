@@ -108,13 +108,7 @@
 					  <x-invalid error="name" />
 					</div>
 				  </div>
-				  <div class="row">
-					<div class="col mb-3">
-						<x-label for="nama_ketua_rt" :value="__('Nama Ketua RT*')" />
-						<x-input type="text" name="nama_ketua_rt" id="nama_ketua_rt"  :value="old('nama_ketua_rt')" required/>
-						<x-invalid error="nama_ketua_rt" />
-					  </div>
-				  </div>
+				  
 				  
 				
 				
@@ -158,13 +152,7 @@
 						  <x-invalid error="name" />
 						</div>
 					  </div>
-					  <div class="row">
-						<div class="col mb-3">
-							<x-label for="nama_ketua_rw" :value="__('Nama Ketua RW*')" />
-							<x-input type="text" name="nama_ketua_rw" id="nama_ketua_rw"  :value="old('nama_ketua_rw')" required/>
-							<x-invalid error="nama_ketua_rw" />
-						  </div>
-					  </div>
+					  
 					  
 					
 					
@@ -200,13 +188,7 @@
 						  <x-invalid error="name" />
 						</div>
 					  </div>
-					  <div class="row">
-						<div class="col mb-3">
-							<x-label for="nama_kepala_dusun" :value="__('Nama Kepala Dusun*')" />
-							<x-input type="text" name="nama_kepala_dusun" id="nama_kepala_dusun"  :value="old('nama_kepala_dusun')" required/>
-							<x-invalid error="nama_kepala_dusun" />
-						  </div>
-					  </div>
+					  
 					  
 					
 					
@@ -225,7 +207,7 @@
 	<div class="modal-dialog" role="document">
 	<div class="modal-content">
 		<div class="modal-header">
-		<h5 class="modal-title" id="exampleModalLabel1">Assign Kepala Dusun</h5>
+		<h5 class="modal-title" id="judulModal"></h5>
 		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 		</div>
 		<form id="formRole" class="mb-3" action="{{ route('roles.add-one') }}" data-remote="true" method="POST">
@@ -241,9 +223,7 @@
 					<div class="col mb-3">
 						<label for="selectpickerLiveSearch" class="form-label">Username</label>
 						<select id="selectpickerLiveSearch" class="selectpicker w-100" data-style="btn-default" data-live-search="true" title="Pilih pengguna baru" required name="user">
-							@foreach($allUsers as $user)
-								<option data-tokens="{{$user->username}}" value="{{$user->username}}">{{$user->username}} | {{$user->nama}}</option>
-							@endforeach
+							
 						</select>
 					</div>
 				</div>
@@ -274,12 +254,13 @@
 		});
 		$(document).on('click','.open_modal',function(){
 				let id= $(this).val();
-				$.ajax({
+				var ajax1= $.ajax({
 					type : 'GET',
 					url: "{{route('roles.get')}}",
 					data : {id_role:id},
 					success: function(msg){
 						let data = JSON.parse(msg);
+						$('#judulModal').text('Assign role: '+data['role'].name);
 						$('#formRole').attr('action', data['link']);
 						$('#roleLKD').val(data['role'].name);
 						if(data['user']){
@@ -289,10 +270,33 @@
 							$('#userLKD').val('');
 						}
 						
-						$('#myModal').modal('show');
+						
 					},
+					error: function (xhr) {
+						var err = JSON.parse(xhr.responseText);
+						alert(err.message);
+					}
 					
-				})
+				});
+				var ajax2 = $.ajax({
+					type : 'GET',
+					url: "{{route('roles.user-list')}}",
+					data : {id_role:id},
+					success: function(msg){
+						$('#selectpickerLiveSearch').selectpicker('destroy');
+						$('#selectpickerLiveSearch').html(msg);
+						$('#selectpickerLiveSearch').selectpicker('render');
+						
+					},
+					error: function (xhr) {
+						var err = JSON.parse(xhr.responseText);
+						alert(err.message);
+					}
+					
+				});
+				$.when(ajax1, ajax2).done(function(data, data1) {
+				$('#myModal').modal('show');
+			});
 				}); 
 				
 	</script>
@@ -309,6 +313,10 @@
 						$('#dusunMRW').html(msg);
 						$('#dusunMRW').selectpicker('render');
 					},
+					error: function (xhr) {
+						var err = JSON.parse(xhr.responseText);
+						alert(err.message);
+					}
 					
 				})
 			});
@@ -322,6 +330,10 @@
 						$('#dusunMRT').html(msg);
 						$('#dusunMRT').selectpicker('render');
 					},
+					error: function (xhr) {
+						var err = JSON.parse(xhr.responseText);
+						alert(err.message);
+					}
 					
 				})
 			});
@@ -340,6 +352,10 @@
 						$('#rwMRT').html(msg);
 						$('#rwMRT').selectpicker('render');
 					},
+					error: function (xhr) {
+						var err = JSON.parse(xhr.responseText);
+						alert(err.message);
+					}
 					
 				})
 			});

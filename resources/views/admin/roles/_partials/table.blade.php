@@ -4,18 +4,19 @@
 			<tr>
 				<th>{{ __('#') }}</th>
 				<th>{{ __('Username') }}</th>
-				<th>{{ __('Nama') }}</th>
 				<th>{{ __('Action') }}</th>
 			</tr>
 		</thead>
 		<tbody>
 			@forelse($users as $user)
 			<tr>
-				<td style="width: 3%">{{ $loop->iteration}}</td>
-				<td style="width: 10%">{{ $user->username }}</td>
-				<td style="width: 25%">{{ $user->nama }}</td>
+				<td style="width: 10%">{{ $loop->iteration}}</td>
+				<td style="width: 25%">{{ $user->username }}</td>
 				<td style="width: 25%">
-					<button href={{route('users.hapusRole', $user)}} class="btn btn-sm btn-danger my-1" onclick='del(this)'>Hapus Role User</button>
+					@if($role->name != 'warga')
+						<button href={{route('users.hapusRole', $user)}} class="btn btn-sm btn-danger my-1" onclick='del(this)'>Hapus Role User</button>
+					@endif
+					
 					<a href="{{route('users.show', $user)}}"><button  class="btn btn-sm btn-dark my-1">Lihat User</button></a>
 				</td>
 			</tr>
