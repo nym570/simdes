@@ -13,6 +13,8 @@ use App\Models\Desa;
 use App\Models\Dusun;
 use App\Models\RW;
 use App\Models\RT;
+use Spatie\Activitylog\Models\Activity;
+use App\Models\Warga;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -61,6 +63,12 @@ class RouteServiceProvider extends ServiceProvider
         });
         Route::bind('rt', function ($value, $route) {
             return $this->getModel(RT::class, $value);
+        });
+        Route::bind('log', function ($value, $route) {
+            return $this->getModel(Activity::class, $value);
+        });
+        Route::bind('warga', function ($value, $route) {
+            return $this->getModel(Warga::class, $value);
         });
     }
 

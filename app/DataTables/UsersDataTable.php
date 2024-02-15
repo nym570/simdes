@@ -29,7 +29,7 @@ class UsersDataTable extends DataTable
 
             $btn = $btn.' <button href='.route("users.status",$row).' class="btn btn-sm btn-'.($row->status=="aktif"?"dark":"primary").' my-1" onclick="change(this)">'.($row->status=="aktif"?"nonaktifkan":"aktifkan").' </button>';
             
-            $btn = $btn.'<form method="POST" action="'.route("password.email").'"  id="reset-form"><input type="hidden" name="_token" value="' . csrf_token() . '"> <input type="hidden" name="email" id="email"  value="'.$row->email.'" > <button type="submit" class="btn btn-sm btn-danger my-1"> Reset Password </button></form>';
+            // $btn = $btn.'<form method="POST" action="'.route("password.email").'"  id="reset-form"><input type="hidden" name="_token" value="' . csrf_token() . '"> <input type="hidden" name="email" id="email"  value="'.$row->email.'" > <button type="submit" class="btn btn-sm btn-danger my-1"> Reset Password </button></form>';
              return $btn;
              
         })

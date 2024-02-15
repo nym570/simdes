@@ -15,11 +15,8 @@
 	  <i class="bx bx-dots-vertical-rounded"></i>
 	</button>
 	<ul class="dropdown-menu">
-		@if(is_null($user->email_verified_at))
-			<li><a class="dropdown-item" href="{{route('verification.send', $user)}}" onclick='verif(this)'>Kirim Verifikasi Email</a></li>
-		@endif
 	  <li><a class="dropdown-item" href="{{route("users.status",$user)}}" onclick='change(this)'>{{$user->status=="aktif"?"Nonaktifkan":"Aktifkan"}}</a></li>
-	  <li><a class="dropdown-item" href="{{route('password.email')}}" onclick='send(this)'>Reset Password</a></li>
+	  {{-- <li><a class="dropdown-item" href="{{route('password.email')}}" onclick='send(this)'>Reset Password</a></li> --}}
 	  <li>
 		<hr class="dropdown-divider">
 	  </li>
@@ -126,14 +123,7 @@
 			form.submit()
 		})
 	}
-	function verif(element) {
-		event.preventDefault()
-		let form = document.getElementById('verif-email');
-		form.setAttribute('action', element.getAttribute('href'))
-		swalConfirm('Kirim email verifikasi ?', `Email verifikasi akan dikirim ke email pengguna`, 'Kirim email!', () => {
-			form.submit()
-		})
-	}
+
 	function change(element) {
 		event.preventDefault()
 		let form = document.getElementById('status-form');

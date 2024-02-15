@@ -6,6 +6,8 @@ use App\Models\Desa;
 use App\Models\Dusun;
 use App\Models\RW;
 use App\Models\RT;
+use Spatie\Activitylog\Models\Activity;
+use App\Models\Warga;
 
 return [
 
@@ -63,6 +65,14 @@ return [
         RT::class => [
             'salt' => RT::class.'lkd-desa-rt',
             'length' => 7,
+        ],
+        Activity::class => [
+            'salt' =>Activity::class.'log',
+            'length' => 10,
+        ],
+        Warga::class => [
+            'salt' => Warga::class.'warga-desa',
+            'length' => 10,
         ],
 
         // 'alternative' => [

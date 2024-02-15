@@ -12,10 +12,13 @@ use App\Http\Traits\Hashidable;
 use App\Notifications\AdminEmailVerificationNotification;
 use App\Notifications\AdminResetPassword;
 use Illuminate\Auth\Passwords\CanResetPassword;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Models\Activity;
 
 class Admin extends Authenticatable 
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles, Hashidable, CanResetPassword;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles, Hashidable, CanResetPassword,LogsActivity;
     protected $table = 'admin';
     protected $guarded = ['id'];
 
@@ -37,6 +40,18 @@ class Admin extends Authenticatable
 	protected $casts = [
 		'email_verified_at' => 'datetime',
 	];
+
+	public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+        ->logOnly(['username','nama', 'email','status','password'])
+		->logOnlyDirty()
+		->useLogName('Admin');
+        // Chain fluent methods for configuration options
+    }
+
+	
+
 	public function sendEmailVerificationNotification()
     {
         // We override the default notification and will use our own
@@ -47,4 +62,26 @@ class Admin extends Authenticatable
 	{
 		$this->notify(new AdminResetPassword($token));
 	}
+
+	public function tapActivity(Activity $activity, string $event)
+{
+    /** @var Collection $properties */
+    if ($properties = $activity->properties) {
+        if ($properties->has('attributes')) {
+            $attributes = $properties->get('attributes');
+            if (isset($attributes['password'])) {
+                $attributes['password'] = '<secret>';
+            }
+            $properties->put('attributes', $attributes);
+        }
+        if ($properties->has('old')) {
+            $old = $properties->get('old');
+            if (isset($old['password'])) {
+                $old['password'] = '<secret>';
+            }
+            $properties->put('old', $old);
+        }
+        $activity->properties = $properties;
+    }
+}
 }

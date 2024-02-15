@@ -33,19 +33,26 @@ class AdminLoginController extends Controller
 	{
 		
 		$user = Admin::where('username',$request['username']) -> first();
-		if($user['status']=='aktif'){
-			
-			$request->authenticate();
+		if($user){
+			if($user['status']=='aktif'){
+				$request->authenticate();
 			$request->session()->regenerate();
 
 			session()->flash('success', __('Selamat Datang ' . auth()->guard('admin')->user()->nama));
+			activity()
+				->causedBy($user)
+				->log('login');
 			
 			return redirect()->intended(RouteServiceProvider::ADMIN_HOME);
+			}
+			
+			return redirect()->route('admin.login')
+			->withError('Akun sudah tidak aktif');
 			
 		}
 		else{
 			return redirect()->route('admin.login')
-			->withError('Username yang anda masukkan bukan admin aktif');
+			->withError('username tidak ditemukan');
 		}
 		
 		
@@ -59,11 +66,16 @@ class AdminLoginController extends Controller
 	 */
 	public function logout(Request $request)
 	{
+		$user = Auth::guard('admin')->user();
 		Auth::guard('admin')->logout();
 		if(!Auth::guard('web')->check()){
 			$request->session()->invalidate();
 			$request->session()->regenerateToken();
 		}
+		activity()
+				->causedBy($user)
+				->log('logout');
+			
 
 		
 

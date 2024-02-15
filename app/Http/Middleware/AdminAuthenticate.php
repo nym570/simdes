@@ -27,6 +27,7 @@ class AdminAuthenticate extends Middleware
     {
 
         if (auth()->guard('admin')->check()) {
+            config(['activitylog.default_auth_driver' => 'admin']);
             return $next($request);
             
         }

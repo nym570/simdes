@@ -5,6 +5,7 @@ use App\Http\Controllers\User_Role\AdminController;
 use App\Http\Controllers\User_Role\RoleController;
 use App\Http\Controllers\Desa\DesaController;
 use App\Http\Controllers\Admin\AdminHomeController;
+use App\Http\Controllers\Admin\LogActivityController;
 use App\Http\Controllers\Desa\WilayahIndoController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Desa\MasterDesaController;
@@ -71,6 +72,9 @@ Route::bind('role', function ($id, $route) {
     return Hashids::decode($id)[0];
 });
 
+Route::controller(LogActivityController::class)->middleware(['admin.auth','admin.verified'])->name('log.')->group(function () {
+	Route::get('/admin/log', 'index')->name('index');
+});
 
 Route::controller(RoleController::class)->middleware(['admin.auth','admin.verified'])->name('roles.')->group(function () {
 	Route::get('/admin/roles', 'index')->name('index');

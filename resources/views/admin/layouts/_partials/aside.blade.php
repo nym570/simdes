@@ -111,6 +111,22 @@
 			</span>
 		</li>
 
+		<li class="menu-header small text-uppercase">
+			<span class="menu-header-text">
+				{{ __('Log') }}
+			</span>
+		</li>
+
+		<li class="menu-item {{ menuIsActive('log') }}">
+			<a href="{{ route('log.index') }}" class="menu-link">
+				<i class="menu-icon tf-icons bx bx-calendar-exclamation"></i>
+				<div data-i18n="Analytics">
+					{{ __('Log Aktivitas') }}
+				</div>
+			</a>
+		</li>
+
+		
 
 		<!-- <li class="menu-item">
 			<a href="javascript:void(0);" class="menu-link menu-toggle">

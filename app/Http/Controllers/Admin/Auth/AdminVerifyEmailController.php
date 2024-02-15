@@ -21,12 +21,16 @@ class AdminVerifyEmailController extends Controller
 
 	public function __invoke(AdminEmailVerificationRequest $request)
 	{
-		if (auth()->guard('admin')->user()->hasVerifiedEmail()) {
+		$user = auth()->guard('admin')->user();
+		if ($user->hasVerifiedEmail()) {
 			return redirect()->intended(RouteServiceProvider::ADMIN_HOME . '?verified=1');
 		}
-			auth()->guard('admin')->user()->markEmailAsVerified();
+			$user->markEmailAsVerified();
 			event(new Verified(auth()->guard('admin')->user()));
 			session()->flash('success', __('Akun berhasil di aktivasi'));
+			activity()
+				->causedBy($user)
+				->log('verifikasi email');
 			return redirect()->intended(RouteServiceProvider::ADMIN_HOME . '?verified=1');
 
 

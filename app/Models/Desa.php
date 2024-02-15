@@ -5,12 +5,22 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Http\Traits\Hashidable;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
 class Desa extends Model
 {
-    use HasFactory,Hashidable;
+    use HasFactory,Hashidable,LogsActivity;
     protected $table = 'desa';
     protected $guarded = ['id'];
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+        ->logOnly(['username','nama', 'email','status','password'])
+		->logOnlyDirty()
+		->useLogName('Admin');
+        // Chain fluent methods for configuration options
+    }
     public function warga()
     {
         return $this->belongsTo(Warga::class,'kepala_desa_nik', 'nik');

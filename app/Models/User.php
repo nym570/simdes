@@ -10,10 +10,13 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use App\Http\Traits\Hashidable;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Models\Activity;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-	use HasApiTokens, HasFactory, Notifiable, HasRoles, Hashidable;
+	use HasApiTokens, HasFactory, Notifiable, HasRoles, Hashidable,LogsActivity;
 
 	/**
 	 * The attributes that are mass assignable.
@@ -41,6 +44,37 @@ class User extends Authenticatable implements MustVerifyEmail
 		'email_verified_at' => 'datetime',
 	];
 
+	public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+        ->logOnly(['username', 'email','status'])
+		->logOnlyDirty()
+		->useLogName('User');
+        // Chain fluent methods for configuration options
+    }
+
+	public function tapActivity(Activity $activity, string $event)
+{
+    /** @var Collection $properties */
+    if ($properties = $activity->properties) {
+        if ($properties->has('attributes')) {
+            $attributes = $properties->get('attributes');
+            if (isset($attributes['password'])) {
+                $attributes['password'] = '<secret>';
+            }
+            $properties->put('attributes', $attributes);
+        }
+        if ($properties->has('old')) {
+            $old = $properties->get('old');
+            if (isset($old['password'])) {
+                $old['password'] = '<secret>';
+            }
+            $properties->put('old', $old);
+        }
+        $activity->properties = $properties;
+    }
+}
+	
 	public function warga()
     {
         return $this->belongsTo(Warga::class,'nik', 'nik');
