@@ -1,15 +1,16 @@
+
 @extends('admin.layouts.app')
 @section('container')
 	<div class="card">
 		<div class="card-body">
 			<h5 class="card-title">
-				{{ __('Daftar Pengguna') }}
+				{{ __('Daftar Warga') }}
 			</h5>
 
 			<div class="mb-4">
 				<!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUser">
-	Tambah Pengguna
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ad">
+	Tambah Warga
   </button>
   
   <!-- Modal -->

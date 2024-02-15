@@ -31,12 +31,16 @@ class LoginController extends Controller
 	public function store(LoginRequest $request)
 	{
 		$user = User::where('username',$request['username']) -> first();
-		if($user->hasRole('warga')){
+		if($user){
 			$request->authenticate();
 			$request->session()->regenerate();
 
 			session()->flash('success', __('Selamat Datang ' . auth()->guard('web')->user()->nama));
+			activity()
+				->causedBy($user)
+				->log('login');
 			return redirect()->intended(RouteServiceProvider::HOME);
+			
 			
 		}
 		else{
@@ -53,12 +57,16 @@ class LoginController extends Controller
 	 */
 	public function logout(Request $request)
 	{
+		$user = Auth::guard('web')->user();
 		Auth::guard('web')->logout();
 
 		if(!Auth::guard('admin')->check()){
 			$request->session()->invalidate();
 			$request->session()->regenerateToken();
 		}
+		activity()
+				->causedBy($user)
+				->log('logout');
 
 		return redirect('/login')->with('success', __('Anda berhasil keluar'));
 	}

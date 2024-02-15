@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('warga', function (Blueprint $table) {
-            
-            $table->string('nik')->primary();
+            $table->id();
+            $table->string('nik')->unique();
             $table->string('no_kk');
             $table->string('nama');
             $table->string('tempat_lahir');

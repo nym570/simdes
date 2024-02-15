@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\LogActivityController;
 use App\Http\Controllers\Desa\WilayahIndoController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Desa\MasterDesaController;
+use App\Http\Controllers\Warga\WargaController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -31,8 +32,6 @@ Route::get('/admin', [AdminHomeController::class,'index'])->name('admin.home')->
 
 Route::controller(UserController::class)->middleware(['admin.auth','admin.verified'])->name('users.')->group(function () {
 	Route::get('/admin/users', 'index')->name('index');
-	Route::post('/admin/users/check-nik', 'validateNIK')->name('nik');
-	Route::post('/admin/users/check-kk', 'validateKK')->name('kk');
 	Route::post('/admin/users', 'store')->name('store');
 	Route::post('/admin/users/{user}/reset-pass', 'reset-pass')->name('reset-pass');
 	Route::get('/admin/users/{user}/show', 'show')->name('show');
@@ -42,6 +41,15 @@ Route::controller(UserController::class)->middleware(['admin.auth','admin.verifi
 	Route::delete('/admin/users/{user}/delete', 'delete')->name('delete');
 	Route::post('/users/{user}/del-role', 'deleteRole')->name('hapusRole');
 	Route::post('/users/{user}/role', 'role')->name('role');
+});
+
+Route::controller(UserController::class)->name('users.')->group(function () {
+	Route::post('/users/check-nik', 'validateNIK')->name('nik');
+	Route::post('/users/check-kk', 'validateKK')->name('kk');
+});
+
+Route::controller(WargaController::class)->middleware(['auth'])->name('warga.')->group(function () {
+	Route::get('/warga', 'index')->name('index');
 });
 
 Route::controller(AdminController::class)->middleware(['admin.auth','admin.verified'])->name('admin-list.')->group(function () {

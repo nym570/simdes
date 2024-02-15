@@ -44,8 +44,9 @@ class Admin extends Authenticatable
 	public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-        ->logOnly(['username','nama', 'email','status','password'])
+        ->logOnly(['username','nama', 'email','status','password','email_verified_at'])
 		->logOnlyDirty()
+        ->dontLogIfAttributesChangedOnly(['remember_token'])
 		->useLogName('Admin');
         // Chain fluent methods for configuration options
     }
@@ -72,12 +73,29 @@ class Admin extends Authenticatable
             if (isset($attributes['password'])) {
                 $attributes['password'] = '<secret>';
             }
+            if (isset($attributes['email_verified_at'])) {
+                if(!is_null($attributes['email_verified_at'])){
+                    $attributes['email_verified_at'] = 'email verified';
+                }
+                else{
+                    $attributes['email_verified_at'] = 'email not verified';
+                }
+                
+            }
             $properties->put('attributes', $attributes);
         }
         if ($properties->has('old')) {
             $old = $properties->get('old');
             if (isset($old['password'])) {
                 $old['password'] = '<secret>';
+            }
+            if (isset($old['email_verified_at'])) {
+                if(!is_null($old['email_verified_at'])){
+                    $old['email_verified_at'] = 'email verified';
+                }
+                else{
+                    $old['email_verified_at'] = 'email not verified';
+                }
             }
             $properties->put('old', $old);
         }

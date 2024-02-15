@@ -2,7 +2,7 @@
 
 namespace App\DataTables;
 
-use App\Models\User;
+use App\Models\Warga;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Services\DataTable;
@@ -11,9 +11,8 @@ use Yajra\DataTables\Html\Editor\Editor;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
-use Vinkla\Hashids\Facades\Hashids;
 
-class UsersDataTable extends DataTable
+class WargaDataTable extends DataTable
 {
     /**
      * Build the DataTable class.
@@ -23,27 +22,23 @@ class UsersDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
-        ->addColumn('action', function($row){
-   
-            $btn = ' <a href='.route("users.show",$row).' class="btn btn-sm btn-success my-1"> Lihat</a>';
-
-            $btn = $btn.' <button href='.route("users.status",$row).' class="btn btn-sm btn-'.($row->status=="aktif"?"dark":"primary").' my-1" onclick="change(this)">'.($row->status=="aktif"?"nonaktifkan":"aktifkan").' </button>';
-            
-            // $btn = $btn.'<form method="POST" action="'.route("password.email").'"  id="reset-form"><input type="hidden" name="_token" value="' . csrf_token() . '"> <input type="hidden" name="email" id="email"  value="'.$row->email.'" > <button type="submit" class="btn btn-sm btn-danger my-1"> Reset Password </button></form>';
-             return $btn;
-             
-        })
-        ->rawColumns(['action'])    
-        ->addIndexColumn() 
-        ->setRowId('id');
+            ->addColumn('action', 'warga.action')
+            ->addColumn('ktp', function($row){
+                return $row->ktp_desa == 1 ? 'desa' : 'luar desa';
+            })
+            ->addColumn('ttl', function($row){
+                return $row->tempat_lahir.', '.$row->tanggal_lahir;
+            })
+            ->addIndexColumn() 
+            ->setRowId('id');
     }
 
     /**
      * Get the query source of dataTable.
      */
-    public function query(User $model): QueryBuilder
+    public function query(Warga $model): QueryBuilder
     {
-        return $model->newQuery()->with(['warga'])->select('users.*')->latest();
+        return $model->newQuery()->latest();
     }
 
     /**
@@ -52,7 +47,7 @@ class UsersDataTable extends DataTable
     public function html(): HtmlBuilder
     {
         return $this->builder()
-                    ->setTableId('users-table')
+                    ->setTableId('warga-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
                     ->orderBy(1)
@@ -70,18 +65,27 @@ class UsersDataTable extends DataTable
     {
         return [
             Column::make('DT_RowIndex')
-                    ->title('#')
-                    ->orderable(false)
-                    ->searchable(false),
-            Column::make('username'),
-            Column::make('nik'),
-            Column::make('warga.nama')->title('nama')->data('warga.nama'),
-            Column::make('email'),
-            Column::make('status'),
+            ->title('#')
+            ->orderable(false)
+            ->searchable(false),
             Column::computed('action')
                   ->exportable(false)
                   ->printable(false)
                   ->addClass('text-center'),
+            Column::make('nik'),
+            Column::make('no_kk')->title('No KK'),
+            Column::make('nama'),
+            Column::make('status'),
+            Column::computed('ktp'),
+            Column::make('alamat_ktp')->title('alamat ktp'),
+            Column::make('no_telp')->title('no hp'),
+            Column::make('jenis_kelamin')->title('jenis kelamin'),
+            Column::computed('ttl'),
+            Column::make('agama'),
+            Column::make('gol_darah'),
+            Column::make('pendidikan'),
+            Column::make('pekerjaan'),
+            
             
         ];
     }
@@ -91,6 +95,6 @@ class UsersDataTable extends DataTable
      */
     protected function filename(): string
     {
-        return 'Users_' . date('YmdHis');
+        return 'Warga_' . date('YmdHis');
     }
 }

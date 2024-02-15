@@ -28,9 +28,6 @@ class AdminVerifyEmailController extends Controller
 			$user->markEmailAsVerified();
 			event(new Verified(auth()->guard('admin')->user()));
 			session()->flash('success', __('Akun berhasil di aktivasi'));
-			activity()
-				->causedBy($user)
-				->log('verifikasi email');
 			return redirect()->intended(RouteServiceProvider::ADMIN_HOME . '?verified=1');
 
 

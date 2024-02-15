@@ -30,7 +30,7 @@
 @auth
 		<li class="menu-header small text-uppercase">
 			<span class="menu-header-text">
-				{{ __('Manajemen Penduduk') }}
+				{{ __('Manajemen Warga') }}
 			</span>
 		</li>
 		
@@ -40,14 +40,14 @@
 		<li class="menu-item">
 			<a class="menu-link menu-toggle" href="javascript:void(0)"><i class="menu-icon tf-icons bx bx-user"></i>
 			<div>
-			  Manajemen Penduduk
+			  Warga
 			</div></a>
 			<ul class="menu-sub">
-				<li class="menu-item {{ menuIsActive('users.*') }}">
-					<a href="{{ route('users.index') }}" class="menu-link">
+				<li class="menu-item {{ menuIsActive('warga.*') }}">
+					<a href="{{ route('warga.index') }}" class="menu-link">
 						
-						<div data-i18n="Penduduk">
-							{{ __('Penduduk') }}
+						<div data-i18n="Warga">
+							{{ __('Warga') }}
 						</div>
 					</a>
 				</li>

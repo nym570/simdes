@@ -21,6 +21,7 @@
 	<title>{{ $title }}</title>
 
 	<meta name="description" content="" />
+	<meta name="csrf-token" content="{{ csrf_token() }}">
 
 	<!-- Favicon -->
 	<link rel="icon" type="image/x-icon" href="{{ asset('assets/img/favicon/favicon.ico') }}" />
@@ -50,6 +51,9 @@
 	<!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
 	<!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
 	<script src="{{ asset('assets/js/config.js') }}"></script>
+	<script src="{{ asset('assets/vendor/libs/jquery/jquery.js') }}"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.js"></script>
 </head>
 
 <body>
@@ -57,7 +61,7 @@
 
 	<div class="container-xxl">
 		<div class="authentication-wrapper authentication-basic container-p-y">
-			<div class="authentication-inner">
+			<div class="authentication-inner" style="{{Request::is('register') ? 'max-width:700px' : ''}}">
 				<div class="card">
 					<div class="card-body">
 
@@ -99,6 +103,7 @@
 	<!-- Main JS -->
 	<script src="{{ asset('assets/js/main.js') }}"></script>
 	<script src="{{ asset('assets/js/custom.js') }}"></script>
+	<script src="{{ asset('assets/vendor/libs/bootstrap-select/bootstrap-select.js') }}"></script> 
 	@stack('js')
 </body>
 

@@ -67,8 +67,8 @@ class ActivityLogDataTable extends DataTable
            
             
         })
-        ->addIndexColumn() 
-        ->setRowId('id');
+        ->addIndexColumn() ;
+        // ->setRowId('nik');
     }
 
     /**
@@ -76,7 +76,7 @@ class ActivityLogDataTable extends DataTable
      */
     public function query(Activity $model): QueryBuilder
     {
-        return $model->newQuery();
+        return $model->newQuery()->latest();
     }
 
     /**

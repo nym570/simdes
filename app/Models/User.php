@@ -47,8 +47,9 @@ class User extends Authenticatable implements MustVerifyEmail
 	public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-        ->logOnly(['username', 'email','status'])
+        ->logOnly(['username', 'email','status','email_verified_at','password'])
 		->logOnlyDirty()
+		->dontLogIfAttributesChangedOnly(['remember_token'])
 		->useLogName('User');
         // Chain fluent methods for configuration options
     }
@@ -62,12 +63,29 @@ class User extends Authenticatable implements MustVerifyEmail
             if (isset($attributes['password'])) {
                 $attributes['password'] = '<secret>';
             }
+            if (isset($attributes['email_verified_at'])) {
+                if(!is_null($attributes['email_verified_at'])){
+                    $attributes['email_verified_at'] = 'email verified';
+                }
+                else{
+                    $attributes['email_verified_at'] = 'email not verified';
+                }
+                
+            }
             $properties->put('attributes', $attributes);
         }
         if ($properties->has('old')) {
             $old = $properties->get('old');
             if (isset($old['password'])) {
                 $old['password'] = '<secret>';
+            }
+            if (isset($old['email_verified_at'])) {
+                if(!is_null($old['email_verified_at'])){
+                    $old['email_verified_at'] = 'email verified';
+                }
+                else{
+                    $old['email_verified_at'] = 'email not verified';
+                }
             }
             $properties->put('old', $old);
         }

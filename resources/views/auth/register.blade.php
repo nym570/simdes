@@ -8,23 +8,20 @@
 
 	<form id="formAuthentication" class="mb-3" action="{{ route('register') }}" method="POST">
 		@csrf
-		<div class="row">
-			<div class="col mb-3">
-			  <x-label for="nama" :value="__('Nama Lengkap')" />
-			  <x-input type="text" name="nama" id="nama" :placeholder="__('Nama lengkap sesuai ktp tanpa gelar')" :value="old('nama')" />
-			  <x-invalid error="nama" />
-			</div>
-		  </div>
-		  <div class="row g-2">
-			<div class="col mb-3">
+		<input type="hidden" id="token" value="{{ csrf_token() }}">
+		
+		  <div class="row g-2 mb-2">
+			<div class="col">
 			  <x-label for="nik" :value="__('NIK')" />
 			  <x-input type="text" name="nik" id="nik" :placeholder="__('NIK 16 digit')" :value="old('nik')" />
 			  <x-invalid error="nik" />
+			  <p><small class="text-danger" id="error_check_nik"></small></p>
 			</div>
-			<div class="col mb-3">
+			<div class="col">
 			  <x-label for="no_kk" :value="__('No Kartu Keluarga')" />
-			  <x-input type="text" name="no_kk" id="no_kk" :placeholder="__('No pada KK 16 digit')" :value="old('no_kk')" />
+			  <x-input type="text" name="no_kk" id="no_kk" :placeholder="__('No pada KK 16 digit')" :value="old('no_kk')" readonly />
 			  <x-invalid error="no_kk" />
+			  <p><small class="text-danger" id="error_check_kk"></small></p>
 			</div>
 		  </div>
 		  <div class="row">
@@ -34,15 +31,9 @@
 			  <x-invalid error="email" />
 			</div>
 		  </div>
-		  <div class="row">
-			<div class="col mb-3">
-				  <x-label for="no_telp" :value="__('No HP')" />
-				  <x-input type="text" name="no_telp" id="no_telp" :placeholder="__('628xxxxxxxxx')" :value="old('no_telp')" />
-				  <x-invalid error="no_telp" />
-			</div>
-		  </div>
-		  <div class="row g-2">
-			<div class="col mb-3 form-password-toggle">
+		
+		  <div class="row g-2 mb-5">
+			<div class="col form-password-toggle">
 			  <label for="password" class="form-label">Password*</label>
 			  <div class="input-group input-group-merge">
 				<x-input type="password" name="password" id="password" :placeholder="__('Password')" aria-describedby="password" required/>
@@ -50,7 +41,7 @@
 				<x-invalid error="password" />
 			   </div>
 			</div>
-			<div class="col mb-3 form-password-toggle">
+			<div class="col form-password-toggle">
 				<label for="password_confirmation" class="form-label">Konfirmasi Password*</label>
 				<div class="input-group input-group-merge">
 					<x-input type="password" name="password_confirmation" id="password_confirmation" :placeholder="__('Ketik ulang password')" aria-describedby="password" required />
@@ -70,5 +61,74 @@
 			<span>{{ __('Masuk') }}</span>
 		</a>
 	</p>
+
+	<script>
+		$( document ).ready(function() {
+				$.ajaxSetup({
+				headers: {
+					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+				}
+			});
+		});
+		$(function(){
+			$('#nik').on('keyup',function(){
+				let nik = $('#nik').val();
+				$.ajax({
+						type : 'POST',
+						url: "{{route('users.nik')}}",
+						data : {'nik':nik},
+						success: function(msg){
+							if($.isEmptyObject(msg.error)){
+								$('#error_check_nik').empty();
+								$('#no_kk').prop('readonly', false);
+							}
+							else{
+								
+									$('#error_check_nik').text(msg.error);
+									$('#no_kk').prop('readonly', true);
+								
+							}
+							
+						},
+						error: function (xhr) {
+							var err = JSON.parse(xhr.responseText);
+							alert(err.message);
+						}
+						
+					})
+			});
+			$('#no_kk').on('keyup',function(){
+				let nik = $('#nik').val();
+				let no_kk = $('#no_kk').val();
+				$.ajax({
+						type : 'POST',
+						url: "{{route('users.kk')}}",
+						data : {'nik':nik, 'no_kk':no_kk},
+						success: function(msg){
+							if($.isEmptyObject(msg.error)){
+								$('#error_check_kk').empty();
+							}
+							else{
+								$('#error_check_kk').text(msg.error);
+							}
+							
+						},
+						error: function (xhr) {
+							var err = JSON.parse(xhr.responseText);
+							alert(err.message);
+						}
+						
+					})
+			});
+			
+		})
+	</script>
+@if($errors->has('nik'))
+	<script type="text/javascript">
+
+	$('#no_kk').prop('readonly', false);
+
+	</script>
+@endif
 @endsection
 

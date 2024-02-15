@@ -1,20 +1,22 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Warga;
 
 use App\Models\Warga;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreWargaRequest;
 use App\Http\Requests\UpdateWargaRequest;
+use App\DataTables\WargaDataTable;
 
 class WargaController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(WargaDataTable $dataTable)
     {
-        //
+        $title = 'Manajemen Warga';
+		 return $dataTable->render('menu.warga.index',compact('title'));
     }
 
     /**

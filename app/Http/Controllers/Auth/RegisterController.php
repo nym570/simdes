@@ -12,6 +12,8 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\Rules;
 use Illuminate\Validation\Rules\Password;
 use Spatie\Permission\Models\Role;
+use App\Rules\ValidateKK;
+use App\Rules\NIKExist;
 
 class RegisterController extends Controller
 {
@@ -35,14 +37,13 @@ class RegisterController extends Controller
 	 */
 	public function store(Request $request)
 	{
+		
 		$request['username'] = $request['nik'];
 		$validated = $request->validate([
-			'nama' => ['required','string'],
 			'email' => ['required','string','email','unique:users,email'],
 			'username' => ['required', 'string','unique:users,username'],
-            'nik' => ['required', 'string','size:16'],
-            'no_kk' => ['required', 'string','size:16'],
-            'no_telp' => ['required', 'string','regex:/62[0-9]+$/u'],
+            'nik' => ['required', 'string','size:16','unique:users,nik',new NIKExist],
+            'no_kk' => ['required', 'string','size:16',new ValidateKK($request['nik'])],
 			'password' => ['required', 'string','confirmed',Password::min(8)->letters()->numbers()],
 		]);
 
@@ -52,7 +53,7 @@ class RegisterController extends Controller
 		$user->assignRole('warga');
 		$user->sendEmailVerificationNotification();
 
-		return to_route('login')->withSuccess('Registrasi Berhasil');
+		return to_route('login')->withSuccess('Registrasi Berhasil, silahkan cek email anda untuk konfirmasi email');
 		
 	}
 }

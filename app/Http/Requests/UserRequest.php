@@ -31,7 +31,6 @@ class UserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nama' => ['required','string'],
 			'email' => ['required','string','email','unique:users,email'],
 			'username' => ['required', 'string','unique:users,username'],
             'nik' => ['required', 'string','size:16','unique:users,nik',new NIKExist],
