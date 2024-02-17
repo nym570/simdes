@@ -21,6 +21,8 @@
 
 	<meta name="description" content="" />
 
+	<meta name="csrf-token" content="{{ csrf_token() }}">
+
 	<!-- Favicon -->
 	<link rel="icon" type="image/x-icon" href="{{ asset('assets/img/favicon/favicon.ico') }}" />
 
@@ -39,6 +41,7 @@
 
 	<!-- Vendors CSS -->
 	<link rel="stylesheet" href="{{ asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
+	<link rel="stylesheet" href="{{ asset('assets/vendor/libs/bootstrap-select/bootstrap-select.css') }}" />
 
 	<!-- Page CSS -->
 
@@ -48,7 +51,25 @@
 	<!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
 	<!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
 	<script src="{{ asset('assets/js/config.js') }}"></script>
-	<link rel="stylesheet" href="{{ asset('assets/vendor/libs/bootstrap-select/bootstrap-select.css') }}" />
+	<link href="https://cdn.datatables.net/1.11.4/css/dataTables.bootstrap5.min.css" rel="stylesheet" type="text/css">
+
+
+	<script src="{{ asset('assets/vendor/libs/jquery/jquery.js') }}"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.js"></script>
+
+    <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css"/>
+	
+	
+		<link rel="stylesheet" type="text/css" href="https://unpkg.com/trix@2.0.8/dist/trix.css">
+		<script type="text/javascript" src="https://unpkg.com/trix@2.0.8/dist/trix.umd.min.js"></script>
+		<style>
+			.trix-button-group.trix-button-group--file-tools {
+				display:none;
+			}
+		</style>
 </head>
 
 <body>
@@ -71,7 +92,7 @@
 
 					<div class="container-xxl flex-grow-1 container-p-y">
 						<x-alert />
-						{{ $slot }}
+						@yield('container')
 					</div>
 					<!-- / Content -->
 
@@ -106,7 +127,6 @@
 
 	<!-- Core JS -->
 	<!-- build:js assets/vendor/js/core.js -->
-	<script src="{{ asset('assets/vendor/libs/jquery/jquery.js') }}"></script>
 	<script src="{{ asset('assets/vendor/libs/popper/popper.js') }}"></script>
 	<script src="{{ asset('assets/vendor/js/bootstrap.js') }}"></script>
 	<script src="{{ asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js') }}"></script>
@@ -116,10 +136,17 @@
 	<!-- Vendors JS -->
 	<script src="{{ asset('assets/vendor/libs/sweetalert2/dist/sweetalert2.all.min.js') }}"></script>
 
+	<script src="{{ asset('assets/vendor/libs/bootstrap-select/bootstrap-select.js') }}"></script> 
+
 	<!-- Main JS -->
 	<script src="{{ asset('assets/js/main.js') }}"></script>
 	<script src="{{ asset('assets/js/custom.js') }}"></script>
-	<script src="{{ asset('assets/vendor/libs/bootstrap-select/bootstrap-select.js') }}"></script> 
+	
+	<script>
+		document.addEventListener('trix-file-accept',function(e){
+			e.preventDefault();
+		})
+	</script>
 	@stack('js')
 </body>
 

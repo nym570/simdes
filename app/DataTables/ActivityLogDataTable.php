@@ -55,10 +55,10 @@ class ActivityLogDataTable extends DataTable
             else{
                 $prop = '';
                 if($row->changes->has('attributes')){
-                    $prop = $prop. 'Data : '.  json_encode($row->changes->get("attributes"));
+                    $prop = $prop. 'Data : '.  json_encode($row->changes->get("attributes"),JSON_PRETTY_PRINT| JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
                 }
                 else if($row->changes->has('old')){
-                    $prop = $prop. 'Data Lama : '.  json_encode($row->changes->get("old"));
+                    $prop = $prop. 'Data Lama : '.  json_encode($row->changes->get("old"),JSON_PRETTY_PRINT| JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
                 }
                 
                 return $prop;

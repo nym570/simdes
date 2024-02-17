@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
+    public function boot()
+	{
+        return view('boot', ["title"=> 'Konfigurasi Awal']);
+		
+	}
     public function index()
 	{
         if(Auth::guest()){

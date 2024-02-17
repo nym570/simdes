@@ -15,6 +15,7 @@ use App\Models\RW;
 use App\Models\RT;
 use Spatie\Activitylog\Models\Activity;
 use App\Models\Warga;
+use App\Models\Ruta;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -45,7 +46,6 @@ class RouteServiceProvider extends ServiceProvider
             Route::middleware('web')
                 ->group(base_path('routes/web.php'));
         });
-
         Route::bind('user', function ($value, $route) {
             return $this->getModel(User::class, $value);
         });
@@ -69,6 +69,9 @@ class RouteServiceProvider extends ServiceProvider
         });
         Route::bind('warga', function ($value, $route) {
             return $this->getModel(Warga::class, $value);
+        });
+        Route::bind('ruta', function ($value, $route) {
+            return $this->getModel(Ruta::class, $value);
         });
     }
 

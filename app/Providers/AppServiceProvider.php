@@ -33,6 +33,7 @@ class AppServiceProvider extends ServiceProvider
 	    Carbon::setLocale('id');
         if (! app()->runningInConsole()) {
             $desa = Desa::get()->first();
+            
             View::share('desa',$desa);
         }
         

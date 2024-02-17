@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Warga;
 
 use App\Models\Warga;
+use App\Models\Desa;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreWargaRequest;
 use App\Http\Requests\UpdateWargaRequest;
@@ -32,7 +33,18 @@ class WargaController extends Controller
      */
     public function store(StoreWargaRequest $request)
     {
-        //
+        $desa = Desa::get()->first();
+        $validated = $request->validated();
+        if($validated['kode_wilayah_ktp']==$desa['kode_wilayah']){
+            $validated['ktp_desa'] = 1;
+        }
+        else{
+            $validated['ktp_desa'] = 0;
+        }
+        $validated['status'] = 'warga';
+        $warga = Warga::create($validated);
+
+        return back()->withSuccess('Data warga berhasil ditambahkan');
     }
 
     /**

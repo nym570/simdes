@@ -4,7 +4,7 @@
 ******************************************************************************/
 
 .menu .app-brand.demo {
-  height: 64px;
+  min-height: 70px;
   margin-top: 12px;
 }
 
@@ -14,7 +14,7 @@
 }
 
 .app-brand-text.demo {
-  font-size: 1.75rem;
+  font-size: 1.5rem;
   letter-spacing: -0.5px;
   text-transform: lowercase;
 }

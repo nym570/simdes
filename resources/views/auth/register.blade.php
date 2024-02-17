@@ -49,6 +49,7 @@
 					<x-invalid error="password_confirmation" />
 				</div>
 			</div>
+			<p><small>password terdiri dari minimal 8 karakter kombinasi huruf dan angka</small></p>
 		  </div>
 		<div class="mb-3">
 			<x-button type="submit" class="btn btn-primary d-grid w-100" :value="__('Buat Akun')" onClickDisabled />

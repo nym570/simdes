@@ -51,8 +51,8 @@
 						</div>
 					</a>
 				</li>
-				<li class="menu-item {{ menuIsActive('roles.*') }}">
-					<a href="{{ route('roles.index') }}" class="menu-link">
+				<li class="menu-item {{ menuIsActive('ruta.*') }}">
+					<a href="{{ route('ruta.index') }}" class="menu-link">
 						<div data-i18n="RumahTangga">
 							{{ __('Rumah Tangga') }}
 						</div>

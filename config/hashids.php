@@ -8,6 +8,7 @@ use App\Models\RW;
 use App\Models\RT;
 use Spatie\Activitylog\Models\Activity;
 use App\Models\Warga;
+use App\Models\Ruta;
 
 return [
 
@@ -72,6 +73,10 @@ return [
         ],
         Warga::class => [
             'salt' => Warga::class.'warga-desa',
+            'length' => 10,
+        ],
+        Ruta::class => [
+            'salt' => Ruta::class.'ruta-desa',
             'length' => 10,
         ],
 

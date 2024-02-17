@@ -41,6 +41,7 @@
 
 	<!-- Vendors CSS -->
 	<link rel="stylesheet" href="{{ asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
+	<link rel="stylesheet" href="{{ asset('assets/vendor/libs/bootstrap-select/bootstrap-select.css') }}" />
 
 	<!-- Page CSS -->
 	<!-- Page -->
@@ -61,7 +62,7 @@
 
 	<div class="container-xxl">
 		<div class="authentication-wrapper authentication-basic container-p-y">
-			<div class="authentication-inner" style="{{Request::is('register') ? 'max-width:700px' : ''}}">
+			<div class="authentication-inner" style="{{Request::is('login') ? '' : 'max-width:700px'}}">
 				<div class="card">
 					<div class="card-body">
 
@@ -99,6 +100,7 @@
 
 	<!-- Vendors JS -->
 	<script src="{{ asset('assets/vendor/libs/sweetalert2/dist/sweetalert2.all.min.js') }}"></script>
+	<script src="{{ asset('assets/vendor/libs/bootstrap-select/bootstrap-select.js') }}"></script> 
 
 	<!-- Main JS -->
 	<script src="{{ asset('assets/js/main.js') }}"></script>

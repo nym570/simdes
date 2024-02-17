@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('name');
             $table->unsignedBigInteger('rw_id');
             $table->foreign('rw_id')->references('id')->on('rw')->constrained();
-            $table->unsignedBigInteger('ketua_rt')->nullable();
-            $table->foreign('ketua_rt')->references('id')->on('roles')->constrained()->onDelete('set null');
+            $table->unsignedBigInteger('ketua_rt');
+            $table->foreign('ketua_rt')->references('id')->on('roles')->constrained();
             $table->timestamps();
             $table->unique(['rw_id', 'name']);
         });

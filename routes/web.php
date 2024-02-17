@@ -10,7 +10,9 @@ use App\Http\Controllers\Desa\WilayahIndoController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Desa\MasterDesaController;
 use App\Http\Controllers\Warga\WargaController;
+use App\Http\Controllers\Warga\RutaController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\MasterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,9 +25,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
+
 Route::get('/', [DashboardController::class,'index'])->name('home');
 
 Route::get('/admin', [AdminHomeController::class,'index'])->name('admin.home')->middleware(['admin.auth','admin.verified']);
+
+Route::get('/boot', [DashboardController::class,'boot'])->name('admin.boot')->middleware(['admin.auth','admin.verified']);
 
 
 
@@ -48,9 +54,6 @@ Route::controller(UserController::class)->name('users.')->group(function () {
 	Route::post('/users/check-kk', 'validateKK')->name('kk');
 });
 
-Route::controller(WargaController::class)->middleware(['auth'])->name('warga.')->group(function () {
-	Route::get('/warga', 'index')->name('index');
-});
 
 Route::controller(AdminController::class)->middleware(['admin.auth','admin.verified'])->name('admin-list.')->group(function () {
 	Route::get('/admin/admin', 'index')->name('index');
@@ -101,9 +104,23 @@ Route::controller(WilayahIndoController::class)->name('wilayah.')->group(functio
 	Route::get('/get-des', 'getDes')->name('get-des');
 });
 Route::controller(MasterDesaController::class)->name('master-desa.')->group(function () {
-	Route::get('/get-dusun', 'getDusun')->name('get-dusun');
-	Route::get('/get-RW', 'getRW')->name('get-rw');
-	Route::get('/get-RT', 'getRT')->name('get-rt');
+	Route::get('/desa/get-dusun', 'getDusun')->name('get-dusun');
+	Route::get('/desa/get-RW', 'getRW')->name('get-rw');
+	Route::get('/desa/get-RT', 'getRT')->name('get-rt');
+});
+Route::controller(MasterController::class)->name('master.')->group(function () {
+	Route::get('/master/get-pekerjaan', 'getPekerjaan')->name('identitas.get-pekerjaan');
+	Route::get('/master/get-pendidikan', 'getPendidikan')->name('identitas.get-pendidikan');
+});
+
+Route::controller(WargaController::class)->middleware(['auth','verified'])->name('warga.')->group(function () {
+	Route::get('/warga', 'index')->name('index');
+	Route::post('/warga', 'store')->name('store');
+});
+
+Route::controller(RutaController::class)->middleware(['auth','verified'])->name('ruta.')->group(function () {
+	Route::get('/ruta', 'index')->name('index');
+	Route::post('/ruta', 'store')->name('store');
 });
 
 require 'auth.php';

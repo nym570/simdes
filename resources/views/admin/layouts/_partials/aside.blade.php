@@ -4,7 +4,7 @@
 			<span class="app-brand-logo demo">
 				<img src="{{ asset('assets/img/icons/logo.png') }}" alt class="w-px-40 h-auto rounded-circle" />
 			</span>
-			<span class="app-brand-text demo menu-text fw-bolder ms-2 text-wrap w-px-40 d-block">
+			<span class="app-brand-text demo menu-text fw-bolder ms-2 text-wrap w-px-40 d-block" >
 				{{ (config('app.name').' '.$desa->desa)}}
 			</span>
 		</a>

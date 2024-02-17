@@ -13,17 +13,17 @@ return new class extends Migration
     {
         Schema::create('desa', function (Blueprint $table) {
             $table->id();
-            $table->string('kode_wilayah');
-            $table->string('desa');
-            $table->string('kecamatan');
-            $table->string('kabupaten');
-            $table->string('provinsi');
-            $table->string('alamat_kantor');
-            $table->string('email_desa');
-            $table->string('no_telp');
-            $table->string('deskripsi');
-            $table->unsignedBigInteger('kepala_desa')->nullable();
-            $table->foreign('kepala_desa')->references('id')->on('roles')->constrained()->onDelete('set null');
+            $table->string('kode_wilayah')->nullable();
+            $table->string('desa')->nullable();
+            $table->string('kecamatan')->nullable();
+            $table->string('kabupaten')->nullable();
+            $table->string('provinsi')->nullable();
+            $table->string('alamat_kantor')->nullable();
+            $table->string('email_desa')->nullable();
+            $table->string('no_telp')->nullable();
+            $table->string('deskripsi')->nullable();
+            $table->unsignedBigInteger('kepala_desa');
+            $table->foreign('kepala_desa')->references('id')->on('roles')->constrained();
             $table->timestamps();
         });
     }

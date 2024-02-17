@@ -35,8 +35,9 @@ class Warga extends Model
     {
         return $this->hasOne(User::class,'foreign_key', 'nik');
     }
-    public function desa()
+    public function anggota_ruta()
     {
-        return $this->hasOne(Warga::class,'foreign_key', 'nik');
+        return $this->hasOne(AnggotaRuta::class);
     }
+    
 }

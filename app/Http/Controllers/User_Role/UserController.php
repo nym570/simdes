@@ -124,7 +124,7 @@ class UserController extends Controller
 			'nama' => ['required','string'],
 			'email' => ['required','string','email','unique:users,email,'. $user->id],
 			'username' => ['required', 'string','unique:users,username,'. $user->id],
-            // 'no_telp' => ['required', 'string','regex:/62[0-9]+$/u'],
+            
 		]);
 		$email = $user->email;
 		
