@@ -124,6 +124,7 @@ Route::controller(RutaController::class)->middleware(['auth','verified'])->name(
 	Route::get('/ruta', 'index')->name('index');
 	Route::post('/ruta', 'store')->name('store');
 	Route::get('/ruta/{ruta}', 'show')->name('show');
+	Route::get('/ruta/{ruta}/edit', 'edit')->name('edit');
 	Route::delete('/ruta/{ruta}/delete', 'destroy')->name('delete');
 	Route::delete('/ruta/anggota/{anggota_ruta}/delete', 'anggotaDestroy')->name('anggota.delete');
 	Route::post('/ruta/{ruta}/anggota', 'storeAnggota')->name('anggota.store');

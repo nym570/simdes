@@ -21,7 +21,7 @@
 	<div class="modal-dialog " role="document">
 	  <div class="modal-content">
 		<div class="modal-header">
-		  <h5 class="modal-title" id="exampleModalLabel1">Tambah Rumah Tangga Baru</h5>
+		  <h5 class="modal-title" id="judulModal">Tambah Rumah Tangga Baru</h5>
 		  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 		</div>
 		<form id="formAuthentication" class="mb-3" action="{{ route('ruta.store') }}" data-remote="true" method="POST">
@@ -76,12 +76,14 @@
 	</div>
   </div>
 
+  
+@include('menu.ruta._partials.edit')
 
   
 
 			</div>
 
-			@include('menu.warga._partials.table')
+			@include('menu.ruta._partials.table')
 
 		</div>
 	</div>
@@ -106,6 +108,9 @@
 						$('#rw_id').selectpicker('destroy');
 						$('#rw_id').html(msg);
 						$('#rw_id').selectpicker('render');
+						$('#rw_edit').selectpicker('destroy');
+						$('#rw_edit').html(msg);
+						$('#rw_edit').selectpicker('render');
 						
 						
 					},
@@ -153,6 +158,7 @@
 					
 				})
 		});
+		
 		
 	</script>
 

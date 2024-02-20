@@ -3416,6 +3416,7 @@ return /******/ (function() { // webpackBootstrap
         this.render();
         this.buildList();
       } else {
+this.selectpicker.main.data = null;
         this.fetchData(function () {
           that.render();
           that.buildList();

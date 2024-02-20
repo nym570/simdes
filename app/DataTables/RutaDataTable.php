@@ -23,7 +23,8 @@ class RutaDataTable extends DataTable
     {
         return (new EloquentDataTable($query))
             ->addColumn('action', function($row){
-                $btn = ' <a href='.route("ruta.show",$row).' class="btn btn-sm btn-success my-1"> Lihat</a>';
+                $btn = ' <a href='.route("ruta.show",$row).' class="btn btn-sm btn-success my-1 mx-1"> Lihat</a>';
+                $btn = $btn.'<button class="btn btn-sm btn-dark mx-1 my-1 open_modal" value="'.route('ruta.edit',$row).'"> Update</button>';
                 $btn = $btn.'<button class="btn btn-sm btn-danger mx-1 my-1 delete_modal" onclick="del(this)" href="'.route('ruta.delete',$row).'"> Hapus</button>';
                 return $btn;
             })

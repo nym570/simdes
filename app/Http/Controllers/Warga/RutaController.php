@@ -120,9 +120,11 @@ class RutaController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Ruta $ruta)
+    public function edit(Ruta $request)
     {
-        //
+        $data = ['ruta' => $request, 'rt' => $request->rt->rw_id];
+
+        return json_encode($data);
     }
 
     /**
