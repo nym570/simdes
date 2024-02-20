@@ -9,6 +9,7 @@ use App\Models\RT;
 use Spatie\Activitylog\Models\Activity;
 use App\Models\Warga;
 use App\Models\Ruta;
+use App\Models\AnggotaRuta;
 
 return [
 
@@ -77,6 +78,10 @@ return [
         ],
         Ruta::class => [
             'salt' => Ruta::class.'ruta-desa',
+            'length' => 10,
+        ],
+        AnggotaRuta::class => [
+            'salt' => AnggotaRuta::class.'anggota-ruta-desa',
             'length' => 10,
         ],
 

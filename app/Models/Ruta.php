@@ -23,6 +23,10 @@ class Ruta extends Model
     }
     public function anggota_ruta()
     {
-        return $this->hasOne(AnggotaRuta::class);
+        return $this->hasMany(AnggotaRuta::class);
+    }
+    public function rt()
+    {
+        return $this->belongsTo(RT::class);
     }
 }

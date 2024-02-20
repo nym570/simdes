@@ -16,6 +16,7 @@ use App\Models\RT;
 use Spatie\Activitylog\Models\Activity;
 use App\Models\Warga;
 use App\Models\Ruta;
+use App\Models\AnggotaRuta;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -72,6 +73,9 @@ class RouteServiceProvider extends ServiceProvider
         });
         Route::bind('ruta', function ($value, $route) {
             return $this->getModel(Ruta::class, $value);
+        });
+        Route::bind('anggota_ruta', function ($value, $route) {
+            return $this->getModel(AnggotaRuta::class, $value);
         });
     }
 

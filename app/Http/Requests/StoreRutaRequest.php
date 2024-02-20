@@ -11,7 +11,7 @@ class StoreRutaRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,9 @@ class StoreRutaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'alamat_domisili' => ['required', 'string'],
+            'rt_id' => ['required'],
+            'kepala_ruta' => ['required','string','size:16','unique:anggota_ruta,anggota_nik'],
         ];
     }
 }

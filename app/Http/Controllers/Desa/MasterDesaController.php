@@ -21,8 +21,14 @@ class MasterDesaController extends Controller
     }
      public function getRW(Request $request)
     {
-        $id = $request['id'];
-        $data = RW::where('dusun_id',$id)->get();
+        if($request->has('id')){
+            $id = $request['id'];
+            $data = RW::where('dusun_id',$id)->get();
+        }
+        else{
+            $data = RW::all();
+        }
+       
         if($data){
             foreach($data as $item){
                 echo "<option data-tokens='".$item['name']."' value='".$item['id']."'>".$item['name']."</option>";
@@ -31,8 +37,14 @@ class MasterDesaController extends Controller
     }
     public function getRT(Request $request)
     {
-        $id = $request['id'];
-        $data = RT::where('rw_id',$id)->get();
+        if($request->has('id')){
+            $id = $request['id'];
+            $data = RT::where('rw_id',$id)->get();
+        }
+        else{
+            $data = RT::all();
+        }
+        
         if($data){
             foreach($data as $item){
                 echo "<option data-tokens='".$item['name']."' value='".$item['id']."'>".$item['name']."</option>";

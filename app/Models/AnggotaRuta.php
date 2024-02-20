@@ -23,7 +23,7 @@ class AnggotaRuta extends Model
     }
     public function warga()
     {
-        return $this->belongsTo(Warga::class,'nik', 'anggota_nik');
+        return $this->belongsTo(Warga::class,'anggota_nik', 'nik');
     }
     public function ruta()
     {

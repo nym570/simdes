@@ -2,7 +2,7 @@
 
 namespace App\DataTables;
 
-use App\Models\Warga;
+use App\Models\AnggotaRuta;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Services\DataTable;
@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
 
-class WargaDataTable extends DataTable
+class AnggotaRutaDataTable extends DataTable
 {
     /**
      * Build the DataTable class.
@@ -22,17 +22,10 @@ class WargaDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
-        ->addColumn('action', function($row){
-   
-            $btn = ' <a href='.route("warga.show",$row).' class="btn btn-sm btn-success my-1"> Lihat</a>';
-             return $btn;
-             
-        })
-            ->addColumn('ktp', function($row){
-                return $row->ktp_desa == 1 ? 'desa' : 'luar desa';
-            })
-            ->addColumn('ttl', function($row){
-                return $row->tempat_lahir.', '.$row->tanggal_lahir;
+            ->addColumn('action', function($row){
+                $btn = ' <a href='.route("warga.show",$row->warga).' class="btn btn-sm btn-success my-1"> Lihat</a>';
+                $btn = $btn.'<button class="btn btn-sm btn-danger mx-1 my-1 delete_modal" onclick="del(this)" href="'.route('ruta.anggota.delete',$row).'">Hapus</button>';
+                return $btn;
             })
             ->addIndexColumn() 
             ->setRowId('id');
@@ -41,9 +34,9 @@ class WargaDataTable extends DataTable
     /**
      * Get the query source of dataTable.
      */
-    public function query(Warga $model): QueryBuilder
+    public function query(AnggotaRuta $model): QueryBuilder
     {
-        return $model->newQuery()->latest();
+        return $model->newQuery()->where('ruta_id',$this->ruta_id)->with(['warga']);
     }
 
     /**
@@ -52,7 +45,7 @@ class WargaDataTable extends DataTable
     public function html(): HtmlBuilder
     {
         return $this->builder()
-                    ->setTableId('warga-table')
+                    ->setTableId('anggotaruta-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
                     ->orderBy(1)
@@ -69,29 +62,15 @@ class WargaDataTable extends DataTable
     public function getColumns(): array
     {
         return [
-            Column::make('DT_RowIndex')
-            ->title('#')
-            ->orderable(false)
-            ->searchable(false),
             Column::computed('action')
                   ->exportable(false)
                   ->printable(false)
+                  ->width(60)
                   ->addClass('text-center'),
-            Column::make('nik'),
-            Column::make('no_kk')->title('No KK'),
-            Column::make('nama'),
-            Column::make('status'),
-            Column::computed('ktp'),
-            Column::make('alamat_ktp')->title('alamat ktp'),
-            Column::make('no_telp')->title('no hp'),
-            Column::make('jenis_kelamin')->title('jenis kelamin'),
-            Column::computed('ttl'),
-            Column::make('agama'),
-            Column::make('gol_darah'),
-            Column::make('pendidikan'),
-            Column::make('pekerjaan'),
-            
-            
+            Column::make('hubungan'),
+            Column::make('anggota_nik')->title('nik')->data('anggota_nik'),
+            Column::make('warga.nama')->title('nama')->data('warga.nama'),
+
         ];
     }
 
@@ -100,6 +79,6 @@ class WargaDataTable extends DataTable
      */
     protected function filename(): string
     {
-        return 'Warga_' . date('YmdHis');
+        return 'AnggotaRuta_' . date('YmdHis');
     }
 }

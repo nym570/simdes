@@ -1,145 +1,47 @@
-@extends('admin.layouts.app')
+@extends('layouts.app')
 @section('container')
 
 	<div class="card">
 		<div class="card-body">
 			
 
-			<div class="mb-4">
-				<!-- Button trigger modal -->
-    <a href="{{route('users.index')}}" class="btn btn-dark"> Kembali </a>
-	<button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#EditUser"> Edit </button>
-	<!-- Icon Dropdown -->
-<div class="btn-group">
-	<button type="button" class="btn btn-light btn-icon rounded-pill dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-	  <i class="bx bx-dots-vertical-rounded"></i>
-	</button>
-	<ul class="dropdown-menu">
-	  <li><a class="dropdown-item" href="{{route("users.status",$user)}}" onclick='change(this)'>{{$user->status=="aktif"?"Nonaktifkan":"Aktifkan"}}</a></li>
-	  {{-- <li><a class="dropdown-item" href="{{route('password.email')}}" onclick='send(this)'>Reset Password</a></li> --}}
-	  <li>
-		<hr class="dropdown-divider">
-	  </li>
-	  <li><a class="dropdown-item" href="{{route('users.delete', $user)}}" onclick='del(this)'>Hapus Pengguna</a></li>
-	</ul>
-  </div>
-
-  
-
-  <h3 class="card-title mt-5"> {{ $user->nama }} </h3>
-
-  <h5> Roles </h5>
-  <div>
-	@forelse ($user->roles as $item)
-		<a href="{{route('roles.show',Hashids::encode($item->id))}}"><span class="badge bg-primary">{{$item->name}}</span></a>
-	@empty
-		<p>Pengguna belum memiliki role</p>
-	@endforelse
-  </div>
-
-	
-  
-  <!-- Modal -->
-  <div class="modal fade" id="EditUser" tabindex="-1" aria-hidden="true">
-	<div class="modal-dialog" role="document">
-	  <div class="modal-content">
-		<div class="modal-header">
-		  <h5 class="modal-title" id="exampleModalLabel1">Ubah data Pengguna</h5>
-		  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-		</div>
-		<form id="formAuthentication" class="mb-3" action="{{ route('users.update',$user) }}" data-remote="true" method="POST">
-            @method("PUT")
-			@csrf
-			<div class="modal-body">
-				<div class="row">
-					<div class="col mb-3">
-						<x-label for="nik" :value="__('NIK')" />
-						<x-input type="text" name="nik" id="nik" :placeholder="__('NIK 16 digit')" value="{{old('nik')? old('nik') : $user->nik}}" readonly/>
-						<x-invalid error="nik" />
-					  </div>
-				  </div>
-				<div class="row">
-				  <div class="col mb-3">
-					<x-label for="username" :value="__('Username')" />
-					<x-input type="text" name="username" id="username" :placeholder="__('Username disarankan menggunakan nik')" value="{{old('username')? old('username') : $user->username}}" />
-					<x-invalid error="username" />
-				  </div>
-				</div>
-				
-				
-				<div class="row">
-				  <div class="col mb-3">
-					<x-label for="email" :value="__('Email')" />
-					<x-input type="email" name="email" id="email" :placeholder="__('Email valid untuk pemberitahuan')" value="{{old('email')? old('email') : $user->email}}" />
-					<x-invalid error="email" />
-				  </div>
-				</div>
-			  </div>
-			  <div class="modal-footer">
-				<x-button type="submit" class="btn btn-primary d-grid w-100" :value="__('Edit Pengguna')"/>
-			  </div>
-		</form>
-	  </div>
-	</div>
-  </div>
-			</div>
-
 			
+				<!-- Button trigger modal -->
+    
+
+	<div class="mb-4">
+		<a href="{{route('warga.index')}}" class="btn btn-dark"> Kembali </a>
+	</div>
+	<div class="card text-center">
+		<div class="card-header">
+		  <ul class="nav nav-pills card-header-pills" role="tablist">
+			<li class="nav-item">
+			  <button type="button" class="nav-link active" data-bs-toggle="tab" data-bs-target="#navs-pills-within-card-active" role="tab">Biodata</button>
+			</li>
+			<li class="nav-item">
+			  <button type="button" class="nav-link" data-bs-toggle="tab" data-bs-target="#navs-pills-within-card-link" role="tab">Lainnya</button>
+			</li>
+
+		  </ul>
+		</div>
+		<div class="card-body">
+		  <div class="tab-content p-0">
+			<div class="tab-pane fade show active" id="navs-pills-within-card-active" role="tabpanel">
+			  <h4>Nama</h4>
+			</div>
+			<div class="tab-pane fade" id="navs-pills-within-card-link" role="tabpanel">
+			  <h4 class="card-title">Special link title</h4>
+			  <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+			  <a href="javascript:void(0)" class="btn btn-secondary">Go somewhere</a>
+			</div>
+		  </div>
+		</div>
+		</div>
 
 		</div>
 	</div>
 
-    <form method="POST" class="d-none" id="delete-form">
-		@csrf
-		@method("DELETE")
-	</form>
-@if (count($errors) > 0)
-    <script type="text/javascript">
-        $( document ).ready(function() {
-             $('#EditUser').modal('show');
-        });
-    </script>
-@endif
-<form method="POST" class="d-none" id="verif-email">
-	@csrf
-</form>
 
-<form method="POST" class="d-none" id="status-form">
-	@csrf
-	@method("PUT")
-</form>
 
-<form method="POST" class="d-none" id="reset-pass">
-	@csrf
-	<input type="hidden" name="email" id="email"  value="{{$user->email}}" >
-</form>
-
-<script>
-	function del(element) {
-		event.preventDefault()
-		let form = document.getElementById('delete-form');
-		form.setAttribute('action', element.getAttribute('href'))
-		swalConfirm('Hapus Pengguna?', `Tidak disarankan menghapus pengguna, seluruh data terkait pengguna akan hilang`, 'Ya, hapus data', () => {
-			form.submit()
-		})
-	}
-
-	function change(element) {
-		event.preventDefault()
-		let form = document.getElementById('status-form');
-		form.setAttribute('action', element.getAttribute('href'))
-		swalConfirm('Ubah Status ?', `Status pengguna akan diubah`, 'Ubah', () => {
-			form.submit()
-		})
-	}
-	function send(element) {
-		event.preventDefault()
-		let form = document.getElementById('reset-pass');
-		form.setAttribute('action', element.getAttribute('href'))
-		swalConfirm('Kirim Email Reset Password ?', `Email akan dikirimkan ke pengguna`, 'Kirim email!', () => {
-			form.submit()
-		})
-	}
-</script>
 
 @endsection

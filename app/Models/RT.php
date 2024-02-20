@@ -16,4 +16,8 @@ class RT extends Model
     {
         return $this->belongsTo(RW::class);
     }
+    public function ruta()
+    {
+        return $this->hasMany(Ruta::class);
+    }
 }

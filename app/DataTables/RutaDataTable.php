@@ -22,9 +22,13 @@ class RutaDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
-            ->addColumn('action', 'ruta.action')
+            ->addColumn('action', function($row){
+                $btn = ' <a href='.route("ruta.show",$row).' class="btn btn-sm btn-success my-1"> Lihat</a>';
+                $btn = $btn.'<button class="btn btn-sm btn-danger mx-1 my-1 delete_modal" onclick="del(this)" href="'.route('ruta.delete',$row).'"> Hapus</button>';
+                return $btn;
+            })
             ->addColumn('kepala keluarga', function($row){
-                return $row->anggota_ruta->warga->nama;
+                return $row->anggota_ruta->where('hubungan','Kepala Keluarga')->value('warga.nama');
             })
             ->addIndexColumn() 
             ->setRowId('id');
@@ -35,7 +39,7 @@ class RutaDataTable extends DataTable
      */
     public function query(Ruta $model): QueryBuilder
     {
-        return $model->newQuery()->with(['anggota_ruta.warga'])->select('ruta.*');
+        return $model->newQuery()->with(['anggota_ruta.warga','rt'])->select('ruta.*');
     }
 
     /**
@@ -74,9 +78,11 @@ class RutaDataTable extends DataTable
                 ->exportable(false)
                 ->printable(false)
                 ->addClass('text-center'),
+            Column::make('rt.name')->title('RT')->data('rt.name'),
             Column::make('alamat_domisili')->title('Alamat Domisili'),
-            Column::make('jumlah_art')->title('Jumlah Anggota'),
             Column::computed('kepala keluarga'),
+            Column::make('jumlah_art')->title('Jumlah Anggota'),
+            
         ];
     }
 

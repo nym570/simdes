@@ -111,16 +111,28 @@ Route::controller(MasterDesaController::class)->name('master-desa.')->group(func
 Route::controller(MasterController::class)->name('master.')->group(function () {
 	Route::get('/master/get-pekerjaan', 'getPekerjaan')->name('identitas.get-pekerjaan');
 	Route::get('/master/get-pendidikan', 'getPendidikan')->name('identitas.get-pendidikan');
+	Route::get('/master/get-hubungan', 'getHubungan')->name('ruta.get-hubungan');
 });
 
 Route::controller(WargaController::class)->middleware(['auth','verified'])->name('warga.')->group(function () {
 	Route::get('/warga', 'index')->name('index');
 	Route::post('/warga', 'store')->name('store');
+	Route::get('/warga/{warga}', 'show')->name('show');
 });
 
 Route::controller(RutaController::class)->middleware(['auth','verified'])->name('ruta.')->group(function () {
 	Route::get('/ruta', 'index')->name('index');
 	Route::post('/ruta', 'store')->name('store');
+	Route::get('/ruta/{ruta}', 'show')->name('show');
+	Route::delete('/ruta/{ruta}/delete', 'destroy')->name('delete');
+	Route::delete('/ruta/anggota/{anggota_ruta}/delete', 'anggotaDestroy')->name('anggota.delete');
+	Route::post('/ruta/{ruta}/anggota', 'storeAnggota')->name('anggota.store');
+	Route::post('/ruta/{ruta}/kepala', 'updateKepala')->name('anggota.update-kepala');
+	Route::post('/ruta/anggota', 'getAnggota')->name('anggota-get');
+});
+
+Route::controller(RutaController::class)->group(function () {
+	Route::get('/get-warga-nonruta', 'getWargaNonRuta')->name('get-warga-nonruta');
 });
 
 require 'auth.php';

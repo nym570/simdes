@@ -8,10 +8,11 @@ use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
+use App\Http\Traits\Hashidable;
 
 class Warga extends Model
 {
-    use HasFactory,Notifiable,LogsActivity;
+    use HasFactory,Notifiable,LogsActivity,Hashidable;
     protected $table = 'warga';
     protected $guarded = [];
 
@@ -33,11 +34,11 @@ class Warga extends Model
 
     public function user()
     {
-        return $this->hasOne(User::class,'foreign_key', 'nik');
+        return $this->hasOne(User::class,'nik', 'nik');
     }
     public function anggota_ruta()
     {
-        return $this->hasOne(AnggotaRuta::class);
+        return $this->hasOne(AnggotaRuta::class,'anggota_nik', 'nik');
     }
     
 }

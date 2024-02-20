@@ -52,7 +52,8 @@ class WargaController extends Controller
      */
     public function show(Warga $warga)
     {
-        //
+        $title = $warga->nama;
+        return view('menu.warga.show',compact(['title','warga']));
     }
 
     /**
