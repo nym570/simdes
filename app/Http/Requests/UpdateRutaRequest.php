@@ -11,7 +11,7 @@ class UpdateRutaRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,8 @@ class UpdateRutaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'alamat_domisili' => ['required', 'string'],
+            'rt_id' => ['required'],
         ];
     }
 }

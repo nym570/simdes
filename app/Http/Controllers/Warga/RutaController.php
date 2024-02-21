@@ -122,7 +122,8 @@ class RutaController extends Controller
      */
     public function edit(Ruta $request)
     {
-        $data = ['ruta' => $request, 'rt' => $request->rt->rw_id];
+        $keterangan = ['rw_id' => $request->rt->rw_id, 'link' =>route('ruta.update',$request)];
+        $data = ['ruta' => $request, 'keterangan' => $keterangan];
 
         return json_encode($data);
     }
@@ -132,7 +133,10 @@ class RutaController extends Controller
      */
     public function update(UpdateRutaRequest $request, Ruta $ruta)
     {
-        //
+        $validated = $request->validated();
+        $ruta->update($validated);
+
+        return back()->withSuccess('Rumah Tangga Berhasil diubah');
     }
 
     /**

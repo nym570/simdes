@@ -19,6 +19,14 @@ class WargaController extends Controller
         $title = 'Manajemen Warga';
 		 return $dataTable->render('menu.warga.index',compact('title'));
     }
+    public function getWargaHidup(){
+        $data = Warga::where('status','warga')->get();
+        if($data){
+            foreach($data as $item){
+                echo "<option data-tokens='".$item['nama'].$item['nik']."' value='".$item['nik']."'>".$item['nik'].' | '.$item['nama']."</option>";
+            }
+        }
+    }
 
     /**
      * Show the form for creating a new resource.

@@ -17,6 +17,11 @@ use Spatie\Activitylog\Models\Activity;
 use App\Models\Warga;
 use App\Models\Ruta;
 use App\Models\AnggotaRuta;
+use App\Models\Dinamika;
+use App\Models\Kelahiran;
+use App\Models\Kematian;
+use App\Models\Kedatangan;
+use App\Models\Kepindahan;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -76,6 +81,21 @@ class RouteServiceProvider extends ServiceProvider
         });
         Route::bind('anggota_ruta', function ($value, $route) {
             return $this->getModel(AnggotaRuta::class, $value);
+        });
+        Route::bind('dinamika', function ($value, $route) {
+            return $this->getModel(Dinamika::class, $value);
+        });
+        Route::bind('lahir', function ($value, $route) {
+            return $this->getModel(Kelahiran::class, $value);
+        });
+        Route::bind('pindah', function ($value, $route) {
+            return $this->getModel(Kepindahan::class, $value);
+        });
+        Route::bind('datang', function ($value, $route) {
+            return $this->getModel(Kedatangan::class, $value);
+        });
+        Route::bind('mati', function ($value, $route) {
+            return $this->getModel(Kematian::class, $value);
         });
     }
 

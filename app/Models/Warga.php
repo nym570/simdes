@@ -15,12 +15,13 @@ class Warga extends Model
     use HasFactory,Notifiable,LogsActivity,Hashidable;
     protected $table = 'warga';
     protected $guarded = [];
+    
 
    
 
     public function getTanggalLahirAttribute($date)
     {
-            return Carbon::parse($date)->translatedFormat('d F Y');
+            return Carbon::parse($date)->translatedFormat('d M Y');
     }
 
     public function getActivitylogOptions(): LogOptions
@@ -39,6 +40,10 @@ class Warga extends Model
     public function anggota_ruta()
     {
         return $this->hasOne(AnggotaRuta::class,'anggota_nik', 'nik');
+    }
+    public function dinamika()
+    {
+        return $this->hasMany(Dinamika::class,'nik', 'nik');
     }
     
 }

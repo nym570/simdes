@@ -10,6 +10,11 @@ use Spatie\Activitylog\Models\Activity;
 use App\Models\Warga;
 use App\Models\Ruta;
 use App\Models\AnggotaRuta;
+use App\Models\Dinamika;
+use App\Models\Kelahiran;
+use App\Models\Kematian;
+use App\Models\Kedatangan;
+use App\Models\Kepindahan;
 
 return [
 
@@ -70,18 +75,38 @@ return [
         ],
         Activity::class => [
             'salt' =>Activity::class.'log',
-            'length' => 10,
+            'length' => 13,
         ],
         Warga::class => [
             'salt' => Warga::class.'warga-desa',
-            'length' => 10,
+            'length' => 15,
         ],
         Ruta::class => [
             'salt' => Ruta::class.'ruta-desa',
-            'length' => 10,
+            'length' => 15,
         ],
         AnggotaRuta::class => [
             'salt' => AnggotaRuta::class.'anggota-ruta-desa',
+            'length' => 15,
+        ],
+        Dinamika::class => [
+            'salt' => Dinamika::class.'dinamika-desa',
+            'length' => 10,
+        ],
+        Kelahiran::class => [
+            'salt' => Kelahiran::class.'dinamika-kelahiran',
+            'length' => 10,
+        ],
+        Kematian::class => [
+            'salt' => Kematian::class.'dinamika-kematian',
+            'length' => 10,
+        ],
+        Kepindahan::class => [
+            'salt' => Kepindahan::class.'dinamika-kepindahan',
+            'length' => 10,
+        ],
+        Kedatangan::class => [
+            'salt' => Kedatangan::class.'dinamika-kedatangan',
             'length' => 10,
         ],
 

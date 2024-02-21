@@ -3406,31 +3406,38 @@ return /******/ (function() { // webpackBootstrap
       this.$element[0].classList.add('mobile-device');
     },
 
-    refresh: function () {
-      var that = this;
-      // update options if data attributes have been changed
-      var config = $.extend({}, this.options, getAttributesObject(this.$element), this.$element.data()); // in this order on refresh, as user may change attributes on select, and options object is not passed on refresh
-      this.options = config;
+         refresh: function () {
+        var that = this;
+        // update options if data attributes have been changed
+        var config = $.extend({}, this.options, getAttributesObject(this.$element), this.$element.data()); // in this order on refresh, as user may change attributes on select, and options object is not passed on refresh
+        this.options = config;
+        //do some proper cleanup of elements before we start filter-option-inner-inner and li elements
+        this.selectpicker.main.elements = [];
+        this.selectpicker.main.data = [];
+        this.selectpicker.current.elements = [];
+        this.selectpicker.current.data = [];
+        this.selectpicker.view.visibleElements = null;
+        this.selectpicker.view.canHighlight = [];
+        this.selectpicker.view.currentActive = null;
 
-      if (this.options.source.data) {
-        this.render();
-        this.buildList();
-      } else {
-this.selectpicker.main.data = null;
-        this.fetchData(function () {
-          that.render();
-          that.buildList();
-        });
-      }
-
-      this.checkDisabled();
-      this.setStyle();
-      this.setWidth();
-
-      this.setSize(true);
-
-      this.$element.trigger('refreshed' + EVENT_KEY);
-    },
+        if (this.options.source.data) {
+          this.render();
+          this.buildList();
+        } else {
+          this.fetchData(function () {
+            that.render();
+            that.buildList();
+          });
+        }
+  
+        this.checkDisabled();
+        this.setStyle();
+        this.setWidth();
+  
+        this.setSize(true);
+  
+        this.$element.trigger('refreshed' + EVENT_KEY);
+      },
 
     hide: function () {
       this.$newElement.hide();

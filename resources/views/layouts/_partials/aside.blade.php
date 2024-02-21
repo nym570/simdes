@@ -72,10 +72,17 @@
 				<li class="menu-item {{ menuIsActive('m.desa.index') }}">
 					<a href="{{ route('m.desa.index') }}" class="menu-link">
 						<div data-i18n="Analytics">
-							{{ __('Pindah') }}
+							{{ __('Lahir') }}
 						</div>
 					</a>
 				</li>
+				<li class="menu-item {{ menuIsActive('dinamika.kematian.*') }}">
+					<a href="{{ route('dinamika.kematian.index') }}" class="menu-link">
+						<div data-i18n="Mati">
+							{{ __('Kematian') }}
+						</div>
+					</a>
+				  </li>
 				<li class="menu-item {{ menuIsActive('m.lkd.*') }}">
 					<a href="{{ route('m.lkd.index') }}" class="menu-link">
 						<div data-i18n="Analytics">
@@ -83,20 +90,14 @@
 						</div>
 					</a>
 				</li>
-				<li class="menu-item {{ menuIsActive('roles.*') }}">
-					<a href="{{ route('roles.index') }}" class="menu-link">
-						<div data-i18n="Roles">
-							{{ __('Lahir') }}
+				<li class="menu-item {{ menuIsActive('dinamika.kepindahan.*') }}">
+					<a href="{{ route('dinamika.kepindahan.index') }}" class="menu-link">
+						<div data-i18n="Pindah">
+							{{ __('Kepindahan') }}
 						</div>
 					</a>
 				  </li>
-				  <li class="menu-item {{ menuIsActive('roles.*') }}">
-					<a href="{{ route('roles.index') }}" class="menu-link">
-						<div data-i18n="Roles">
-							{{ __('Mati') }}
-						</div>
-					</a>
-				  </li>
+				  
 			  
 			</ul>
 		</li>

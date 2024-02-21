@@ -2,7 +2,7 @@
 
 namespace App\DataTables;
 
-use App\Models\Ruta;
+use App\Models\Kematian;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Services\DataTable;
@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
 
-class RutaDataTable extends DataTable
+class KematianDataTable extends DataTable
 {
     /**
      * Build the DataTable class.
@@ -22,14 +22,20 @@ class RutaDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
-            ->addColumn('action', function($row){
-                $btn = ' <a href='.route("ruta.show",$row).' class="btn btn-sm btn-success my-1 mx-1"> Lihat</a>';
-                $btn = $btn.'<button class="btn btn-sm btn-dark mx-1 my-1 open_modal" value="'.route('ruta.edit',$row).'"> Update</button>';
-                $btn = $btn.'<button class="btn btn-sm btn-danger mx-1 my-1 delete_modal" onclick="del(this)" href="'.route('ruta.delete',$row).'"> Hapus</button>';
-                return $btn;
-            })
-            ->addColumn('kepala keluarga', function($row){
-                return $row->anggota_ruta->where('hubungan','Kepala Keluarga')->value('warga.nama');
+        ->addColumn('action', function($row){
+            $btn = "";
+            if(!$row->verifikasi){
+                $btn = '<button class="btn btn-sm btn-warning mx-1 my-1 verif_modal" onclick="verif(this)" href="'.route('dinamika.kematian.verifikasi',$row).'"> Verif</button>';
+            }
+            
+
+            // $btn = $btn.'<button class="btn btn-sm btn-dark my-1 open_modal" value="'.$row->kepala_dusun.'"> Kepala Dusun</button>';
+
+             return $btn;
+             
+        })
+            ->addColumn('identitas', function($row){
+                return $row->dinamika->warga->nama.' ['.$row->dinamika->nik.']';
             })
             ->addIndexColumn() 
             ->setRowId('id');
@@ -38,9 +44,9 @@ class RutaDataTable extends DataTable
     /**
      * Get the query source of dataTable.
      */
-    public function query(Ruta $model): QueryBuilder
+    public function query(Kematian $model): QueryBuilder
     {
-        return $model->newQuery()->with(['anggota_ruta.warga','rt'])->select('ruta.*');
+        return $model->newQuery()->with(['dinamika.warga'])->select('kematian.*');
     }
 
     /**
@@ -49,7 +55,7 @@ class RutaDataTable extends DataTable
     public function html(): HtmlBuilder
     {
         return $this->builder()
-                    ->setTableId('ruta-table')
+                    ->setTableId('kematian-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
                     ->orderBy(1)
@@ -71,14 +77,14 @@ class RutaDataTable extends DataTable
                 ->orderable(false)
                 ->searchable(false),
             Column::computed('action')
-                ->exportable(false)
-                ->printable(false)
-                ->addClass('text-center'),
-            Column::make('rt.name')->title('RT')->data('rt.name'),
-            Column::make('alamat_domisili')->title('Alamat Domisili'),
-            Column::computed('kepala keluarga'),
-            Column::make('jumlah_art')->title('Jumlah Anggota'),
-            
+                  ->exportable(false)
+                  ->printable(false)
+                  ->width(60)
+                  ->addClass('text-center'),
+            Column::make('waktu'),
+            Column::computed('identitas'),
+            Column::make('usia'),
+            Column::make('penyebab'),
         ];
     }
 
@@ -87,6 +93,6 @@ class RutaDataTable extends DataTable
      */
     protected function filename(): string
     {
-        return 'Ruta_' . date('YmdHis');
+        return 'Kematian_' . date('YmdHis');
     }
 }

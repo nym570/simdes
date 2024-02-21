@@ -11,6 +11,8 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Desa\MasterDesaController;
 use App\Http\Controllers\Warga\WargaController;
 use App\Http\Controllers\Warga\RutaController;
+use App\Http\Controllers\Warga\Dinamika\KematianController;
+use App\Http\Controllers\Warga\Dinamika\KepindahanController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MasterController;
 
@@ -116,8 +118,20 @@ Route::controller(MasterController::class)->name('master.')->group(function () {
 
 Route::controller(WargaController::class)->middleware(['auth','verified'])->name('warga.')->group(function () {
 	Route::get('/warga', 'index')->name('index');
+	Route::get('/warga/get', 'getWargaHidup')->name('get-warga');
 	Route::post('/warga', 'store')->name('store');
 	Route::get('/warga/{warga}', 'show')->name('show');
+});
+Route::controller(KematianController::class)->middleware(['auth','verified'])->name('dinamika.kematian.')->group(function () {
+	Route::get('/dinamika/kematian', 'index')->name('index');
+	Route::post('/dinamika/kematian', 'store')->name('store');
+	Route::put('/dinamika/kematian/{mati}/verif', 'verifikasi')->name('verifikasi');
+});
+Route::controller(KepindahanController::class)->middleware(['auth','verified'])->name('dinamika.kepindahan.')->group(function () {
+	Route::get('/dinamika/kepindahan', 'index')->name('index');
+	Route::post('/dinamika/kepindahan', 'store')->name('store');
+	Route::put('/dinamika/kepindahan/{pindah}/verif', 'verifikasi')->name('verifikasi');
+	
 });
 
 Route::controller(RutaController::class)->middleware(['auth','verified'])->name('ruta.')->group(function () {
@@ -125,6 +139,7 @@ Route::controller(RutaController::class)->middleware(['auth','verified'])->name(
 	Route::post('/ruta', 'store')->name('store');
 	Route::get('/ruta/{ruta}', 'show')->name('show');
 	Route::get('/ruta/{ruta}/edit', 'edit')->name('edit');
+	Route::put('/ruta/{ruta}/update', 'update')->name('update');
 	Route::delete('/ruta/{ruta}/delete', 'destroy')->name('delete');
 	Route::delete('/ruta/anggota/{anggota_ruta}/delete', 'anggotaDestroy')->name('anggota.delete');
 	Route::post('/ruta/{ruta}/anggota', 'storeAnggota')->name('anggota.store');
