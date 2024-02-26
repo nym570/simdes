@@ -3,10 +3,13 @@
 Project ini untuk sistem informasi manajemen desa yang meliputi
 - Admin Pane
 - User Pane
+- Desa Management
 - Role/User Management
 - Dusun/RW/RT Management
-- Kependudukan
-- Kelompok Rumah Tangga
+- Kependudukan Management
+    - Warga
+    - Kelompok Rumah Tangga
+    - Dinamika Kependudukan
 
 
 ## Tentang Sistem
