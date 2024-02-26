@@ -63,6 +63,9 @@ class User extends Authenticatable implements MustVerifyEmail
             if (isset($attributes['password'])) {
                 $attributes['password'] = '<secret>';
             }
+            if(isset($attributes['role'])){
+                $attributes['role'] = $attributes['role'];
+            }
             if (isset($attributes['email_verified_at'])) {
                 if(!is_null($attributes['email_verified_at'])){
                     $attributes['email_verified_at'] = 'email verified';
@@ -78,6 +81,9 @@ class User extends Authenticatable implements MustVerifyEmail
             $old = $properties->get('old');
             if (isset($old['password'])) {
                 $old['password'] = '<secret>';
+            }
+            if(isset($old['role'])){
+                $old['role'] = $old['role'];
             }
             if (isset($old['email_verified_at'])) {
                 if(!is_null($old['email_verified_at'])){

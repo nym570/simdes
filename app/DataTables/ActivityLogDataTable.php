@@ -31,7 +31,7 @@ class ActivityLogDataTable extends DataTable
                 if($class == 'Warga'){
                     return $row->subject->nik;
                 }
-                else if ($class == 'Admin' || $class == 'User'){
+                else if ($class == 'Admin' || $class == 'User'|| $class == 'Role'){
                      return $row->subject->username;
                 }
                 else {

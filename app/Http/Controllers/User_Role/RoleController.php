@@ -120,11 +120,7 @@ class RoleController extends Controller
         $new_user = User::where('username',$data['user']) -> first();
 
         $new_user->assignRole($data['role']);
-        activity()
-        ->performedOn($new_user)
-        ->causedBy(auth()->user())
-        ->withProperties(['role' => $data['role']])
-        ->log('role');
+       
         return back()->withSuccess('Role berhasil diperbaharui.');
     }
 
@@ -133,11 +129,7 @@ class RoleController extends Controller
         $data = $request->all();
         $user = User::where('username',$data['user']) -> first();
         $user->assignRole($data['role']);
-        activity()
-        ->performedOn($user)
-        ->causedBy(auth()->user())
-        ->withProperties(['role' => $data['role']])
-        ->log('role');
+       
         return back()->withSuccess('Role berhasil diperbaharui.');
     }
 
@@ -148,11 +140,7 @@ class RoleController extends Controller
         $users = User::whereIn('username',$data['users'])->get();
         foreach($users as $user) {
             $user->assignRole($data['role']);
-            activity()
-        ->performedOn($user)
-        ->causedBy(auth()->user())
-        ->withProperties(['role' => $data['role']])
-        ->log('role');
+           
         }
         
         return back()->withSuccess('Role berhasil diperbaharui.');
