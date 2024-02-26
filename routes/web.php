@@ -4,6 +4,7 @@ use App\Http\Controllers\User_Role\UserController;
 use App\Http\Controllers\User_Role\AdminController;
 use App\Http\Controllers\User_Role\RoleController;
 use App\Http\Controllers\Desa\DesaController;
+use App\Http\Controllers\Desa\PemerintahanController;
 use App\Http\Controllers\Admin\AdminHomeController;
 use App\Http\Controllers\Admin\LogActivityController;
 use App\Http\Controllers\Desa\WilayahIndoController;
@@ -83,6 +84,11 @@ Route::controller(DesaController::class)->middleware(['admin.auth','admin.verifi
 	Route::post('/admin/desa/kemasyarakatan/dusun', 'storeDusun')->name('dusun.store');
 	Route::post('/admin/desa/kemasyarakatan/rw', 'storeRW')->name('rw.store');
 	Route::post('/admin/desa/kemasyarakatan/rt', 'storeRT')->name('rt.store');
+	
+});
+Route::controller(PemerintahanController::class)->middleware(['admin.auth','admin.verified'])->name('m.pemerintahan.')->group(function () {
+	Route::get('/admin/pemerintahan', 'index')->name('index');
+
 	
 });
 

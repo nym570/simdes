@@ -13,7 +13,13 @@ return new class extends Migration
     {
         Schema::create('pemerintahan', function (Blueprint $table) {
             $table->id();
+            $table->string('nik')->unique();
+            $table->string('jabatan');
+            $table->string('foto')->nullable();
+            $table->text('tugas')->nullable();
+            $table->text('wewenang')->nullable();
             $table->timestamps();
+            $table->foreign('nik')->references('nik')->on('warga');
         });
     }
 

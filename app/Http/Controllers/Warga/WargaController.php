@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreWargaRequest;
 use App\Http\Requests\UpdateWargaRequest;
 use App\DataTables\WargaDataTable;
+use App\Imports\WargaImport;
 
 class WargaController extends Controller
 {
@@ -55,6 +56,23 @@ class WargaController extends Controller
         return back()->withSuccess('Data warga berhasil ditambahkan');
     }
 
+    public function import(Request $request)
+    {
+        $this->validate($request, [
+            'import' => 'required|mimes:csv,xls,xlsx'
+        ]);
+        $file = $request->file('import');
+        $import = new WargaImport();
+        $import->import($file);
+        if(count($import->failures())>=1){
+            return back()->withError('Import data warga gagal : '.count($import->failures()).' data');
+        }
+        else{
+            return back()->withSuccess('Import data warga berhasil');
+        }
+
+        
+    }
     /**
      * Display the specified resource.
      */

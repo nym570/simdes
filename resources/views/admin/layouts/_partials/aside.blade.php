@@ -91,9 +91,9 @@
 						</div>
 					</a>
 				</li>
-				<li class="menu-item {{ menuIsActive('roles.*') }}">
-					<a href="{{ route('roles.index') }}" class="menu-link">
-						<div data-i18n="Roles">
+				<li class="menu-item {{ menuIsActive('m.pemerintahan.*') }}">
+					<a href="{{ route('m.pemerintahan.index') }}" class="menu-link">
+						<div data-i18n="Pemerintahan">
 							{{ __('Perangkat Desa') }}
 						</div>
 					</a>

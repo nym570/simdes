@@ -30,6 +30,7 @@ return new class extends Migration
             $table->string('status');
             $table->string('dokumen_kk')->nullable();
             $table->string('dokumen_ktp')->nullable();
+            $table->string('foto')->nullable();
             $table->timestamps();
         });
     }

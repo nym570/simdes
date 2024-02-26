@@ -1,20 +1,22 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Desa;
 
 use App\Models\Pemerintahan;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\DataTables\PemerintahanDataTable;
 
 class PemerintahanController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        //
-    }
+    public function index(PemerintahanTable $dataTable)
+	 {
+		$title = 'Manajemen Perangkat Desa';
+		 return $dataTable->render('admin.desa.pemerintahan.index',compact('title'));
+	 }
 
     /**
      * Show the form for creating a new resource.

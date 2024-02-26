@@ -2,7 +2,7 @@
 
 namespace App\DataTables;
 
-use App\Models\Admin;
+use App\Models\Pemerintahan;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Services\DataTable;
@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
 
-class AdminDataTable extends DataTable
+class PemerintahanDataTable extends DataTable
 {
     /**
      * Build the DataTable class.
@@ -22,29 +22,17 @@ class AdminDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
-        ->addColumn('action', function($row){
-            $btn = ' <a href="" class="btn btn-sm btn-success my-1"> Lihat</a>';
-                if($row->id != auth()->guard('admin')->user()->id){
-                    $btn = $btn.' <button href='.route("admin-list.status",$row).' class="btn btn-sm btn-'.($row->is_active?"dark":"primary").' my-1" onclick="change(this)">'.($row->is_active?"nonaktifkan":"aktifkan").' </button>';
-             
-                }
-                return $btn;
-             
-        })
-        ->addColumn('status', function($row){
-                return $row->is_active==true?'<span class="badge bg-info">Aktif</span>':'<span class="badge bg-secondary">Nonaktif</span>';
-        })
-        ->rawColumns(['action','status'])    
-        ->addIndexColumn() 
-        ->setRowId('id');
+            ->addColumn('action', 'pemerintahan.action')
+            ->addIndexColumn() 
+            ->setRowId('id');
     }
 
     /**
      * Get the query source of dataTable.
      */
-    public function query(Admin $model): QueryBuilder
+    public function query(Pemerintahan $model): QueryBuilder
     {
-        return $model->newQuery();
+        return $model->newQuery()->with(['warga'])->select('pemerintahan.*')->latest();
     }
 
     /**
@@ -53,7 +41,7 @@ class AdminDataTable extends DataTable
     public function html(): HtmlBuilder
     {
         return $this->builder()
-                    ->setTableId('admin-table')
+                    ->setTableId('pemerintahan-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
                     ->orderBy(1)
@@ -70,20 +58,20 @@ class AdminDataTable extends DataTable
     public function getColumns(): array
     {
         return [
-            
             Column::make('DT_RowIndex')
                     ->title('#')
                     ->orderable(false)
                     ->searchable(false),
-             Column::computed('action')
+            Column::computed('action')
                   ->exportable(false)
                   ->printable(false)
+                  ->width(60)
                   ->addClass('text-center'),
-            Column::make('username'),
-            Column::make('nama'),
-            Column::make('email'),
-            Column::computed('status'),
-            
+            Column::make('jabatan'),
+            Column::make('nik'),
+            Column::make('warga.nama')->title('nama')->data('warga.nama'),
+            Column::make('tugas'),
+            Column::make('wewenang'),
         ];
     }
 
@@ -92,6 +80,6 @@ class AdminDataTable extends DataTable
      */
     protected function filename(): string
     {
-        return 'Admin_' . date('YmdHis');
+        return 'Pemerintahan_' . date('YmdHis');
     }
 }

@@ -12,6 +12,9 @@
 <button type="button" class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target="#addWarga">
 	Tambah Warga
   </button>
+  <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#importExcel">
+	Import Excel
+  </button>
 
 
   
@@ -212,6 +215,7 @@
 	  </div>
 	</div>
   </div>
+  @include('menu.warga._partials.import')
 			</div>
 
 			@include('menu.warga._partials.table')
