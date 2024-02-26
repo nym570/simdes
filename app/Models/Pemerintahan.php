@@ -8,26 +8,17 @@ use App\Http\Traits\Hashidable;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
 
-class RW extends Model
+class Pemerintahan extends Model
 {
     use HasFactory,Hashidable,LogsActivity;
-    protected $table = 'rw';
+    protected $table = 'pemerintahan';
     protected $guarded = ['id'];
-
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-        ->logOnly(['name'])
+        ->logOnly(['nik','jabatan','foto','tugas','wewenang'])
 		->logOnlyDirty()
-		->useLogName('RW');
+		->useLogName('Pemerintahan');
         // Chain fluent methods for configuration options
-    }
-    public function dusun()
-    {
-        return $this->belongsTo(Dusun::class);
-    }
-    public function rt()
-    {
-        return $this->hasMany(RT::class);
     }
 }

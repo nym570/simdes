@@ -16,9 +16,9 @@ class Desa extends Model
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-        ->logOnly(['username','nama', 'email','status','password'])
+        ->logOnly(['kode_wilayah','nama', 'kecamatan','kabupaten','provinsi','alamat_kantor','email_desa','no_telp','deskripsi'])
 		->logOnlyDirty()
-		->useLogName('Admin');
+		->useLogName('Desa');
         // Chain fluent methods for configuration options
     }
     public function warga()

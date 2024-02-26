@@ -52,10 +52,13 @@ class RoleController extends Controller
      */
     public function show(Role $role)
     {
-        $users = User::role($role->name)->where('status','aktif')->paginate(10);
+        $users = User::role($role->name)->where('is_active',true)->paginate(10);
         $title = 'Role : '.$role->name;
+        $category = Role::where('category',$role->category)->where('category','!=','warga')->where('guard_name','web')->pluck('name')->toArray();
+        $allUsers = User::with('warga')->withoutRole($category)->get();
         
-		return view('admin.roles.show', compact(['role','users','title']));
+        
+		return view('admin.roles.show', compact(['role','users','title','allUsers']));
     }
     public function userWithout(Request $request){
         $id = $request->only('id_role');
@@ -117,6 +120,11 @@ class RoleController extends Controller
         $new_user = User::where('username',$data['user']) -> first();
 
         $new_user->assignRole($data['role']);
+        activity()
+        ->performedOn($new_user)
+        ->causedBy(auth()->user())
+        ->withProperties(['role' => $data['role']])
+        ->log('role');
         return back()->withSuccess('Role berhasil diperbaharui.');
     }
 
@@ -125,6 +133,11 @@ class RoleController extends Controller
         $data = $request->all();
         $user = User::where('username',$data['user']) -> first();
         $user->assignRole($data['role']);
+        activity()
+        ->performedOn($user)
+        ->causedBy(auth()->user())
+        ->withProperties(['role' => $data['role']])
+        ->log('role');
         return back()->withSuccess('Role berhasil diperbaharui.');
     }
 
@@ -135,7 +148,13 @@ class RoleController extends Controller
         $users = User::whereIn('username',$data['users'])->get();
         foreach($users as $user) {
             $user->assignRole($data['role']);
+            activity()
+        ->performedOn($user)
+        ->causedBy(auth()->user())
+        ->withProperties(['role' => $data['role']])
+        ->log('role');
         }
+        
         return back()->withSuccess('Role berhasil diperbaharui.');
     }
 
@@ -144,7 +163,7 @@ class RoleController extends Controller
      */
     public function destroy(Role $role)
     {
-        if($role->name=='Super Admin'){
+        if($role->name=='admin'){
             abort(403, 'SUPER ADMIN ROLE CAN NOT BE DELETED');
         }
         if(auth()->user()->hasRole($role->name)){

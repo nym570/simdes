@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('tempat_lahir');
             $table->date('tanggal_lahir');
             $table->enum('jenis_kelamin',['laki-laki','perempuan']);
-            $table->enum('agama',['islam','kristen','katolik','hindu','budha','konghucu']);
+            $table->string('agama');
             $table->string('pendidikan');
             $table->string('pekerjaan');
             $table->string('gol_darah');
@@ -27,7 +27,7 @@ return new class extends Migration
             $table->string('alamat_ktp');
             $table->string('no_telp');
             $table->boolean('ktp_desa');
-            $table->enum('status',['warga','tinggal ditempat lain karena bekerja/bersekolah','meninggal','pindah']);
+            $table->string('status');
             $table->string('dokumen_kk')->nullable();
             $table->string('dokumen_ktp')->nullable();
             $table->timestamps();

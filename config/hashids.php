@@ -2,6 +2,7 @@
 
 use App\Models\User;
 use App\Models\Admin;
+use App\Models\Pemerintahan;
 use App\Models\Desa;
 use App\Models\Dusun;
 use App\Models\RW;
@@ -60,6 +61,10 @@ return [
         Desa::class => [
             'salt' => Desa::class.'desa',
             'length' => 7,
+        ],
+        Pemerintahan::class => [
+            'salt' => Pemerintahan::class.'pemerintahan',
+            'length' => 4,
         ],
         Dusun::class => [
             'salt' => Dusun::class.'lkd-desa-dusun',

@@ -61,7 +61,7 @@ class DesaController extends Controller
     public function storeDusun(Request $request)
     {
         $data = $request->validate([
-			'name' => ['required','string'],
+			'name' => ['required','string','unique:dusun,name'],
 		]);
         $data['name'] = 'Dusun '.$data['name'];
         $role = Role::create(['name' => $request->name,'category'=>'pemimpin','status' => 'dusun']);
@@ -77,6 +77,9 @@ class DesaController extends Controller
             'dusun_id' => ['required']
 		]);
         $data['name'] = 'RW '.str_pad($data['name'], 2, '0', STR_PAD_LEFT);
+        if (RW::where('name', $data['name'] )->exists()) {
+            return back()->withError('RW Gagal ditambahkan karena telah ada');
+        }
         
         $role = Role::create(['name' => $data['name'],'category'=>'pemimpin','status' => 'rw']);
         $data['ketua_rw'] = $role->id;
@@ -93,6 +96,9 @@ class DesaController extends Controller
 		]);
         $rw = RW::where('id',$data['rw_id'])->first();
         $data['name'] = $rw->name.'/RT '.str_pad($data['name'], 2, '0', STR_PAD_LEFT);
+        if (RT::where('name', $data['name'] )->exists()) {
+            return back()->withError('RT Gagal ditambahkan karena telah ada');
+        }
         
         $role = Role::create(['name' => $data['name'],'category'=>'pemimpin','status' =>'rt']);
         $data['ketua_rt'] = $role->id;
@@ -149,6 +155,12 @@ class DesaController extends Controller
             File::copy(public_path('assets/img/favicon/favicon.ico'), public_path('favicon.ico'));
         }
 
+        
+        $desa->update([
+            'alamat_kantor' => $request['alamat_kantor'],
+            'email_desa' => $request['email_desa'],
+            'no_telp' => $request['no_telp'],
+        ]);
         if($desa->kode_wilayah != $request->kode_wilayah){
             $desa->update([
                 'kode_wilayah' => $request['kode_wilayah'],
@@ -157,12 +169,8 @@ class DesaController extends Controller
                 'kabupaten' => $request['kabupaten'],
                 'provinsi' => $request['provinsi'],
             ]);
+            return route('admin.home')->withSuccess('Konfigurasi berhasil diperbarui');
         }
-        $desa->update([
-            'alamat_kantor' => $request['alamat_kantor'],
-            'email_desa' => $request['email_desa'],
-            'no_telp' => $request['no_telp'],
-        ]);
         return back()->withSuccess('Profil desa berhasil diperbarui');
     }
 

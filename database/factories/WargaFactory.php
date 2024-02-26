@@ -24,6 +24,7 @@ class WargaFactory extends Factory
             'tempat_lahir' => $this->faker->city(),
             'tanggal_lahir' => $this->faker->dateTime(),
             'jenis_kelamin' => $this->faker->randomElement(['laki-laki', 'perempuan']),
+            'agama' => $this->faker->randomElement(['Islam','Kristen','Katolik','Hindu','Budha']),
             'pendidikan' => $this->faker->randomElement(['Tidak / Belum Sekolah','Belum Tamat SD/Sederajat','Tamat SD / Sederajat']),
             'pekerjaan' => $this->faker->randomElement(['Wiraswasta','Lainnya','Dokter']),
             'gol_darah' => $this->faker->randomElement(['A', 'B', 'AB', 'O']),

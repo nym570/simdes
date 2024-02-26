@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Route;
 use App\Models\User;
 use App\Models\Admin;
 use App\Models\Desa;
+use App\Models\Pemerintahan;
 use App\Models\Dusun;
 use App\Models\RW;
 use App\Models\RT;
@@ -61,6 +62,9 @@ class RouteServiceProvider extends ServiceProvider
         Route::bind('desa', function ($value, $route) {
             return $this->getModel(Desa::class, $value);
         });
+        Route::bind('pemerintahan', function ($value, $route) {
+            return $this->getModel(Pemerintahan::class, $value);
+        });
         Route::bind('dusun', function ($value, $route) {
             return $this->getModel(Dusun::class, $value);
         });
@@ -97,6 +101,7 @@ class RouteServiceProvider extends ServiceProvider
         Route::bind('mati', function ($value, $route) {
             return $this->getModel(Kematian::class, $value);
         });
+        
     }
 
     /**

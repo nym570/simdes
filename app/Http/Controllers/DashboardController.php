@@ -8,11 +8,22 @@ use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('admin.verified')->only('config');
+    }
     public function boot()
 	{
-        return view('boot', ["title"=> 'Konfigurasi Awal']);
-		
+        if(Auth::guard('admin')->check()){
+            return redirect(route('admin.boot.config'));
+        }
+        else{
+            return view('not-boot', ["title"=> 'Sistem belum dapat diakses']);
+        }
 	}
+    public function config(){
+        return view('boot', ["title"=> 'Konfigurasi Awal']);
+    }
     public function index()
 	{
         if(Auth::guest()){

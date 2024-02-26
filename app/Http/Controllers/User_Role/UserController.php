@@ -14,6 +14,7 @@ use App\Rules\ValidateKK;
 use App\Rules\NIKExist;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
+use App\Imports\UserImport;
 
 
 class UserController extends Controller
@@ -141,14 +142,31 @@ class UserController extends Controller
 
 	public function status(Request $request, User $user)
 	{
-		$data['status'] = 'nonaktif';
-		if($user->status=='nonaktif'){
-			$data['status'] = 'aktif';
+		$data['is_active'] = false;
+		if(!$user->is_active){
+			$data['is_active'] = true;
 		}
 		$user->update($data);
 
 		return back()->withSuccess('Status pengguna '.$user->username.' berhasil diubah');
 	}
+	public function import(Request $request)
+    {
+        $this->validate($request, [
+            'import' => 'required|mimes:csv,xls,xlsx'
+        ]);
+        $file = $request->file('import');
+        $import = new UserImport();
+        $import->import($file);
+        if(count($import->failures())>=1){
+            return back()->withError('Import data admin gagal : '.count($import->failures()).' data');
+        }
+        else{
+            return back()->withSuccess('Import data admin berhasil');
+        }
+
+        
+    }
 
 	/**
 	 * Remove the specified resource from storage.

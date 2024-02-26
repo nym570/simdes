@@ -25,13 +25,16 @@ class AdminDataTable extends DataTable
         ->addColumn('action', function($row){
             $btn = ' <a href="" class="btn btn-sm btn-success my-1"> Lihat</a>';
                 if($row->id != auth()->guard('admin')->user()->id){
-                    $btn = $btn.' <button href='.route("admin-list.status",$row).' class="btn btn-sm btn-'.($row->status=="aktif"?"dark":"primary").' my-1" onclick="change(this)">'.($row->status=="aktif"?"nonaktifkan":"aktifkan").' </button>';
+                    $btn = $btn.' <button href='.route("admin-list.status",$row).' class="btn btn-sm btn-'.($row->is_active?"dark":"primary").' my-1" onclick="change(this)">'.($row->is_active?"nonaktifkan":"aktifkan").' </button>';
              
                 }
                 return $btn;
              
         })
-        ->rawColumns(['action'])    
+        ->addColumn('status', function($row){
+                return $row->is_active==true?'<span class="badge bg-info">Aktif</span>':'<span class="badge bg-secondary">Nonaktif</span>';
+        })
+        ->rawColumns(['action','status'])    
         ->addIndexColumn() 
         ->setRowId('id');
     }
@@ -67,6 +70,10 @@ class AdminDataTable extends DataTable
     public function getColumns(): array
     {
         return [
+            Column::computed('action')
+                  ->exportable(false)
+                  ->printable(false)
+                  ->addClass('text-center'),
             Column::make('DT_RowIndex')
                     ->title('#')
                     ->orderable(false)
@@ -74,11 +81,8 @@ class AdminDataTable extends DataTable
             Column::make('username'),
             Column::make('nama'),
             Column::make('email'),
-            Column::make('status'),
-            Column::computed('action')
-                  ->exportable(false)
-                  ->printable(false)
-                  ->addClass('text-center'),
+            Column::computed('status'),
+            
         ];
     }
 

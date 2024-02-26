@@ -32,7 +32,8 @@ class LoginController extends Controller
 	{
 		$user = User::where('username',$request['username']) -> first();
 		if($user){
-			$request->authenticate();
+			if($user['is_active']){
+				$request->authenticate();
 			$request->session()->regenerate();
 
 			session()->flash('success', __('Selamat Datang ' . auth()->guard('web')->user()->nama));
@@ -40,6 +41,9 @@ class LoginController extends Controller
 				->causedBy($user)
 				->log('login');
 			return redirect()->intended(RouteServiceProvider::HOME);
+			}
+			return redirect()->route('login')
+			->withError('Akun sudah tidak aktif');
 			
 			
 		}

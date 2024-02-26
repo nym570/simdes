@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\DataTables\AdminDataTable;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Facades\Hash;
+use App\Imports\AdminImport;
 
 class AdminController extends Controller
 {
@@ -49,6 +50,24 @@ class AdminController extends Controller
 		return back()->withSuccess('Data admin berhasil ditambahkan');
     }
 
+    public function import(Request $request)
+    {
+        $this->validate($request, [
+            'import' => 'required|mimes:csv,xls,xlsx'
+        ]);
+        $file = $request->file('import');
+        $import = new AdminImport();
+        $import->import($file);
+        if(count($import->failures())>=1){
+            return back()->withError('Import data admin gagal : '.count($import->failures()).' data');
+        }
+        else{
+            return back()->withSuccess('Import data admin berhasil');
+        }
+
+        
+    }
+
     /**
      * Display the specified resource.
      */
@@ -75,9 +94,9 @@ class AdminController extends Controller
 
     public function status(Request $request, Admin $user)
 	{
-		$data['status'] = 'nonaktif';
-		if($user->status=='nonaktif'){
-			$data['status'] = 'aktif';
+		$data['is_active'] = false;
+		if(!$user->is_active){
+			$data['is_active'] = true;
 		}
 		$user->update($data);
 

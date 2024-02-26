@@ -33,7 +33,10 @@ Route::get('/', [DashboardController::class,'index'])->name('home');
 
 Route::get('/admin', [AdminHomeController::class,'index'])->name('admin.home')->middleware(['admin.auth','admin.verified']);
 
-Route::get('/boot', [DashboardController::class,'boot'])->name('admin.boot')->middleware(['admin.auth','admin.verified']);
+Route::get('/boot', [DashboardController::class,'boot'])->name('admin.boot');
+
+Route::get('/boot/config', [DashboardController::class,'config'])->name('admin.boot.config')->middleware(['admin.auth','admin.verified']);
+
 
 
 
@@ -41,6 +44,7 @@ Route::get('/boot', [DashboardController::class,'boot'])->name('admin.boot')->mi
 Route::controller(UserController::class)->middleware(['admin.auth','admin.verified'])->name('users.')->group(function () {
 	Route::get('/admin/users', 'index')->name('index');
 	Route::post('/admin/users', 'store')->name('store');
+	Route::post('/admin/users/import', 'import')->name('import');
 	Route::post('/admin/users/{user}/reset-pass', 'reset-pass')->name('reset-pass');
 	Route::get('/admin/users/{user}/show', 'show')->name('show');
 	Route::get('/admin/users/{user}/edit', 'edit')->name('edit');
@@ -60,6 +64,7 @@ Route::controller(UserController::class)->name('users.')->group(function () {
 Route::controller(AdminController::class)->middleware(['admin.auth','admin.verified'])->name('admin-list.')->group(function () {
 	Route::get('/admin/admin', 'index')->name('index');
 	Route::post('/admin/admin', 'store')->name('store');
+	Route::post('/admin/admin/import', 'import')->name('import');
 	Route::put('/admin/admin/{admin}/status', 'status')->name('status');
 });
 

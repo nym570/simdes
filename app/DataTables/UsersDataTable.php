@@ -27,13 +27,16 @@ class UsersDataTable extends DataTable
    
             $btn = ' <a href='.route("users.show",$row).' class="btn btn-sm btn-success my-1"> Lihat</a>';
 
-            $btn = $btn.' <button href='.route("users.status",$row).' class="btn btn-sm btn-'.($row->status=="aktif"?"dark":"primary").' my-1" onclick="change(this)">'.($row->status=="aktif"?"nonaktifkan":"aktifkan").' </button>';
+            $btn = $btn.' <button href='.route("users.status",$row).' class="btn btn-sm btn-'.($row->is_active?"dark":"primary").' my-1" onclick="change(this)">'.($row->is_active?"nonaktifkan":"aktifkan").' </button>';
             
             // $btn = $btn.'<form method="POST" action="'.route("password.email").'"  id="reset-form"><input type="hidden" name="_token" value="' . csrf_token() . '"> <input type="hidden" name="email" id="email"  value="'.$row->email.'" > <button type="submit" class="btn btn-sm btn-danger my-1"> Reset Password </button></form>';
              return $btn;
              
         })
-        ->rawColumns(['action'])    
+        ->addColumn('status', function($row){
+            return $row->is_active==true?'<span class="badge bg-info">Aktif</span>':'<span class="badge bg-secondary">Nonaktif</span>';
+    })
+        ->rawColumns(['action','status'])    
         ->addIndexColumn() 
         ->setRowId('id');
     }
@@ -73,15 +76,16 @@ class UsersDataTable extends DataTable
                     ->title('#')
                     ->orderable(false)
                     ->searchable(false),
-            Column::make('username'),
-            Column::make('nik'),
-            Column::make('warga.nama')->title('nama')->data('warga.nama'),
-            Column::make('email'),
-            Column::make('status'),
             Column::computed('action')
                   ->exportable(false)
                   ->printable(false)
                   ->addClass('text-center'),
+            Column::make('username'),
+            Column::make('nik'),
+            Column::make('warga.nama')->title('nama')->data('warga.nama'),
+            Column::make('email'),
+            Column::computed('status'),
+            
             
         ];
     }

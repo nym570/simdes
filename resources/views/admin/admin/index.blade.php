@@ -11,6 +11,9 @@
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUser">
 	Tambah Admin
   </button>
+  <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#importExcel">
+	Import Excel
+  </button>
   
   <!-- Modal -->
   <div class="modal fade" id="addUser" tabindex="-1" aria-hidden="true">
@@ -74,6 +77,7 @@
 	  </div>
 	</div>
   </div>
+  @include('admin.admin._partials.import')
 			</div>
 
 			@include('admin.admin._partials.table')
@@ -142,7 +146,7 @@
 		
 	})
 </script>
-@if (count($errors) > 0)
+@if (count($errors) > 0&&!$errors->has('import'))
     <script type="text/javascript">
 	
         $( document ).ready(function() {
@@ -158,6 +162,17 @@
 	
 		</script>
 	@endif
+@endif
+@if ($errors->has('import'))
+    <script type="text/javascript">
+	
+        $( document ).ready(function() {
+			
+             $('#importExcel').modal('show');
+        });
+
+    </script>
+	
 @endif
 
 
