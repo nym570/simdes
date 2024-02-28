@@ -169,7 +169,7 @@ class DesaController extends Controller
                 'kabupaten' => $request['kabupaten'],
                 'provinsi' => $request['provinsi'],
             ]);
-            return route('admin.home')->withSuccess('Konfigurasi berhasil diperbarui');
+            return redirect(route('admin.home'))->withSuccess('Konfigurasi berhasil diperbarui');
         }
         return back()->withSuccess('Profil desa berhasil diperbarui');
     }

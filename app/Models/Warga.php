@@ -37,6 +37,10 @@ class Warga extends Model
     {
         return $this->hasOne(User::class,'nik', 'nik');
     }
+    public function pemerintahan()
+    {
+        return $this->hasOne(Pemerintahan::class,'nik', 'nik');
+    }
     public function anggota_ruta()
     {
         return $this->hasOne(AnggotaRuta::class,'anggota_nik', 'nik');

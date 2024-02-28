@@ -23,11 +23,16 @@ return new class extends Migration
             $table->id();
             $table->string('tempat');
             $table->dateTime('waktu');
+            $table->float('berat', 8, 2);
+            $table->float('panjang', 8, 2);
             $table->boolean('verifikasi')->default(false);
             $table->string('bukti');
             $table->string('keterangan')->nullable();
             $table->string('ibu_nik');
             $table->string('bapak_nik');
+            $table->string('kepala_nik');
+            $table->string('hubungan_ruta');
+            $table->foreign('kepala_nik')->references('nik')->on('warga');
             $table->timestamps();
         });
         Schema::create('kematian', function (Blueprint $table) {
@@ -49,6 +54,8 @@ return new class extends Migration
             $table->boolean('verifikasi')->default(false);
             $table->string('bukti');
             $table->string('keterangan')->nullable();
+            $table->string('kepala_nik');
+            $table->foreign('kepala_nik')->references('nik')->on('warga');
             $table->timestamps();
         });
         Schema::create('kepindahan', function (Blueprint $table) {

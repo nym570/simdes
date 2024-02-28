@@ -22,7 +22,15 @@ class PemerintahanDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
-            ->addColumn('action', 'pemerintahan.action')
+        ->addColumn('action', function($row){
+   
+            $btn = ' <a href='.route("m.pemerintahan.show",$row).' class="btn btn-sm btn-success my-1"> Lihat</a>';
+
+            $btn = $btn.'<button class="btn btn-sm btn-warning my-1 open_modal" value="'.$row->id.'"> Update</button>';
+
+             return $btn;
+             
+        })
             ->addIndexColumn() 
             ->setRowId('id');
     }
@@ -70,8 +78,6 @@ class PemerintahanDataTable extends DataTable
             Column::make('jabatan'),
             Column::make('nik'),
             Column::make('warga.nama')->title('nama')->data('warga.nama'),
-            Column::make('tugas'),
-            Column::make('wewenang'),
         ];
     }
 

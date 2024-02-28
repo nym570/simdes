@@ -33,6 +33,15 @@ class RutaController extends Controller
             }
         }
     }
+    public function getKepalaRuta()
+    {
+        $kepala = AnggotaRuta::where('hubungan','Kepala Keluarga')->with('warga')->get();
+        if($kepala){
+            foreach($kepala as $item){
+                echo "<option data-tokens='".$item->warga->nik.$item->warga->nama."' value='".$item->warga->nik."'>".$item->warga->nik.' | '.$item->warga->nama."</option>";
+            }
+        }
+    }
     /**
      * Show the form for creating a new resource.
      */

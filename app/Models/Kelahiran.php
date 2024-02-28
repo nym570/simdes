@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Http\Traits\Hashidable;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
+use Illuminate\Support\Carbon;
 
 class Kelahiran extends Model
 {
@@ -17,7 +18,7 @@ class Kelahiran extends Model
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-        ->logOnly(['tempat_kelahiran','petugas_kelahiran','waktu_kelahiran','verifikasi','bukti','keterangan','ibu_nik','bapak_nik'])
+        ->logOnly(['tempat','berat','panjang','waktu','verifikasi','bukti','keterangan','ibu_nik','bapak_nik','kepala_nik'])
 		->logOnlyDirty()
 		->useLogName('Kelahiran');
         // Chain fluent methods for configuration options

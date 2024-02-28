@@ -5,15 +5,19 @@ namespace App\Http\Controllers\Warga\Dinamika;
 use App\Models\Kedatangan;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\DataTables\KedatanganDataTable;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 class KedatanganController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(KedatanganDataTable $dataTable)
     {
-        //
+        $title = 'Kedatangan';
+		 return $dataTable->render('menu.dinamika.kedatangan.index',compact('title'));
     }
 
     /**

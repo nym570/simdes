@@ -12,6 +12,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Desa\MasterDesaController;
 use App\Http\Controllers\Warga\WargaController;
 use App\Http\Controllers\Warga\RutaController;
+use App\Http\Controllers\Warga\Dinamika\KelahiranController;
 use App\Http\Controllers\Warga\Dinamika\KematianController;
 use App\Http\Controllers\Warga\Dinamika\KepindahanController;
 use Illuminate\Support\Facades\Route;
@@ -88,6 +89,8 @@ Route::controller(DesaController::class)->middleware(['admin.auth','admin.verifi
 });
 Route::controller(PemerintahanController::class)->middleware(['admin.auth','admin.verified'])->name('m.pemerintahan.')->group(function () {
 	Route::get('/admin/pemerintahan', 'index')->name('index');
+	Route::post('/admin/pemerintahan', 'store')->name('store');
+	Route::get('/admin/pemerintahan/{pemerintahan}/show', 'show')->name('show');
 
 	
 });
@@ -129,9 +132,18 @@ Route::controller(MasterController::class)->name('master.')->group(function () {
 
 Route::controller(WargaController::class)->middleware(['auth','verified'])->name('warga.')->group(function () {
 	Route::get('/warga', 'index')->name('index');
-	Route::get('/warga/get', 'getWargaHidup')->name('get-warga');
 	Route::post('/warga', 'store')->name('store');
+	Route::get('/warga/get-warga', 'getWargaHidup')->name('get-warga');
 	Route::get('/warga/{warga}', 'show')->name('show');
+	Route::post('/warga/import', 'import')->name('import');
+});
+Route::controller(WargaController::class)->group(function () {
+	Route::get('/get-warga', 'getWargaHidup')->name('get-warga');
+});
+Route::controller(KelahiranController::class)->middleware(['auth','verified'])->name('dinamika.kelahiran.')->group(function () {
+	Route::get('/dinamika/kelahiran', 'index')->name('index');
+	Route::post('/dinamika/kelahiran', 'store')->name('store');
+	Route::put('/dinamika/kelahiran/{lahir}/verif', 'verifikasi')->name('verifikasi');
 });
 Route::controller(KematianController::class)->middleware(['auth','verified'])->name('dinamika.kematian.')->group(function () {
 	Route::get('/dinamika/kematian', 'index')->name('index');
@@ -160,6 +172,7 @@ Route::controller(RutaController::class)->middleware(['auth','verified'])->name(
 
 Route::controller(RutaController::class)->group(function () {
 	Route::get('/get-warga-nonruta', 'getWargaNonRuta')->name('get-warga-nonruta');
+	Route::get('/get-kepala-ruta', 'getKepalaRuta')->name('get-kepala-ruta');
 });
 
 require 'auth.php';

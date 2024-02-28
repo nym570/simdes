@@ -42,7 +42,7 @@ class KematianController extends Controller
             'penyebab' => ['required','string'],
             'saksi' => ['required','string'],
             'pelapor_nik' => ['required','string','size:16'],
-            'bukti' => ['mimes:jpg,png,pdf','max:1024']
+            'bukti' => ['required','mimes:jpg,png,pdf','max:1024']
             
 		]);
         

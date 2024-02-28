@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('gol_darah');
             $table->string('kode_wilayah_ktp');
             $table->string('alamat_ktp');
-            $table->string('no_telp');
+            $table->string('no_telp')->nullable();
             $table->boolean('ktp_desa');
             $table->string('status');
             $table->string('dokumen_kk')->nullable();

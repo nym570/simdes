@@ -2,7 +2,7 @@
 
 namespace App\DataTables;
 
-use App\Models\Kepindahan;
+use App\Models\Kedatangan;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Services\DataTable;
@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
 
-class KepindahanDataTable extends DataTable
+class KedatanganDataTable extends DataTable
 {
     /**
      * Build the DataTable class.
@@ -22,22 +22,7 @@ class KepindahanDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
-        ->addColumn('action', function($row){
-            $btn = "";
-            if(!$row->verifikasi){
-                $btn = '<button class="btn btn-sm btn-warning mx-1 my-1 verif_modal" onclick="verif(this)" href="'.route('dinamika.kepindahan.verifikasi',$row).'"> Verif</button>';
-            }
-            
-
-            // $btn = $btn.'<button class="btn btn-sm btn-dark my-1 open_modal" value="'.$row->kepala_dusun.'"> Kepala Dusun</button>';
-
-             return $btn;
-             
-        })
-        ->addColumn('jumlah orang', function($row){
-            
-            return $row->dinamika->size();
-        })
+            ->addColumn('action', 'kedatangan.action')
             ->addColumn('identitas', function($row){
                 $identitas = "";
                 foreach ($row->dinamika as $item){
@@ -53,9 +38,9 @@ class KepindahanDataTable extends DataTable
     /**
      * Get the query source of dataTable.
      */
-    public function query(Kepindahan $model): QueryBuilder
+    public function query(Kedatangan $model): QueryBuilder
     {
-        return $model->newQuery()->with(['dinamika.warga'])->select('kepindahan.*');
+        return $model->newQuery()->with(['dinamika.warga'])->select('kedatangan.*');
     }
 
     /**
@@ -64,7 +49,7 @@ class KepindahanDataTable extends DataTable
     public function html(): HtmlBuilder
     {
         return $this->builder()
-                    ->setTableId('kepindahan-table')
+                    ->setTableId('kedatangan-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
                     ->orderBy(1)
@@ -82,18 +67,18 @@ class KepindahanDataTable extends DataTable
     {
         return [
             Column::make('DT_RowIndex')
-                ->title('#')
-                ->orderable(false)
-                ->searchable(false),
+            ->title('#')
+            ->orderable(false)
+            ->searchable(false),
             Column::computed('action')
                   ->exportable(false)
                   ->printable(false)
                   ->width(60)
                   ->addClass('text-center'),
-            Column::make('waktu'),
-            Column::computed('jumlah orang'),
-            Column::computed('identitas'),
-
+            Column::make('id'),
+            Column::make('add your columns'),
+            Column::make('created_at'),
+            Column::make('updated_at'),
         ];
     }
 
@@ -102,6 +87,6 @@ class KepindahanDataTable extends DataTable
      */
     protected function filename(): string
     {
-        return 'Kepindahan_' . date('YmdHis');
+        return 'Kedatangan_' . date('YmdHis');
     }
 }

@@ -22,7 +22,21 @@ class KelahiranDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
-            ->addColumn('action', 'kelahiran.action')
+        ->addColumn('action', function($row){
+            $btn = "";
+            if(!$row->verifikasi){
+                $btn = '<button class="btn btn-sm btn-warning mx-1 my-1 verif_modal" onclick="verif(this)" href="'.route('dinamika.kelahiran.verifikasi',$row).'"> Verif</button>';
+            }
+            
+
+            // $btn = $btn.'<button class="btn btn-sm btn-dark my-1 open_modal" value="'.$row->kepala_dusun.'"> Kepala Dusun</button>';
+
+             return $btn;
+             
+        })
+            ->addColumn('identitas bayi', function($row){
+                return $row->dinamika->warga->nama.' ['.$row->dinamika->nik.']';
+            })
             ->addIndexColumn() 
             ->setRowId('id');
     }
@@ -69,7 +83,7 @@ class KelahiranDataTable extends DataTable
                   ->addClass('text-center'),
             Column::make('waktu'),
             Column::make('tempat'),
-            Column::make('updated_at'),
+            Column::computed('identitas bayi'),
         ];
     }
 

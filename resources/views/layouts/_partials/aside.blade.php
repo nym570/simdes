@@ -69,10 +69,10 @@
 			  Dinamika Penduduk
 			</div></a>
 			<ul class="menu-sub">
-				<li class="menu-item {{ menuIsActive('m.desa.index') }}">
-					<a href="{{ route('m.desa.index') }}" class="menu-link">
+				<li class="menu-item {{ menuIsActive('dinamika.kelahiran.*') }}">
+					<a href="{{ route('dinamika.kelahiran.index') }}" class="menu-link">
 						<div data-i18n="Analytics">
-							{{ __('Lahir') }}
+							{{ __('Kelahiran') }}
 						</div>
 					</a>
 				</li>

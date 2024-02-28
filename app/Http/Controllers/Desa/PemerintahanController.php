@@ -6,13 +6,15 @@ use App\Models\Pemerintahan;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\DataTables\PemerintahanDataTable;
+use App\Rules\NIKExist;
+use Illuminate\Support\Facades\Storage;
 
 class PemerintahanController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(PemerintahanTable $dataTable)
+    public function index(PemerintahanDataTable $dataTable)
 	 {
 		$title = 'Manajemen Perangkat Desa';
 		 return $dataTable->render('admin.desa.pemerintahan.index',compact('title'));
@@ -31,7 +33,20 @@ class PemerintahanController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+			'nik' => ['required', 'string','size:16','unique:pemerintahan,nik',new NIKExist],
+            'jabatan' => ['required','string','unique:pemerintahan,jabatan'],
+			'tugas' => ['required'],
+			'wewenang' => ['required'],
+            'foto' => [ 'mimes:jpg,png','max:1024'],
+		]);
+        if($request->file('foto')){
+            $extension = $request->file('foto')->extension();
+            $data['foto'] = Storage::disk('public')->putFileAs('pemerintahan', $request->file('foto'),date('Ymd').'_'.$data['jabatan'].'_'.$data['nik'].'.'.$extension);
+        }
+        $pemerintahan = Pemerintahan::create($data);
+        return back()->withSuccess('Data perangkat desa berhasil ditambahkan');
+
     }
 
     /**
@@ -39,7 +54,8 @@ class PemerintahanController extends Controller
      */
     public function show(Pemerintahan $pemerintahan)
     {
-        //
+        $title = 'Lihat '.$pemerintahan->jabatan;
+		return view('admin.desa.pemerintahan.show', compact(['pemerintahan','title']));
     }
 
     /**

@@ -31,6 +31,7 @@ class StoreWargaRequest extends FormRequest
             'jenis_kelamin' => ['required', 'string'],
             'pendidikan' => ['required', 'string'],
             'pekerjaan' => ['required', 'string'],
+            'agama' => ['required', 'string'],
             'gol_darah' => ['required', 'string'],
             'kode_wilayah_ktp' => ['required', 'string','regex:/[0-9]{2}.[0-9]{2}.[0-9]{4}/u'],
             'alamat_ktp' => ['required', 'string'],

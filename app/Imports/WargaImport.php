@@ -3,6 +3,7 @@
 namespace App\Imports;
 
 use App\Models\Warga;
+use App\Models\Desa;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Concerns\ToModel;
@@ -27,6 +28,7 @@ class WargaImport implements ToModel, WithUpserts, WithHeadingRow, WithBatchInse
     */
     public function model(array $row)
     {
+        $desa = Desa::get()->first();
         return new Warga([
             'nik' => $row['nik'],
             'no_kk' => $row['no_kk'],
@@ -37,6 +39,7 @@ class WargaImport implements ToModel, WithUpserts, WithHeadingRow, WithBatchInse
             'pendidikan' => $row['pendidikan'],
             'pekerjaan' => $row['pekerjaan'],
             'gol_darah' => $row['gol_darah'],
+            'agama' => $row['agama'],
             'kode_wilayah_ktp' => $row['kode_wilayah_ktp'],
             'ktp_desa' => $row['kode_wilayah_ktp']==$desa['kode_wilayah']?true:false,
             'alamat_ktp' => $row['alamat_ktp'],
@@ -70,6 +73,7 @@ class WargaImport implements ToModel, WithUpserts, WithHeadingRow, WithBatchInse
             'pendidikan' => ['required'],
             'pekerjaan' => ['required'],
             'gol_darah' => ['required'],
+            'agama' => ['required'],
             'kode_wilayah_ktp' => ['required','regex:/[0-9]{2}.[0-9]{2}.[0-9]{4}/u'],
             'alamat_ktp' => ['required'],
             'status' => ['required'],

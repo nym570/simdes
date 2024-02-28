@@ -21,4 +21,8 @@ class Pemerintahan extends Model
 		->useLogName('Pemerintahan');
         // Chain fluent methods for configuration options
     }
+    public function warga()
+    {
+        return $this->belongsTo(Warga::class,'nik', 'nik');
+    }
 }

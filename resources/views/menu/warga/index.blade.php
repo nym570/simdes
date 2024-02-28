@@ -12,7 +12,7 @@
 <button type="button" class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target="#addWarga">
 	Tambah Warga
   </button>
-  <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#importExcel">
+  <button type="button" class="btn btn-success mb-4" data-bs-toggle="modal" data-bs-target="#importExcel">
 	Import Excel
   </button>
 
@@ -167,12 +167,12 @@
 					<div class="col mb-3">
 						<label for="agama" class="form-label">Agama*</label>
 						<select id="agama" class="selectpicker w-100" data-style="btn-default" data-live-search="false" title="Pilih agama"  name="agama" required>
-							<option value="islam">Islam</option>
-    						<option value="kristen">Kristen (Protestan)</option>
-							<option value="katolik">Katolik</option>
-							<option value="hindu">Hindu</option>
-							<option value="budha">Budha</option>
-							<option value="konghucu">Konghucu</option>
+							<option value="Islam">Islam</option>
+    						<option value="Kristen">Kristen (Protestan)</option>
+							<option value="Katolik">Katolik</option>
+							<option value="Hindu">Hindu</option>
+							<option value="Budha">Budha</option>
+							<option value="Konghucu">Konghucu</option>
 						</select>
 					</div>
 				</div>
@@ -184,6 +184,7 @@
     						<option value="B">B</option>
 							<option value="AB">AB</option>
 							<option value="O">O</option>
+							<option value="Tidak Mengetahui">Tidak Mengetahui</option>
 						</select>
 					</div>
 				</div>
@@ -215,13 +216,15 @@
 	  </div>
 	</div>
   </div>
-  @include('menu.warga._partials.import')
+
 			</div>
 
+			@include('menu.warga._partials.import')
 			@include('menu.warga._partials.table')
 
 		</div>
 	</div>
+</div>
 
 <script>
 		

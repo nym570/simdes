@@ -42,6 +42,7 @@
 	<!-- Vendors CSS -->
 	<link rel="stylesheet" href="{{ asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
 	<link rel="stylesheet" href="{{ asset('assets/vendor/libs/bootstrap-select/bootstrap-select.css') }}" />
+	<link rel="stylesheet" href="{{ asset('assets/vendor/libs/bs-stepper/bs-stepper.css') }}" />
 
 	<!-- Page CSS -->
 
@@ -137,6 +138,7 @@
 	<script src="{{ asset('assets/vendor/libs/sweetalert2/dist/sweetalert2.all.min.js') }}"></script>
 
 	<script src="{{ asset('assets/vendor/libs/bootstrap-select/bootstrap-select.js') }}"></script> 
+	<script src="{{ asset('assets/vendor/libs/bs-stepper/bs-stepper.js') }}"></script> 
 
 	<!-- Main JS -->
 	<script src="{{ asset('assets/js/main.js') }}"></script>

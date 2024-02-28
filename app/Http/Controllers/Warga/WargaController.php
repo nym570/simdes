@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Warga;
 use App\Models\Warga;
 use App\Models\Desa;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use App\Http\Requests\StoreWargaRequest;
 use App\Http\Requests\UpdateWargaRequest;
 use App\DataTables\WargaDataTable;
