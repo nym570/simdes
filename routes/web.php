@@ -159,6 +159,8 @@ Route::controller(KepindahanController::class)->middleware(['auth','verified'])-
 });
 Route::controller(KedatanganController::class)->middleware(['auth','verified'])->name('dinamika.kedatangan.')->group(function () {
 	Route::get('/dinamika/kedatangan', 'index')->name('index');
+	Route::get('/dinamika/kedatangan/create', 'create')->name('create');
+	Route::post('/dinamika/kedatangan/pendatang', 'pendatang')->name('pendatang');
 	Route::post('/dinamika/kedatangan', 'store')->name('store');
 	Route::put('/dinamika/kedatangan/{datang}/verif', 'verifikasi')->name('verifikasi');
 	

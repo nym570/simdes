@@ -40,7 +40,7 @@ class RutaDataTable extends DataTable
      */
     public function query(Ruta $model): QueryBuilder
     {
-        return $model->newQuery()->with(['anggota_ruta.warga','rt'])->select('ruta.*');
+        return $model->newQuery()->where('is_active',true)->with(['anggota_ruta.warga','rt']);
     }
 
     /**

@@ -22,9 +22,23 @@ class KedatanganDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
-            ->addColumn('action', 'kedatangan.action')
+        ->addColumn('action', function($row){
+            $btn = "";
+            if(!$row->verifikasi){
+                $btn = '<button class="btn btn-sm btn-warning mx-1 my-1 verif_modal" onclick="verif(this)" href="'.route('dinamika.kedatangan.verifikasi',$row).'"> Verif</button>';
+            }
+            
+
+            // $btn = $btn.'<button class="btn btn-sm btn-dark my-1 open_modal" value="'.$row->kepala_dusun.'"> Kepala Dusun</button>';
+
+             return $btn;
+             
+        })
             ->addColumn('jumlah orang', function($row){
                 return count($row->dinamika);
+            })
+            ->addColumn('status ruta', function($row){
+                return $row->is_new == true ? 'Baru' : 'Menumpang';
             })
             ->addColumn('identitas', function($row){
                 $identitas = "";
@@ -80,6 +94,7 @@ class KedatanganDataTable extends DataTable
                   ->addClass('text-center'),
              Column::make('waktu'),
             Column::computed('jumlah orang'),
+            Column::computed('status ruta'),
             Column::computed('identitas'),
         ];
     }

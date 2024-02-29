@@ -25,7 +25,7 @@ class Kedatangan extends Model
     }
     public function getWaktuAttribute($date)
     {
-            return Carbon::parse($date)->translatedFormat('d F Y H:i');
+            return Carbon::parse($date)->translatedFormat('d F Y');
     }
     public function dinamika()
     {
