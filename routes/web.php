@@ -15,6 +15,7 @@ use App\Http\Controllers\Warga\RutaController;
 use App\Http\Controllers\Warga\Dinamika\KelahiranController;
 use App\Http\Controllers\Warga\Dinamika\KematianController;
 use App\Http\Controllers\Warga\Dinamika\KepindahanController;
+use App\Http\Controllers\Warga\Dinamika\KedatanganController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MasterController;
 
@@ -154,6 +155,12 @@ Route::controller(KepindahanController::class)->middleware(['auth','verified'])-
 	Route::get('/dinamika/kepindahan', 'index')->name('index');
 	Route::post('/dinamika/kepindahan', 'store')->name('store');
 	Route::put('/dinamika/kepindahan/{pindah}/verif', 'verifikasi')->name('verifikasi');
+	
+});
+Route::controller(KedatanganController::class)->middleware(['auth','verified'])->name('dinamika.kedatangan.')->group(function () {
+	Route::get('/dinamika/kedatangan', 'index')->name('index');
+	Route::post('/dinamika/kedatangan', 'store')->name('store');
+	Route::put('/dinamika/kedatangan/{datang}/verif', 'verifikasi')->name('verifikasi');
 	
 });
 

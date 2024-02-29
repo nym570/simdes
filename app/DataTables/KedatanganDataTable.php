@@ -23,6 +23,9 @@ class KedatanganDataTable extends DataTable
     {
         return (new EloquentDataTable($query))
             ->addColumn('action', 'kedatangan.action')
+            ->addColumn('jumlah orang', function($row){
+                return count($row->dinamika);
+            })
             ->addColumn('identitas', function($row){
                 $identitas = "";
                 foreach ($row->dinamika as $item){
@@ -75,10 +78,9 @@ class KedatanganDataTable extends DataTable
                   ->printable(false)
                   ->width(60)
                   ->addClass('text-center'),
-            Column::make('id'),
-            Column::make('add your columns'),
-            Column::make('created_at'),
-            Column::make('updated_at'),
+             Column::make('waktu'),
+            Column::computed('jumlah orang'),
+            Column::computed('identitas'),
         ];
     }
 

@@ -35,8 +35,7 @@ class KepindahanDataTable extends DataTable
              
         })
         ->addColumn('jumlah orang', function($row){
-            
-            return $row->dinamika->size();
+            return count($row->dinamika);
         })
             ->addColumn('identitas', function($row){
                 $identitas = "";

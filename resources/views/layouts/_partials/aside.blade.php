@@ -83,10 +83,10 @@
 						</div>
 					</a>
 				  </li>
-				<li class="menu-item {{ menuIsActive('m.lkd.*') }}">
-					<a href="{{ route('m.lkd.index') }}" class="menu-link">
-						<div data-i18n="Analytics">
-							{{ __('Datang') }}
+				<li class="menu-item {{ menuIsActive('dinamika.kedatangan.*') }}">
+					<a href="{{ route('dinamika.kedatangan.index') }}" class="menu-link">
+						<div data-i18n="Datang">
+							{{ __('Kedatangan') }}
 						</div>
 					</a>
 				</li>

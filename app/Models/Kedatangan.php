@@ -7,12 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 use App\Http\Traits\Hashidable;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
+use Illuminate\Support\Carbon;
 
 class Kedatangan extends Model
 {
     use HasFactory,Hashidable,LogsActivity;
-    protected $table = 'kedatagan';
+    protected $table = 'kedatangan';
     protected $guarded = ['id'];
+    protected $with = ['dinamika']; 
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
