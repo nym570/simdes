@@ -33,16 +33,8 @@
 		</div>
 
 		<div class="col-sm-7 gy-1 text-nowrap d-flex flex-column justify-content-between ps-4 gap-2 pe-3">
-		  @foreach ($data['warga'] as $key => $item)
-		  <div class="d-flex align-items-center gap-2">
-			  <small class="text-wrap" style="width: 40%">{{$key=='warga'?'tinggal':'sementara ditempat lain'}}</small>
-			  <div class="progress w-100" style="height:10px;">
-				<div class="progress-bar bg-primary" role="progressbar" style="width: {{$item*100/array_sum($data['warga']).'%'}}" aria-valuenow="{{$item*100/array_sum($data['warga'])}}" aria-valuemin="0" aria-valuemax="100"></div>
-			  </div>
-			  <small class="w-px-20 text-end">{{$item}}</small>
-			</div>
-		  @endforeach
-
+		 	<p class="text-muted text-wrap">Rumah Tangga adalah seseorang atau sekelompok orang yang mendiami suatu bangunan</p>
+			<small class="text-muted text-wrap">- Badan Pusat Statistik -</small>
 		</div>
 	  </div>
   </div>
