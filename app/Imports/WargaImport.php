@@ -4,6 +4,7 @@ namespace App\Imports;
 
 use App\Models\Warga;
 use App\Models\Desa;
+use App\Models\RT;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Concerns\ToModel;
@@ -29,6 +30,7 @@ class WargaImport implements ToModel, WithUpserts, WithHeadingRow, WithBatchInse
     public function model(array $row)
     {
         $desa = Desa::get()->first();
+        $rt_id = RT::where('ketua_rt',auth()->user()->roles->where('status','rt')->value('id'))->value('id');
         return new Warga([
             'nik' => $row['nik'],
             'no_kk' => $row['no_kk'],
@@ -45,6 +47,7 @@ class WargaImport implements ToModel, WithUpserts, WithHeadingRow, WithBatchInse
             'alamat_ktp' => $row['alamat_ktp'],
             'status' => $row['status'],
              'no_telp' => $row['no_telp'],
+             'rt_id' => $rt_id,
         ]);
     }
     public function batchSize(): int

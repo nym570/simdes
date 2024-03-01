@@ -30,4 +30,8 @@ class RT extends Model
     {
         return $this->hasMany(Ruta::class);
     }
+    public function warga()
+    {
+        return $this->hasMany(Warga::class);
+    }
 }

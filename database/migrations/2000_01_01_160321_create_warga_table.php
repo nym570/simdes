@@ -28,6 +28,8 @@ return new class extends Migration
             $table->string('no_telp')->nullable();
             $table->boolean('ktp_desa');
             $table->string('status');
+            $table->unsignedBigInteger('rt_id')->nullable();
+            $table->foreign('rt_id')->references('id')->on('rt')->constrained();
             $table->string('dokumen_kk')->nullable();
             $table->string('dokumen_ktp')->nullable();
             $table->string('foto')->nullable();

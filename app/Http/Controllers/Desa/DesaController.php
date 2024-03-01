@@ -64,7 +64,7 @@ class DesaController extends Controller
 			'name' => ['required','string','unique:dusun,name'],
 		]);
         $data['name'] = 'Dusun '.$data['name'];
-        $role = Role::create(['name' => $request->name,'category'=>'pemimpin','status' => 'dusun']);
+        $role = Role::create(['name' => $data['name'],'category'=>'pemimpin','status' => 'dusun']);
         $data['kepala_dusun'] = $role->id;
         $dusun = Dusun::create($data);
         

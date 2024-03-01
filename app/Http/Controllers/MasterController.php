@@ -29,13 +29,14 @@ class MasterController extends Controller
     }
     public function getHubungan(Request $request)
     {
+        
         if(isset($request['uncheck'])){
             $data = DB::table('master_hubungan')->whereNotIn('id', $request['uncheck'])->get();
         }
         else{
             $data = DB::table('master_hubungan')->get();
         }
-       
+        
         if($data){
             foreach($data as $item){
                

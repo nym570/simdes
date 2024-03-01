@@ -11,6 +11,7 @@ use Yajra\DataTables\Html\Editor\Editor;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
+use Illuminate\Database\Eloquent\Builder;
 
 class RutaDataTable extends DataTable
 {
@@ -24,8 +25,11 @@ class RutaDataTable extends DataTable
         return (new EloquentDataTable($query))
             ->addColumn('action', function($row){
                 $btn = ' <a href='.route("ruta.show",$row).' class="btn btn-sm btn-success my-1 mx-1"> Lihat</a>';
-                $btn = $btn.'<button class="btn btn-sm btn-dark mx-1 my-1 open_modal" value="'.route('ruta.edit',$row).'"> Update</button>';
-                $btn = $btn.'<button class="btn btn-sm btn-danger mx-1 my-1 delete_modal" onclick="del(this)" href="'.route('ruta.delete',$row).'"> Hapus</button>';
+                if(in_array('rt',auth()->user()->roles->pluck('status')->toArray())){
+                    $btn = $btn.'<button class="btn btn-sm btn-dark mx-1 my-1 open_modal" value="'.route('ruta.edit',$row).'"> Update</button>';
+                    $btn = $btn.'<button class="btn btn-sm btn-danger mx-1 my-1 delete_modal" onclick="del(this)" href="'.route('ruta.delete',$row).'"> Hapus</button>';
+                }
+                
                 return $btn;
             })
             ->addColumn('kepala keluarga', function($row){
@@ -40,7 +44,40 @@ class RutaDataTable extends DataTable
      */
     public function query(Ruta $model): QueryBuilder
     {
-        return $model->newQuery()->where('is_active',true)->with(['anggota_ruta.warga','rt']);
+        $user_role = auth()->user()->roles->pluck('category')->toArray(); 
+        if(in_array('kependudukan',$user_role)){
+            return $model->newQuery()->with(['anggota_ruta.warga','rt'])->latest();
+        }
+        else if(in_array('pemimpin',$user_role)){
+            $cakupan = auth()->user()->roles->pluck('status')->toArray();
+            if(in_array('desa',$cakupan)){
+                return $model->newQuery()->with(['anggota_ruta.warga','rt'])->latest();
+            }
+            else if(in_array('dusun',$cakupan)){
+                   return $model->newQuery()->with(['anggota_ruta.warga','rt'])->whereHas("rt.rw.dusun", function(Builder $builder) {
+                     $builder->where('kepala_dusun', '=', auth()->user()->roles->where('status','dusun')->value('id'));
+                 });
+                
+            }
+            else if(in_array('rw',$cakupan)){
+                // return $model->newQuery()->whereHas("anggota_ruta.ruta.rt.rw", function(Builder $builder) {
+                //     $builder->where('ketua_rw', '=', auth()->user()->roles->where('status','rw')->value('id'));
+                // });
+                return $model->newQuery()->with(['anggota_ruta.warga','rt'])->whereHas("rt.rw", function(Builder $builder) {
+                    $builder->where('ketua_rw', '=', auth()->user()->roles->where('status','rw')->value('id'));
+                });
+                
+            }
+            else if(in_array('rt',$cakupan)){
+                // return $model->newQuery()->whereHas("anggota_ruta.ruta.rt", function(Builder $builder) {
+                //     $builder->where('ketua_rt', '=', auth()->user()->roles->where('status','rt')->value('id'));
+                // });
+                return $model->newQuery()->with(['anggota_ruta.warga','rt'])->whereHas("rt", function(Builder $builder) {
+                    $builder->where('ketua_rt', '=', auth()->user()->roles->where('status','rt')->value('id'));
+                });
+                
+            }
+        }
     }
 
     /**

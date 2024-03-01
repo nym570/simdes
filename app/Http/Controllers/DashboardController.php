@@ -5,6 +5,13 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Warga;
+use App\Models\Ruta;
+use App\Models\Kelahiran;
+use App\Models\Kematian;
+use App\Models\Kedatangan;
+use App\Models\Kepindahan;
+use App\Models\Dinamika;
 
 class DashboardController extends Controller
 {
@@ -26,15 +33,26 @@ class DashboardController extends Controller
     }
     public function index()
 	{
+        $title = 'Dashboard';
+        $kelahiran = Kelahiran::whereYear('waktu',now()->year)->where('verifikasi',1);
+        $kedatangan = Kedatangan::whereYear('waktu',now()->year)->where('verifikasi',1);
+        $kematian = Kematian::whereYear('waktu',now()->year)->where('verifikasi',1);
+        $kepindahan = Kepindahan::whereYear('waktu',now()->year)->where('verifikasi',1);
+        $warga = Warga::groupby('status')->whereIn('status',['warga','tinggal ditempat lain karena bekerja/bersekolah'])->selectRaw('count(*) as total, status')->pluck('total','status')->all();
+        $ruta = Ruta::count();
+        $data = [
+            'kelahiran' => $kelahiran->count(),
+            'kedatangan' => $kedatangan->count(),
+            'kematian' => $kematian->count(),
+            'kepindahan' => $kepindahan->count(),
+            'warga' => $warga,
+            'ruta' => $ruta
+
+        ];
         if(Auth::guest()){
-            return view('home', ["title"=> 'Sistem Manajemen Desa']);
+            $title = 'Sistem Manajemen Desa';
         }
-        else{
-            if(!auth()->guard('web')->user()->hasVerifiedEmail()){
-                return redirect()->route('verification.notice');
-            }
-            return view('home', ["title"=> 'Dashboard']);
-        }
+        return view('home', ["title"=> $title,"data" => $data]);
 		
 	}
     

@@ -34,6 +34,7 @@ class KepindahanController extends Controller
      */
     public function store(Request $request)
     {
+        
         $nik = $request['nik'];
         $data = $request->validate([
 			'alamat_pindah' => ['required','string'],
@@ -41,14 +42,18 @@ class KepindahanController extends Controller
             'penyebab' => ['required','string'],
             'jenis' => ['required','string'],
             'kode_wilayah_pindah' => ['required','string','size:13'],
-            'bukti' => ['mimes:jpg,png,pdf','max:1024']
-            
+            'bukti' => ['mimes:jpg,png,pdf','max:1024'],
 		]);
+        if(isset($request['keterangan'])){
+            $data['keterangan'] = $request['keterangan'];
+        }
+        
         if($request->file('bukti')){
             $extension = $request->file('bukti')->extension();
-            $data['bukti'] = Storage::disk('public')->putFileAs('dinamika', $request->file('bukti'),date('Ymd').'_kepindahan_'.$nik[0].'.'.$extension);
+            $data['bukti'] = Storage::disk('public')->putFileAs('dinamika', $request->file('bukti'),date('Ymd').'_kepindahan_'.'.'.$extension);
         }
         $kepindahan = Kepindahan::create($data);
+       
         foreach($nik as $item){
             $kepindahan->dinamika()->create([ 'nik' => $item ]);
         }

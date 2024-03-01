@@ -11,17 +11,17 @@
 			@csrf
 			
 			<div class="modal-body">
-				<div class="row g-2 mb-3">
+				<div class="row g-2 mb-3 {{in_array('rt',auth()->user()->roles->pluck('status')->toArray())?'d-none':''}}">
 					<div class="col">
 						<label for="rw_edit" class="form-label">RW*</label>
-						<select id="rw_edit" class="selectpicker w-100" data-style="btn-default" data-live-search="true" name="rw_id" required>
+						<select id="rw_edit" class="selectpicker w-100" data-style="btn-default" data-live-search="true" name="rw_id" {{in_array('rt',auth()->user()->roles->pluck('status')->toArray())?'':'required'}}>
 							
 						</select>
 						<x-invalid error="rw_id" />
 					</div>
 					<div class="col">
 						<label for="rt_edit" class="form-label">RT*</label>
-						<select id="rt_edit" class="selectpicker w-100" data-style="btn-default" data-live-search="true"  name="rt_id" required>
+						<select id="rt_edit" class="selectpicker w-100" data-style="btn-default" data-live-search="true"  name="rt_id" {{in_array('rt',auth()->user()->roles->pluck('status')->toArray())?'':'required'}}>
 							
 						</select>
 						<x-invalid error="rt_id" />

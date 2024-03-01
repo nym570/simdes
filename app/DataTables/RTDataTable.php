@@ -43,7 +43,7 @@ class RTDataTable extends DataTable
      */
     public function query(RT $model): QueryBuilder
     {
-        return $model->newQuery()->with(['rw'])->select('rt.*');
+        return $model->newQuery()->with(['rw.dusun'])->select('rt.*');
     }
 
     /**
@@ -77,6 +77,7 @@ class RTDataTable extends DataTable
                   ->searchable(false),      
             Column::make('name')
                   ->title('nama'),
+            Column::make('rw.dusun.name')->title('dusun')->data('rw.dusun.name'),
             Column::make('rw.name')->title('rw')->data('rw.name'),
             Column::computed('action')
                   ->exportable(false)

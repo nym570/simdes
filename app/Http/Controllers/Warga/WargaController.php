@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Warga;
 
 use App\Models\Warga;
+use App\Models\RT;
 use App\Models\Desa;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -10,6 +11,7 @@ use App\Http\Requests\StoreWargaRequest;
 use App\Http\Requests\UpdateWargaRequest;
 use App\DataTables\WargaDataTable;
 use App\Imports\WargaImport;
+use Illuminate\Database\Eloquent\Builder;
 
 class WargaController extends Controller
 {
@@ -22,7 +24,9 @@ class WargaController extends Controller
 		 return $dataTable->render('menu.warga.index',compact('title'));
     }
     public function getWargaHidup(){
-        $data = Warga::where('status','warga')->get();
+        $data = Warga::where('status','warga')->whereHas("rt", function(Builder $builder) {
+            $builder->where('ketua_rt', '=', auth()->user()->roles->where('status','rt')->value('id'));
+        })->get();
         if($data){
             foreach($data as $item){
                 echo "<option data-tokens='".$item['nama'].$item['nik']."' value='".$item['nik']."'>".$item['nik'].' | '.$item['nama']."</option>";
@@ -52,6 +56,10 @@ class WargaController extends Controller
             $validated['ktp_desa'] = 0;
         }
         $validated['status'] = 'warga';
+        if(auth()->user()->roles->where('status','rt')){
+            $validated['rt_id'] = RT::where('ketua_rt',auth()->user()->roles->where('status','rt')->value('id'))->value('id');
+        }
+       
         $warga = Warga::create($validated);
 
         return back()->withSuccess('Data warga berhasil ditambahkan');

@@ -9,6 +9,8 @@
 
 			<div class="mb-4">
 				<!-- Button trigger modal -->
+
+@if(in_array('rt',auth()->user()->roles->pluck('status')->toArray()))
 <button type="button" class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target="#addRuta">
 	Tambah Rumah Tangga
   </button>
@@ -28,17 +30,17 @@
 			@csrf
 			
 			<div class="modal-body">
-				<div class="row g-2 mb-3">
+				<div id = "domisili" class="row g-2 mb-3 {{in_array('rt',auth()->user()->roles->pluck('status')->toArray())?'d-none':''}}">
 					<div class="col">
 						<label for="rw_id" class="form-label">RW*</label>
-						<select id="rw_id" class="selectpicker w-100" data-style="btn-default" data-live-search="true" title="Pilih RW" name="rw_id" required>
+						<select id="rw_id" class="selectpicker w-100" data-style="btn-default" data-live-search="true" title="Pilih RW" name="rw_id" {{in_array('rt',auth()->user()->roles->pluck('status')->toArray())?'':'required'}}>
 							
 						</select>
 						<x-invalid error="rw" />
 					</div>
 					<div class="col">
 						<label for="rt_id" class="form-label">RT*</label>
-						<select id="rt_id" class="selectpicker w-100" data-style="btn-default" data-live-search="true" title="Pilih RT" name="rt_id" required>
+						<select id="rt_id" class="selectpicker w-100" data-style="btn-default" data-live-search="true" title="Pilih RT" name="rt_id" {{in_array('rt',auth()->user()->roles->pluck('status')->toArray())?'':'required'}}>
 							
 						</select>
 						<x-invalid error="rt_id" />
@@ -78,7 +80,7 @@
 
   
 @include('menu.ruta._partials.edit')
-
+@endif
   
 
 			</div>
@@ -101,7 +103,8 @@
 				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 			}
 		});
-		$.ajax({
+		if(!$('#domisili').hasClass('d-none')){
+			$.ajax({
 					type : 'GET',
 					url: "{{route('master-desa.get-rw')}}",
 					success: function(msg){
@@ -119,6 +122,9 @@
 						alert(err.message);
 					}
 				});
+		}
+		
+		
 				$.ajax({
 					type : 'GET',
 					url: "{{route('get-warga-nonruta')}}",

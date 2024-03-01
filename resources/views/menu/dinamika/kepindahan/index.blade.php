@@ -32,17 +32,26 @@
 					<div class="col mb-3">
 						<label for="jenis" class="form-label">Jenis Kepindahan</label>
 						<select id="jenis" class="selectpicker w-100" data-style="btn-default" data-live-search="false" title="Pilih Jenis Kepindahan" name="jenis" required>
-							<option value="Seluruh Rumah Tangga">Seluruh Rumah Tangga</option>
-    						<option value="Sebagian Anggota Rumah Tangga">Sebagian Anggota Rumah Tangga</option>
+							<option value="Seluruh">Seluruh Rumah Tangga</option>
+    						<option value="Sebagian">Sebagian Anggota Rumah Tangga</option>
 							<option value="Perorangan">Perorangan</option>
 						</select>
 						<x-invalid error="jenis" />
 					</div>
 				</div>
-				<div class="row  mb-3">
+				<div class="row mb-3" id="ruta_pindah">
 					<div class="col">
-						<label for="nik" class="form-label">Warga*</label>
-						<select id="nik" class="selectpicker w-100" data-style="btn-default" multiple data-icon-base="bx" multiple data-actions-box="true" data-live-search="true" data-tick-icon="bx-check text-primary" title="Pilih Warga" name="nik[]" required>
+						<label for="kepala_nik" class="form-label">Kepala Rumah Tangga*</label>
+						<select id="kepala_nik" class="selectpicker w-100" data-style="btn-default" data-live-search="true"  title="Pilih Rumah Tangga" name="kepala_nik">
+							
+						</select>
+						<x-invalid error="kepala_nik" />
+					</div>
+				</div>
+				<div class="row  mb-3" id="warga_pindah">
+					<div class="col">
+						<label for="nik" class="form-label">Warga Pindah*</label>
+						<select id="nik" class="selectpicker w-100" data-style="btn-default" multiple data-icon-base="bx" multiple data-actions-box="true" data-live-search="true" data-tick-icon="bx-check text-primary" title="Pilih Warga" name="nik[]">
 							
 						</select>
 						<x-invalid error="nik" />
@@ -186,11 +195,16 @@
 <script>
 		
 		$( document ).ready(function() {
+			
 			$.ajaxSetup({
 			headers: {
 				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 			}
 		});
+		$('#ruta_pindah').hide();
+		$('#warga_pindah').addClass('d-none');
+		$('#warga_pindah').prop('required',false);
+		
 		$.ajax({
 					type : 'GET',
 					url: "{{route('wilayah.get-prov')}}",
@@ -206,24 +220,86 @@
 						alert(err.message);
 					}
 				});
+				
+		
+	});
+	$(function(){
+		$('#jenis').on('change',function(){
+				$('#jenis').selectpicker('render');
+				let jenis = $('#jenis').val();
+				if(jenis == 'Perorangan'){
+					$('#ruta_pindah').hide();
+					$('#warga_pindah').removeClass('d-none');
+					$('#warga_pindah').prop('required',true);
+					$.ajax({
+						type : 'GET',
+						url: "{{route('warga.get-warga')}}",
+						success: function(msg){
+							$('#nik').selectpicker('destroy');
+							$('#nik').html(msg);
+							$('#nik').selectpicker('render');	
+						},
+						error: function (xhr) {
+							var err = JSON.parse(xhr.responseText);
+							alert(err.message);
+						}
+					});
+				}
+				else{
+					$('#ruta_pindah').show();
+					$.ajax({
+						type : 'GET',
+						url: "{{route('get-kepala-ruta')}}",
+						success: function(msg){
+							$('#kepala_nik').selectpicker('destroy');
+							$('#kepala_nik').html(msg);
+							$('#kepala_nik').selectpicker('render');
+						},
+						error: function (xhr) {
+							var err = JSON.parse(xhr.responseText);
+							alert(err.message);
+						}
+					});
+					if(jenis == 'Seluruh'){
+						$('#warga_pindah').addClass('d-none');
+						$('#warga_pindah').prop('required',false);
+					}
+					else if(jenis == 'Sebagian'){
+						$('#warga_pindah').removeClass('d-none');
+						$('#warga_pindah').prop('required',true);
+					
+					}
+				}
+				
+			});
+			$('#kepala_nik').on('change',function(){
+				$('#kepala_nik').selectpicker('render');
+				let kepala = $('#kepala_nik').val();
+				
 				$.ajax({
-					type : 'GET',
-					url: "{{route('warga.get-warga')}}",
+					type : 'POST',
+					url: "{{route('ruta.anggota-get')}}",
+					data : {'kepala':kepala},
 					success: function(msg){
 						$('#nik').selectpicker('destroy');
 						$('#nik').html(msg);
 						$('#nik').selectpicker('render');
-						
-						
+						let jenis = $('#jenis').val();
+						if(jenis == 'Seluruh'){
+							$('#nik').selectpicker('selectAll');
+							console.log()
+						}
+						else if (jenis == 'Sebagian'){
+							$('#nik').selectpicker('deselectAll');
+						}
 					},
 					error: function (xhr) {
 						var err = JSON.parse(xhr.responseText);
 						alert(err.message);
 					}
-				});
-		
-	});
-	$(function(){
+					
+				})
+			});
 			$('#provinsi').on('change',function(){
 				$('#provinsi').selectpicker('render');
 				let id_prov = $('#provinsi').val();

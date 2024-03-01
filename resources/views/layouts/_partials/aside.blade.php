@@ -28,6 +28,7 @@
 			</a>
 		</li>
 @auth
+	@if(!empty(array_intersect(['kependudukan','pemimpin'],auth()->user()->roles->pluck('category')->toArray())))
 		<li class="menu-header small text-uppercase">
 			<span class="menu-header-text">
 				{{ __('Manajemen Warga') }}
@@ -101,6 +102,7 @@
 			  
 			</ul>
 		</li>
+	@endif
 @endauth
 		
 

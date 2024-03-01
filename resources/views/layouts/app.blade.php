@@ -132,6 +132,7 @@
 	<script src="{{ asset('assets/vendor/js/bootstrap.js') }}"></script>
 	<script src="{{ asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js') }}"></script>
 	<script src="{{ asset('assets/vendor/js/menu.js') }}"></script>
+	<script src="{{ asset('assets/vendor/libs/chartjs/chartjs.js') }}"></script>
 	<!-- endbuild -->
 
 	<!-- Vendors JS -->

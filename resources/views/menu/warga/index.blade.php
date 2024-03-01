@@ -9,6 +9,7 @@
 
 			<div class="mb-4">
 				<!-- Button trigger modal -->
+@if(in_array('rt',auth()->user()->roles->pluck('status')->toArray()))
 <button type="button" class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target="#addWarga">
 	Tambah Warga
   </button>
@@ -125,7 +126,7 @@
 							</div>
 						  </div>
 						</div>
-
+						
 						<div class="divider divider-dashed mb-2">
 							<div class="divider-text">Biodata Warga</div>
 						  </div>
@@ -216,6 +217,7 @@
 	  </div>
 	</div>
   </div>
+@endif
 
 			</div>
 

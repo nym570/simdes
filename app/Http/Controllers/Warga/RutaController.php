@@ -3,14 +3,14 @@
 namespace App\Http\Controllers\Warga;
 
 use App\Models\Ruta;
+use App\Models\RT;
 use App\Models\Warga;
 use App\Models\AnggotaRuta;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreRutaRequest;
-use App\Http\Requests\UpdateRutaRequest;
 use App\DataTables\RutaDataTable;
 use App\DataTables\AnggotaRutaDataTable;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Builder;
 
 class RutaController extends Controller
 {
@@ -26,16 +26,22 @@ class RutaController extends Controller
     public function getWargaNonRuta()
     {
         $anggota = AnggotaRuta::pluck('anggota_nik')->all();
-        $warga = Warga::whereNotIn('nik', $anggota)->get();
+
+        
+        $warga = Warga::where('status','warga')->whereNotIn('nik', $anggota)->whereHas("rt", function(Builder $builder) {
+            $builder->where('ketua_rt', '=', auth()->user()->roles->where('status','rt')->value('id'));
+        })->get();
         if($warga){
             foreach($warga as $item){
-                echo "<option data-tokens='".$item['nik']."' value='".$item['nik']."'>".$item['nik'].' | '.$item['nama']."</option>";
+                echo "<option data-tokens='".$item['nik'].$item['nama']."' value='".$item['nik']."'>".$item['nik'].' | '.$item['nama']."</option>";
             }
         }
     }
     public function getKepalaRuta()
     {
-        $kepala = AnggotaRuta::where('hubungan','Kepala Keluarga')->with('warga')->get();
+        $kepala = AnggotaRuta::where('hubungan','Kepala Keluarga')->with('warga')->whereHas("ruta.rt", function(Builder $builder) {
+            $builder->where('ketua_rt', '=', auth()->user()->roles->where('status','rt')->value('id'));
+        })->get();
         if($kepala){
             foreach($kepala as $item){
                 echo "<option data-tokens='".$item->warga->nik.$item->warga->nama."' value='".$item->warga->nik."'>".$item->warga->nik.' | '.$item->warga->nama."</option>";
@@ -53,9 +59,15 @@ class RutaController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreRutaRequest $request)
+    public function store(Request $request)
     {
-        $validated = $request->validated();
+        $validated =$request->validate([
+			'alamat_domisili' => ['required','string'],
+            
+		]);
+        if(auth()->user()->roles->where('status','rt')){
+            $validated['rt_id'] = RT::where('ketua_rt',auth()->user()->roles->where('status','rt')->value('id'))->value('id');
+        }
         $validated['jumlah_art'] = 1;
         $ruta = Ruta::create($validated)->id;
         $kepala = [
@@ -99,17 +111,30 @@ class RutaController extends Controller
     }
     public function getAnggota(Request $request)
     {
-        $data = AnggotaRuta::where('ruta_id',$request['id'])->with('warga')->get();
-        if($data){
-            foreach($data as $item){
-                if($item->hubungan != 'Kepala Keluarga'){
-                    echo "<option data-tokens='".$item->warga->nik."' value='".$item->warga->nik."'>".$item->warga->nik.' | '.$item->warga->nama."</option>";
+        if(isset($request['kepala'])){
+            $ruta = AnggotaRuta::where('anggota_nik',$request['kepala'])->first()->value('ruta_id');
+            $data = AnggotaRuta::where('ruta_id',$ruta)->with(['warga'])->get();
+            if($data){
+                foreach($data as $item){
+                        echo "<option data-tokens='".$item->warga->nik."' value='".$item->warga->nik."'>".$item->warga->nik.' | '.$item->warga->nama."</option>";
                 }
-                
+            }
+        }
+        else{
+            $data = AnggotaRuta::where('ruta_id',$request['id'])->with('warga')->get();
+            if($data){
+                foreach($data as $item){
+                    if($item->hubungan != 'Kepala Keluarga'){
+                        echo "<option data-tokens='".$item->warga->nik."' value='".$item->warga->nik."'>".$item->warga->nik.' | '.$item->warga->nama."</option>";
+                    }
+                    
+                }
             }
         }
         
+        
     }
+
     public function updateKepala(Request $request)
     {
         if(isset($request['nik_lama'])){
@@ -140,9 +165,12 @@ class RutaController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateRutaRequest $request, Ruta $ruta)
+    public function update(Request $request, Ruta $ruta)
     {
-        $validated = $request->validated();
+        $validated = $validated =$request->validate([
+			'alamat_domisili' => ['required','string'],
+            
+		]);
         $ruta->update($validated);
 
         return back()->withSuccess('Rumah Tangga Berhasil diubah');

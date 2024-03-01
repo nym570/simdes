@@ -10,6 +10,7 @@
 			<div class="mb-4">
 				<!-- Button trigger modal -->
 				<a href="{{route('ruta.index')}}" class="btn btn-dark"> Kembali </a>
+@if(in_array('rt',auth()->user()->roles->pluck('status')->toArray()))
 <button type="button" class="btn btn-primary" id="buttonAdd">
 	Tambah Anggota
   </button>
@@ -117,12 +118,13 @@
   </div>
 @endif
 
-			</div>
+			
 			<form method="POST" class="d-none" id="delete-form">
 				@csrf
 				@method("DELETE")
 			</form>
-			
+			@endif	
+		</div>	
 			@include('menu.warga._partials.table')
 
 		</div>
@@ -157,7 +159,7 @@
 				var ajax2=$.ajax({
 					type : 'GET',
 					url: "{{route('master.ruta.get-hubungan')}}",
-					data:{uncheck:1},
+					data:{uncheck:[1]},
 					success: function(msg){
 						$('#hubungan').selectpicker('destroy');
 						$('#hubungan').html(msg);

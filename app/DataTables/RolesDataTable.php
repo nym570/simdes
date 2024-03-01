@@ -51,7 +51,7 @@ class RolesDataTable extends DataTable
                     ->setTableId('roles-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
-                    ->orderBy(1)
+                    ->orderBy(3)
                     ->selectStyleSingle()
                     ->parameters([
                         'dom'          => 'Bfrtip',
@@ -73,6 +73,8 @@ class RolesDataTable extends DataTable
                     ->title('nama'),
             Column::make('category')
                     ->title('kategori'),
+            Column::make('status')
+                    ->title('cakupan'),
             Column::computed('action')
                   ->exportable(false)
                   ->printable(false)

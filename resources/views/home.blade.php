@@ -1,38 +1,131 @@
-<x-app-layout title="Home">
-	<div class="row">
-		@auth
-		<div class="col-lg-8 mb-4">
-			<div class="card">
-				<div class="d-flex align-items-end row">
-					
-					<div class="col-sm-7">
-						
-						<div class="card-body">
-							<h5 class="card-title text-primary">
-								{{ __('Hi!') }}
-							</h5>
-							<p class="mb-4">
-								{{ __('You have done ') }}
-								<span class="fw-bold">
-									{{ __('72%') }}
-								</span>
-								{{ __(' more sales today. Check your new badge in your profile.') }}
-							</p>
-
-							<a href="javascript:;" class="btn btn-sm btn-outline-primary">
-								{{ __('View Badges') }}
-							</a>
-						</div>
-					</div>
-					
-					<div class="col-sm-5 text-center text-sm-left">
-						<div class="card-body pb-0 px-0 px-md-4">
-							<img src="{{ asset('assets/img/illustrations/man-with-laptop-light.png') }}" height="140" alt="View Badge User" data-app-dark-img="illustrations/man-with-laptop-dark.png" data-app-light-img="illustrations/man-with-laptop-light.png">
-						</div>
-					</div>
+@extends('layouts.app')
+@section('container')
+<div class="row mb-4 g-4">
+	<div class="col-md-6">
+	  <div class="card h-100">
+		<div class="card-body row widget-separator">
+		  <div class="col-sm-5 border-shift border-end">
+			<h1 class="text-primary text-center mb-0">{{$data['warga']['warga']+$data['warga']['tinggal ditempat lain karena bekerja/bersekolah']}}</h1>
+			<h3 class=" text-center">Warga Desa Hidup</h3>
+		  </div>
+  
+		  <div class="col-sm-7 gy-1 text-nowrap d-flex flex-column justify-content-between ps-4 gap-2 pe-3">
+			@foreach ($data['warga'] as $key => $item)
+			<div class="d-flex align-items-center gap-2">
+				<small class="text-wrap" style="width: 40%">{{$key=='warga'?'tinggal':'sementara ditempat lain'}}</small>
+				<div class="progress w-100" style="height:10px;">
+				  <div class="progress-bar bg-primary" role="progressbar" style="width: {{$item*100/array_sum($data['warga']).'%'}}" aria-valuenow="{{$item*100/array_sum($data['warga'])}}" aria-valuemin="0" aria-valuemax="100"></div>
 				</div>
-			</div>
-		</div>
-		@endauth
+				<small class="w-px-20 text-end">{{$item}}</small>
+			  </div>
+			@endforeach
+
+		  </div>
+	    </div>
 	</div>
-</x-app-layout>
+	
+</div><div class="col-md-6">
+	<div class="card h-100">
+	  <div class="card-body row widget-separator">
+		<div class="col-sm-5 border-shift border-end">
+		  <h1 class="text-primary text-center mb-0">{{$data['ruta']}}</h1>
+		  <h3 class=" text-center">Rumah Tangga</h3>
+		</div>
+
+		<div class="col-sm-7 gy-1 text-nowrap d-flex flex-column justify-content-between ps-4 gap-2 pe-3">
+		  @foreach ($data['warga'] as $key => $item)
+		  <div class="d-flex align-items-center gap-2">
+			  <small class="text-wrap" style="width: 40%">{{$key=='warga'?'tinggal':'sementara ditempat lain'}}</small>
+			  <div class="progress w-100" style="height:10px;">
+				<div class="progress-bar bg-primary" role="progressbar" style="width: {{$item*100/array_sum($data['warga']).'%'}}" aria-valuenow="{{$item*100/array_sum($data['warga'])}}" aria-valuemin="0" aria-valuemax="100"></div>
+			  </div>
+			  <small class="w-px-20 text-end">{{$item}}</small>
+			</div>
+		  @endforeach
+
+		</div>
+	  </div>
+  </div>
+</div>
+	
+  
+<div class="row g-4 mb-4">
+	<div class="col-sm-6 col-xl-3">
+	  <div class="card">
+		<div class="card-body">
+		  <div class="d-flex align-items-start justify-content-between">
+			<div class="content-left">
+			  <span>Lahir</span>
+			  <div class="d-flex align-items-end mt-2">
+				<h4 class="mb-0 me-2">{{$data['kelahiran']}}</h4>
+			  </div>
+			</div>
+			<div class="avatar">
+			  <span class="avatar-initial rounded bg-label-primary">
+				<i class="bx bx-user bx-sm"></i>
+			  </span>
+			</div>
+		  </div>
+		</div>
+	  </div>
+	</div>
+	<div class="col-sm-6 col-xl-3">
+	  <div class="card">
+		<div class="card-body">
+		  <div class="d-flex align-items-start justify-content-between">
+			<div class="content-left">
+			  <span>Mati</span>
+			  <div class="d-flex align-items-end mt-2">
+				<h4 class="mb-0 me-2">{{$data['kematian']}}</h4>
+			  </div>
+			</div>
+			<div class="avatar">
+			  <span class="avatar-initial rounded bg-label-danger">
+				<i class="bx bx-user-check bx-sm"></i>
+			  </span>
+			</div>
+		  </div>
+		</div>
+	  </div>
+	</div>
+	<div class="col-sm-6 col-xl-3">
+	  <div class="card">
+		<div class="card-body">
+		  <div class="d-flex align-items-start justify-content-between">
+			<div class="content-left">
+			  <span>Datang</span>
+			  <div class="d-flex align-items-end mt-2">
+				<h4 class="mb-0 me-2">{{$data['kedatangan']}}</h4>
+			  </div>
+			</div>
+			<div class="avatar">
+			  <span class="avatar-initial rounded bg-label-success">
+				<i class="bx bx-group bx-sm"></i>
+			  </span>
+			</div>
+		  </div>
+		</div>
+	  </div>
+	</div>
+	<div class="col-sm-6 col-xl-3">
+	  <div class="card">
+		<div class="card-body">
+		  <div class="d-flex align-items-start justify-content-between">
+			<div class="content-left">
+			  <span>Pindah</span>
+			  <div class="d-flex align-items-end mt-2">
+				<h4 class="mb-0 me-2">{{$data['kepindahan']}}</h4>
+			  </div>
+			</div>
+			<div class="avatar">
+			  <span class="avatar-initial rounded bg-label-warning">
+				<i class="bx bx-user-voice bx-sm"></i>
+			  </span>
+			</div>
+		  </div>
+		</div>
+	  </div>
+	</div>
+  </div>
+</div>
+@endsection
