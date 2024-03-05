@@ -66,6 +66,7 @@ return new class extends Migration
             $table->dateTime('waktu');
             $table->string('kode_wilayah_pindah');
             $table->string('alamat_pindah');
+            $table->string('jenis');
             $table->string('penyebab');
             $table->boolean('verifikasi')->default(false);
             $table->string('bukti');

@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('alamat_kantor')->nullable();
             $table->string('email_desa')->nullable();
             $table->string('no_telp')->nullable();
-            $table->string('deskripsi')->nullable();
+            $table->text('deskripsi')->nullable();
             $table->unsignedBigInteger('kepala_desa');
             $table->foreign('kepala_desa')->references('id')->on('roles')->constrained();
             $table->timestamps();

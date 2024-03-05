@@ -25,9 +25,9 @@ class DusunDataTable extends DataTable
         return (new EloquentDataTable($query))
         ->addColumn('action', function($row){
    
-            $btn = ' <a href='.route("users.show",$row).' class="btn btn-sm btn-success my-1"> Lihat</a>';
+            $btn = ' <a href='.route("users.show",$row).' class="btn btn-sm btn-success my-1 mx-1"> Lihat</a>';
 
-            $btn = $btn.'<button class="btn btn-sm btn-dark my-1 open_modal" value="'.$row->kepala_dusun.'"> Kepala Dusun</button>';
+            $btn = $btn.'<button class="btn btn-sm btn-dark my-1 mx-1 open_modal" value="'.$row->kepala_dusun.'"> Kepala Dusun</button>';
 
             
             
@@ -58,10 +58,13 @@ class DusunDataTable extends DataTable
                     ->minifiedAjax(route('m.lkd.getDusun'))
                     ->orderBy(1)
                     ->selectStyleSingle()
+                    ->paging(true)
                     ->parameters([
-                        'dom'          => 'Bfrtip',
-                        'responsive' => true,
-                        'autoWidth' => false
+                        'dom'          => 'Blfrtip',
+                        'buttons'      => ['pdf','excel', 'print', 'reload'],
+                        'responsive'    => true,
+                        'auto-width'    =>false,
+                        
                     ]);
     }
 
@@ -74,14 +77,16 @@ class DusunDataTable extends DataTable
             
             Column::make('DT_RowIndex')
                   ->title('#')
+                  ->width(50)
                   ->orderable(false)
-                  ->searchable(false),      
-            Column::make('name')->title('Dusun'),
-            Column::computed('action')
+                  ->searchable(false),
+             Column::computed('action')
                   ->exportable(false)
                   ->printable(false)
-                  ->width(100)
-                  ->addClass('text-center'),
+                  ->width(150),
+                  
+            Column::make('name')->title('Dusun'),
+            
         ];
     }
 

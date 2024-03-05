@@ -26,6 +26,20 @@ class WargaDataTable extends DataTable
         ->addColumn('action', function($row){
    
             $btn = ' <a href='.route("warga.show",$row).' class="btn btn-sm btn-success my-1"> Lihat</a>';
+            if(!($row->status == 'meninggal' || $row->status == 'pindah')){
+                $btn = $btn.'<div class="btn-group me-3">
+                <button class="btn btn-sm btn-warning dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Aksi
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <li><a class="dropdown-item" href="javascript:void(0);">Atur Domisili</a></li>
+                  <li><a class="dropdown-item" href="javascript:void(0);">Sementara keluar</a></li>
+                  <li><a class="dropdown-item" href="javascript:void(0);">Upload Dokumen</a></li>
+                </ul>
+              </div>';
+            }
+          
+           
              return $btn;
              
         })
@@ -39,6 +53,7 @@ class WargaDataTable extends DataTable
                 return $row->tempat_lahir.', '.$row->tanggal_lahir;
             })
             ->addIndexColumn() 
+            
             ->setRowId('id');
     }
 
@@ -49,12 +64,12 @@ class WargaDataTable extends DataTable
     {
         $user_role = auth()->user()->roles->pluck('category')->toArray(); 
         if(in_array('kependudukan',$user_role)){
-            return $model->newQuery()->with('rt')->latest();
+            return $model->newQuery()->with('rt');
         }
         else if(in_array('pemimpin',$user_role)){
             $cakupan = auth()->user()->roles->pluck('status')->toArray();
             if(in_array('desa',$cakupan)){
-                return $model->newQuery()->with('rt')->latest();
+                return $model->newQuery()->with('rt');
             }
             else if(in_array('dusun',$cakupan)){
                 // return $model->newQuery()->whereHas("anggota_ruta.ruta.rt.rw.dusun", function(Builder $builder) {
@@ -96,11 +111,42 @@ class WargaDataTable extends DataTable
                     ->setTableId('warga-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
-                    ->orderBy(1)
+                    ->orderBy(2,'desc')
                     ->selectStyleSingle()
+                    ->paging(true)
                     ->parameters([
-                        'dom'          => 'Bfrtip',
+                        'dom'          => 'Blfrtip',
                         'buttons'      => ['pdf','excel', 'print', 'reload'],
+                        'initComplete' => "function () {
+                            this.api()
+                                .columns()
+                                .every(function (index) {
+                                    if (index == 0 || index == 1 || index == 2) return;
+                                    let column = this;
+                     
+                                    // Create select element
+                                    let select = document.createElement('select');
+                                    select.add(new Option(''));
+                                    column.footer().replaceChildren(select);
+                     
+                                    // Apply listener for user change in value
+                                    select.addEventListener('change', function () {
+                                        column
+                                            .search(select.value, {exact: true})
+                                            .draw();
+                                    });
+                     
+                                    // Add list of options
+                                    column
+                                        .data()
+                                        .unique()
+                                        .sort()
+                                        .each(function (d, j) {
+                                            select.add(new Option(d));
+                                        });
+                                });
+                        }",
+                        
                     ]);
     }
 

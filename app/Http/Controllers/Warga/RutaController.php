@@ -63,7 +63,7 @@ class RutaController extends Controller
     {
         $validated =$request->validate([
 			'alamat_domisili' => ['required','string'],
-            
+            'kepala_ruta' => ['required'],
 		]);
         if(auth()->user()->roles->where('status','rt')){
             $validated['rt_id'] = RT::where('ketua_rt',auth()->user()->roles->where('status','rt')->value('id'))->value('id');

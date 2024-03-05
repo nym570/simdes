@@ -23,10 +23,16 @@ class WargaController extends Controller
         $title = 'Manajemen Warga';
 		 return $dataTable->render('menu.warga.index',compact('title'));
     }
-    public function getWargaHidup(){
-        $data = Warga::where('status','warga')->whereHas("rt", function(Builder $builder) {
-            $builder->where('ketua_rt', '=', auth()->user()->roles->where('status','rt')->value('id'));
-        })->get();
+    public function getWargaHidup(Request $request){
+        if($request['tujuan']=='pemerintahan'){
+            $data = Warga::doesntHave('pemerintahan')->where('status','warga')->get();
+        }
+        else if($request['warga']=='2'){
+            $data = Warga::where('status','warga')->whereHas("rt", function(Builder $builder) {
+                $builder->where('ketua_rt', '=', auth()->user()->roles->where('status','rt')->value('id'));
+            })->get();
+        }
+       
         if($data){
             foreach($data as $item){
                 echo "<option data-tokens='".$item['nama'].$item['nik']."' value='".$item['nik']."'>".$item['nik'].' | '.$item['nama']."</option>";

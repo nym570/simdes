@@ -1,6 +1,6 @@
 <div class="table-responsive pb-5">
 	
-	{!! $dataTable->table() !!}
+	{!! $dataTable->table(['class' => 'table table-striped mb-4'], true) !!}
 
 
 	<form method="POST" class="d-none" id="status-form">

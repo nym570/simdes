@@ -43,6 +43,7 @@
 	<link rel="stylesheet" href="{{ asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
 	<link rel="stylesheet" href="{{ asset('assets/vendor/libs/bootstrap-select/bootstrap-select.css') }}" />
 	<link rel="stylesheet" href="{{ asset('assets/vendor/libs/bs-stepper/bs-stepper.css') }}" />
+	<link rel="stylesheet" href="{{ asset('assets/vendor/libs/swiper/swiper.css') }}" />
 
 	<!-- Page CSS -->
 
@@ -133,6 +134,7 @@
 	<script src="{{ asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js') }}"></script>
 	<script src="{{ asset('assets/vendor/js/menu.js') }}"></script>
 	<script src="{{ asset('assets/vendor/libs/chartjs/chartjs.js') }}"></script>
+	<script src="{{ asset('assets/vendor/libs/swiper/swiper.js') }}"></script>	
 	<!-- endbuild -->
 
 	<!-- Vendors JS -->

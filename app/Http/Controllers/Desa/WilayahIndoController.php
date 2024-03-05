@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Desa;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 
 class WilayahIndoController extends Controller
 {
@@ -17,7 +18,7 @@ class WilayahIndoController extends Controller
         if($response->successful()){
             $data = $response['data'];
             foreach($data as $item){
-                echo "<option data-tokens='".$item['nama']."' value='".$item['kode']."'>".$item['nama']."</option>";
+                echo "<option data-tokens='".$item['kode'].$item['nama']."' value='".$item['kode']."'>".Str::title($item['nama'])."</option>";
             }
         }
     }
@@ -28,7 +29,7 @@ class WilayahIndoController extends Controller
         if($response->successful()){
             $data = $response['data'];
             foreach($data as $item){
-                echo "<option data-tokens='".$item['nama']."' value='".$item['kode']."'>".$item['nama']."</option>";
+                echo "<option data-tokens='".$item['kode'].$item['nama']."' value='".$item['kode']."'>".Str::title($item['nama'])."</option>";
             }
         }
     }
@@ -40,7 +41,7 @@ class WilayahIndoController extends Controller
         if($response->successful()){
             $data = $response['data'];
             foreach($data as $item){
-                echo "<option data-tokens='".$item['nama']."' value='".$item['kode']."'>".$item['nama']."</option>";
+                echo "<option data-tokens='".$item['kode'].$item['nama']."' value='".$item['kode']."'>".Str::title($item['nama'])."</option>";
             }
         }
     }
@@ -52,7 +53,7 @@ class WilayahIndoController extends Controller
         if($response->successful()){
             $data = $response['data'];
             foreach($data as $item){
-                echo "<option data-tokens='".$item['nama']."' value='".$item['kode']."'>".$item['nama']."</option>";
+                echo "<option data-tokens='".$item['kode'].$item['nama']."' value='".$item['kode']."'>".Str::title($item['nama'])."</option>";
             }
         }
     }

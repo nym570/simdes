@@ -75,8 +75,6 @@ Route::controller(DesaController::class)->middleware(['admin.auth','admin.verifi
 	Route::get('/admin/desa', 'index')->name('index');
 	Route::put('/admin/desa/{desa}/update', 'update')->name('update');
 	Route::put('/admin/desa/{desa}/update-deskripsi', 'updateDesc')->name('deskripsi');
-
-	
 });
 Route::controller(DesaController::class)->middleware(['admin.auth','admin.verified'])->name('m.lkd.')->group(function () {
 	Route::get('/admin/desa/kemasyarakatan', 'lkd')->name('index');
@@ -86,12 +84,19 @@ Route::controller(DesaController::class)->middleware(['admin.auth','admin.verifi
 	Route::post('/admin/desa/kemasyarakatan/dusun', 'storeDusun')->name('dusun.store');
 	Route::post('/admin/desa/kemasyarakatan/rw', 'storeRW')->name('rw.store');
 	Route::post('/admin/desa/kemasyarakatan/rt', 'storeRT')->name('rt.store');
-	
+});
+Route::controller(DesaController::class)->name('desa.')->group(function () {
+	Route::get('/desa', 'show')->name('show');
 });
 Route::controller(PemerintahanController::class)->middleware(['admin.auth','admin.verified'])->name('m.pemerintahan.')->group(function () {
 	Route::get('/admin/pemerintahan', 'index')->name('index');
 	Route::post('/admin/pemerintahan', 'store')->name('store');
 	Route::get('/admin/pemerintahan/{pemerintahan}/show', 'show')->name('show');
+	Route::put('/admin/pemerintahan/{pemerintahan}/update', 'update')->name('update');
+	Route::delete('/admin/pemerintahan/{pemerintahan}/delete', 'delete')->name('delete');
+});
+Route::controller(PemerintahanController::class)->name('pemerintahan.')->group(function () {
+	Route::get('pemerintahan/get', 'get')->name('get');
 
 	
 });
@@ -134,7 +139,7 @@ Route::controller(MasterController::class)->name('master.')->group(function () {
 Route::controller(WargaController::class)->middleware(['auth','verified'])->name('warga.')->group(function () {
 	Route::get('/warga', 'index')->name('index');
 	Route::post('/warga', 'store')->name('store');
-	Route::get('/warga/get-warga', 'getWargaHidup')->name('get-warga');
+	Route::get('warga/get-warga', 'getWargaHidup')->name('get-warga');
 	Route::get('/warga/{warga}', 'show')->name('show');
 	Route::post('/warga/import', 'import')->name('import');
 });

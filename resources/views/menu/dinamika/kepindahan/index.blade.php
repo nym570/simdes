@@ -7,7 +7,7 @@
 				{{ __('Daftar Kepindahan Warga') }}
 			</h5>
 
-			<div class="mb-4">
+			<div class="mb-1">
 				<!-- Button trigger modal -->
 <button type="button" class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target="#addPindah">
 	Tambah Kepindahan
@@ -190,7 +190,7 @@
 		@csrf
 		@method("PUT")
 	</form>
-
+</div>
 
 <script>
 		

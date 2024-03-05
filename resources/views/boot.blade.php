@@ -33,7 +33,7 @@
 						  <div id="accordionOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
 							<div class="accordion-body">
 								<div class="row">
-									<div class="col">
+									<div class="col mb-3">
 										<label for="provinsi" class="form-label">Provinsi</label>
 										<select id="provinsi" class="selectpicker w-100" data-style="btn-default" data-live-search="true" title="Pilih provinsi" name="kode_provinsi">
 											
@@ -142,7 +142,7 @@
 						$('#provinsi').on('change',function(){
 							$('#provinsi').selectpicker('render');
 							let id_prov = $('#provinsi').val();
-							let el = $("#provinsi option:selected").attr("data-tokens");
+							let el = $("#provinsi option:selected").text();
 							$('#nama_prov').val(el);
 							
 							$.ajax({
@@ -164,7 +164,7 @@
 						$('#kabupaten').on('change',function(){
 							$('#kabupaten').selectpicker('render');
 							let id_kab = $('#kabupaten').val();
-							let el = $("#kabupaten option:selected").attr("data-tokens");
+							let el = $("#kabupaten option:selected").text();
 							$('#nama_kab').val(el);
 			
 							$.ajax({
@@ -188,7 +188,7 @@
 						$('#kecamatan').on('change',function(){
 							$('#kecamatan').selectpicker('render');
 							let id_kec = $('#kecamatan').val();
-							let el = $("#kecamatan option:selected").attr("data-tokens");
+							let el = $("#kecamatan option:selected").text();
 							$('#nama_kec').val(el);
 							$.ajax({
 								type : 'GET',
@@ -212,7 +212,7 @@
 						$('#desa').on('change',function(){
 							$('#desa').selectpicker('render');
 							let id_desa = $('#desa').val();
-							let el = $("#desa option:selected").attr("data-tokens");
+							let el = $("#desa option:selected").text();
 							$('#nama_des').val(el);
 							$('#kode_wilayah').val(id_desa);
 						});

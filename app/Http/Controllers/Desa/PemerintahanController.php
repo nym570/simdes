@@ -58,6 +58,11 @@ class PemerintahanController extends Controller
 		return view('admin.desa.pemerintahan.show', compact(['pemerintahan','title']));
     }
 
+    public function get(Request $request)
+    {
+		return json_encode(Pemerintahan::where('id',$request['id'])->with('warga:nik,nama')->first());
+    }
+
     /**
      * Show the form for editing the specified resource.
      */
@@ -71,14 +76,37 @@ class PemerintahanController extends Controller
      */
     public function update(Request $request, Pemerintahan $pemerintahan)
     {
-        //
+        $validasi = [
+            'jabatan' => ['required','string','unique:pemerintahan,jabatan,'. $pemerintahan->id],
+        ];
+        
+        if(!is_null($request['nik'])){
+            $validasi['nik'] = ['required', 'string','size:16','unique:pemerintahan,nik',new NIKExist];
+        }
+        if(isset($request['foto'])){
+            $validasi['foto'] = [ 'mimes:jpg,png','max:1024'];
+        }
+        $data = $request->validate($validasi);
+        $data['nik'] = $request['nik_current'];
+        $data['tugas'] = $request['tugas'];
+        $data['wewenang'] = $request['wewenang'];
+        
+        
+        if($request->file('foto')){
+            $extension = $request->file('foto')->extension();
+            $data['foto'] = Storage::disk('public')->putFileAs('pemerintahan', $request->file('foto'),date('Ymd').'_'.$data['jabatan'].'_'.$data['nik'].'.'.$extension);
+            Storage::disk('public')->delete($request['current_foto_path']);
+        }
+        $pemerintahan->update($data);
+        return back()->withSuccess('Data perangkat desa berhasil diubah');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Pemerintahan $pemerintahan)
+    public function delete(Pemerintahan $pemerintahan)
     {
-        //
+        $pemerintahan->delete();
+		return back()->withSuccess('Perangkat Desa Berhasil dihapus');
     }
 }

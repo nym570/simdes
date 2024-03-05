@@ -23,9 +23,9 @@ class KepindahanDataTable extends DataTable
     {
         return (new EloquentDataTable($query))
         ->addColumn('action', function($row){
-            $btn = "";
+            $btn = '<button class="btn btn-sm btn-success mx-1 my-1 verif_modal" onclick="verif(this)" href="'.route('dinamika.kepindahan.verifikasi',$row).'"> Lihat</button>';
             if(!$row->verifikasi){
-                $btn = '<button class="btn btn-sm btn-warning mx-1 my-1 verif_modal" onclick="verif(this)" href="'.route('dinamika.kepindahan.verifikasi',$row).'"> Verif</button>';
+                $btn = $btn. '<button class="btn btn-sm btn-warning mx-1 my-1 verif_modal" onclick="verif(this)" href="'.route('dinamika.kepindahan.verifikasi',$row).'"> Verif</button>';
             }
             
 
@@ -38,14 +38,16 @@ class KepindahanDataTable extends DataTable
             return count($row->dinamika);
         })
             ->addColumn('identitas', function($row){
-                $identitas = "";
+                $identitas = "<ul>";
                 foreach ($row->dinamika as $item){
-                    $identitas = $identitas.$item->warga->nama.' ['.$item->nik.'] ';
+                    $identitas = $identitas.'<li>'.$item->warga->nama.' ['.$item->nik.']</li>';
                     
                 }
+                $identitas = $identitas."</ul>";
                 return $identitas;
             })
             ->addIndexColumn() 
+            ->rawColumns(['action','identitas'])    
             ->setRowId('id');
     }
 
@@ -68,9 +70,39 @@ class KepindahanDataTable extends DataTable
                     ->minifiedAjax()
                     ->orderBy(1)
                     ->selectStyleSingle()
+                    ->paging(true)
                     ->parameters([
-                        'dom'          => 'Bfrtip',
+                        'dom'          => 'Blfrtip',
                         'buttons'      => ['pdf','excel', 'print', 'reload'],
+                        'initComplete' => "function () {
+                            this.api()
+                                .columns()
+                                .every(function (index) {
+                                    if (index == 0 || index == 1 ||index == 6) return;
+                                    let column = this;
+                     
+                                    // Create select element
+                                    let select = document.createElement('select');
+                                    select.add(new Option(''));
+                                    column.footer().replaceChildren(select);
+                     
+                                    // Apply listener for user change in value
+                                    select.addEventListener('change', function () {
+                                        column
+                                            .search(select.value, {exact: true})
+                                            .draw();
+                                    });
+                     
+                                    // Add list of options
+                                    column
+                                        .data()
+                                        .unique()
+                                        .sort()
+                                        .each(function (d, j) {
+                                            select.add(new Option(d));
+                                        });
+                                });
+                        }",
                     ]);
     }
 
@@ -90,6 +122,8 @@ class KepindahanDataTable extends DataTable
                   ->width(60)
                   ->addClass('text-center'),
             Column::make('waktu'),
+            Column::make('penyebab'),
+            Column::make('jenis'),
             Column::computed('jumlah orang'),
             Column::computed('identitas'),
 

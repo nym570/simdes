@@ -27,7 +27,24 @@
 				</div>
 			</a>
 		</li>
+		<li class="menu-item {{ menuIsActive('desa.*') }}">
+			<a href="{{ route('desa.show') }}" class="menu-link">
+				<i class="menu-icon tf-icons bx bx-info-circle"></i>
+				<div data-i18n="Desa">
+					{{ __('Profil Desa') }}
+				</div>
+			</a>
+		</li>
+		<li class="menu-item {{ menuIsActive('user') }}">
+			<a href="{{ route('home') }}" class="menu-link">
+				<i class="menu-icon tf-icons bx bx-bar-chart-alt-2"></i>
+				<div data-i18n="Analytics">
+					{{ __('Statistik Desa') }}
+				</div>
+			</a>
+		</li>
 @auth
+		
 	@if(!empty(array_intersect(['kependudukan','pemimpin'],auth()->user()->roles->pluck('category')->toArray())))
 		<li class="menu-header small text-uppercase">
 			<span class="menu-header-text">

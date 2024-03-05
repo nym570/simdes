@@ -24,9 +24,9 @@ class RWDataTable extends DataTable
         return (new EloquentDataTable($query))
         ->addColumn('action', function($row){
    
-            $btn = ' <a href='.route("users.show",$row).' class="btn btn-sm btn-success my-1"> Lihat</a>';
+            $btn = ' <a href='.route("users.show",$row).' class="btn btn-sm btn-success my-1 mx-1"> Lihat</a>';
 
-            $btn = $btn.'<button class="btn btn-sm btn-dark my-1 open_modal" value="'.$row->ketua_rw.'"> Ketua RW</button>';
+            $btn = $btn.'<button class="btn btn-sm btn-dark my-1 mx-1 open_modal" value="'.$row->ketua_rw.'"> Ketua RW</button>';
 
             
              return $btn;
@@ -57,7 +57,7 @@ class RWDataTable extends DataTable
                     ->orderBy(1)
                     ->selectStyleSingle()
                     ->parameters([
-                        'dom'          => 'Bfrtip',
+                        'dom'          => 'Blfrtip',
                         'responsive' => true,
                         'autoWidth' => false
                     ]);
@@ -71,17 +71,18 @@ class RWDataTable extends DataTable
         return [
             
             Column::make('DT_RowIndex')
-                  ->title('#')
-                  ->orderable(false)
-                  ->searchable(false),      
+            ->title('#')
+            ->width(50)
+            ->orderable(false)
+            ->searchable(false),
+       Column::computed('action')
+            ->exportable(false)
+            ->printable(false)
+            ->width(150),     
             Column::make('name')
                   ->title('nama'),
             Column::make('dusun.name')->title('dusun')->data('dusun.name'),
-            Column::computed('action')
-                  ->exportable(false)
-                  ->printable(false)
-                  ->width(100)
-                  ->addClass('text-center'),
+           
         ];
     }
 

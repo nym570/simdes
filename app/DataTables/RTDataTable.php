@@ -24,9 +24,9 @@ class RTDataTable extends DataTable
         return (new EloquentDataTable($query))
         ->addColumn('action', function($row){
    
-            $btn = ' <a href='.route("users.show",$row).' class="btn btn-sm btn-success my-1"> Lihat</a>';
+            $btn = ' <a href='.route("users.show",$row).' class="btn btn-sm btn-success mx-1 my-1"> Lihat</a>';
 
-            $btn = $btn.'<button class="btn btn-sm btn-dark my-1 open_modal" value="'.$row->ketua_rt.'"> Ketua RT</button>';
+            $btn = $btn.'<button class="btn btn-sm btn-dark mx-1 my-1 open_modal" value="'.$row->ketua_rt.'"> Ketua RT</button>';
 
             
             
@@ -70,20 +70,21 @@ class RTDataTable extends DataTable
     public function getColumns(): array
     {
         return [
-            
+           
             Column::make('DT_RowIndex')
-                  ->title('#')
-                  ->orderable(false)
-                  ->searchable(false),      
+            ->title('#')
+            ->width(50)
+            ->orderable(false)
+            ->searchable(false),
+       Column::computed('action')
+            ->exportable(false)
+            ->printable(false)
+            ->width(150),     
             Column::make('name')
                   ->title('nama'),
             Column::make('rw.dusun.name')->title('dusun')->data('rw.dusun.name'),
             Column::make('rw.name')->title('rw')->data('rw.name'),
-            Column::computed('action')
-                  ->exportable(false)
-                  ->printable(false)
-                  ->width(100)
-                  ->addClass('text-center'),
+           
         ];
     }
 

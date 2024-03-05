@@ -7,6 +7,7 @@ use App\Models\Dusun;
 use App\Models\RW;
 use App\Models\RT;
 use App\Models\User;
+use App\Models\Pemerintahan;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreDesaRequest;
 use App\Http\Requests\UpdateDesaRequest;
@@ -112,7 +113,7 @@ class DesaController extends Controller
      */
     public function create()
     {
-        //
+        
     }
 
     /**
@@ -128,7 +129,15 @@ class DesaController extends Controller
      */
     public function show(Desa $desa)
     {
-        //
+        $title = 'Profil Desa';
+        $pemerintahan = Pemerintahan::with('warga')->get();
+        $agregate = [
+            'dusun' => Dusun::count(),
+            'rw' => RW::count(),
+            'rt' => RT::count()
+        ];
+
+		return view('menu.guest.profil-desa.show', compact(['title','agregate','pemerintahan']));
     }
 
     /**
@@ -176,11 +185,7 @@ class DesaController extends Controller
 
     public function updateDesc(Request $request,Desa $desa)
     {
-        $data = $request->validate([
-			'deskripsi' => ['string'],
-		]);
-       
-        $desa->update($data);
+        $desa->update($request->only('deskripsi'));
         return back()->withSuccess('Deskripsi desa berhasil diperbarui');
     }
 

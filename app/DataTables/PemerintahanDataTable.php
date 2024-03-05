@@ -24,9 +24,17 @@ class PemerintahanDataTable extends DataTable
         return (new EloquentDataTable($query))
         ->addColumn('action', function($row){
    
-            $btn = ' <a href='.route("m.pemerintahan.show",$row).' class="btn btn-sm btn-success my-1"> Lihat</a>';
-
-            $btn = $btn.'<button class="btn btn-sm btn-warning my-1 open_modal" value="'.$row->id.'"> Update</button>';
+            $btn = '<button class="btn btn-sm btn-success my-1 open_modal_pemerintahan" value="'.$row->id.'"> Lihat</button>';
+            $btn = $btn.'<div class="btn-group me-3">
+                <button class="btn btn-sm btn-warning dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Aksi
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <li><a class="dropdown-item open_modal_edit" data-pemerintahan="'.$row->id.'"data-link="'.route('m.pemerintahan.update',$row).'">Update</a></li>
+                  <li><a class="dropdown-item" href="'.route('m.pemerintahan.delete',$row).'" onclick="del(this)">Hapus</a></li>
+                  
+                </ul>
+              </div>';
 
              return $btn;
              
@@ -52,11 +60,40 @@ class PemerintahanDataTable extends DataTable
                     ->setTableId('pemerintahan-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
-                    ->orderBy(1)
                     ->selectStyleSingle()
+                    ->paging(true)
                     ->parameters([
-                        'dom'          => 'Bfrtip',
+                        'dom'          => 'Blfrtip',
                         'buttons'      => ['pdf','excel', 'print', 'reload'],
+                        'initComplete' => "function () {
+                            this.api()
+                                .columns()
+                                .every(function (index) {
+                                    if (index == 0 || index == 1) return;
+                                    let column = this;
+                     
+                                    // Create select element
+                                    let select = document.createElement('select');
+                                    select.add(new Option(''));
+                                    column.footer().replaceChildren(select);
+                     
+                                    // Apply listener for user change in value
+                                    select.addEventListener('change', function () {
+                                        column
+                                            .search(select.value, {exact: true})
+                                            .draw();
+                                    });
+                     
+                                    // Add list of options
+                                    column
+                                        .data()
+                                        .unique()
+                                        .sort()
+                                        .each(function (d, j) {
+                                            select.add(new Option(d));
+                                        });
+                                });
+                        }",
                     ]);
     }
 
