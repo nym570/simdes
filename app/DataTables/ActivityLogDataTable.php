@@ -41,6 +41,14 @@ class ActivityLogDataTable extends DataTable
             
            
         })
+        ->addColumn('tanggal', function($row){
+           
+            return $row->created_at->toDateString();
+        })
+        ->addColumn('waktu', function($row){
+           
+            return $row->created_at->toTimeString();
+        })
         ->addColumn('user', function($row){
             if(is_null($row->causer)){
                 return '';
@@ -88,11 +96,40 @@ class ActivityLogDataTable extends DataTable
                     ->setTableId('activity_log-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
-                    ->orderBy(1)
                     ->selectStyleSingle()
+                    ->paging(true)
                     ->parameters([
-                        'dom'          => 'Bfrtip',
+                        'dom'          => 'Blfrtip',
                         'buttons'      => ['pdf','excel', 'print', 'reload'],
+                        'initComplete' => "function () {
+                            this.api()
+                                .columns()
+                                .every(function (index) {
+                                    if (index == 0||index==5) return;
+                                    let column = this;
+                     
+                                    // Create select element
+                                    let select = document.createElement('select');
+                                    select.add(new Option(''));
+                                    column.footer().replaceChildren(select);
+                     
+                                    // Apply listener for user change in value
+                                    select.addEventListener('change', function () {
+                                        column
+                                            .search(select.value, {exact: true})
+                                            .draw();
+                                    });
+                     
+                                    // Add list of options
+                                    column
+                                        .data()
+                                        .unique()
+                                        .sort()
+                                        .each(function (d, j) {
+                                            select.add(new Option(d.replace(/<(\/)?([a-zA-Z]*)(\s[a-zA-Z]*=[^>]*)?(\s)*(\/)?>/g, '')));
+                                        });
+                                });
+                        }",
                     ]);
     }
 
@@ -112,7 +149,8 @@ class ActivityLogDataTable extends DataTable
             
             Column::make('description')->title('deskripsi'),
             Column::computed('properti'),
-            Column::make('created_at')->title('waktu'),
+            Column::computed('tanggal'),
+            Column::computed('waktu'),
             
         ];
     }

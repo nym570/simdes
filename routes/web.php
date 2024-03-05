@@ -68,7 +68,10 @@ Route::controller(AdminController::class)->middleware(['admin.auth','admin.verif
 	Route::get('/admin/admin', 'index')->name('index');
 	Route::post('/admin/admin', 'store')->name('store');
 	Route::post('/admin/admin/import', 'import')->name('import');
+	Route::get('/admin/admin/{admin}/get', 'get')->name('get');
 	Route::put('/admin/admin/{admin}/status', 'status')->name('status');
+	Route::put('/admin/admin/{admin}/reset-pass', 'resetPass')->name('reset-pass');
+	Route::put('/admin/admin/{admin}/update', 'update')->name('update');
 });
 
 Route::controller(DesaController::class)->middleware(['admin.auth','admin.verified'])->name('m.desa.')->group(function () {

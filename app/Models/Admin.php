@@ -44,7 +44,7 @@ class Admin extends Authenticatable
 	public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-        ->logOnly(['username','nama', 'email','status','password','email_verified_at'])
+        ->logOnly(['username','nama', 'is_active','email','status','password','email_verified_at'])
 		->logOnlyDirty()
         ->dontLogIfAttributesChangedOnly(['remember_token'])
 		->useLogName('Admin');

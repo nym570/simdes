@@ -24,8 +24,8 @@ class WargaController extends Controller
 		 return $dataTable->render('menu.warga.index',compact('title'));
     }
     public function getWargaHidup(Request $request){
-        if($request['tujuan']=='pemerintahan'){
-            $data = Warga::doesntHave('pemerintahan')->where('status','warga')->get();
+        if(isset($request['tujuan'])){
+            $data = Warga::doesntHave($request['tujuan'])->where('status','warga')->get();
         }
         else if($request['warga']=='2'){
             $data = Warga::where('status','warga')->whereHas("rt", function(Builder $builder) {

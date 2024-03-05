@@ -27,10 +27,15 @@ class UsersDataTable extends DataTable
    
             $btn = ' <a href='.route("users.show",$row).' class="btn btn-sm btn-success my-1"> Lihat</a>';
 
-            $btn = $btn.' <button href='.route("users.status",$row).' class="btn btn-sm btn-'.($row->is_active?"dark":"primary").' my-1" onclick="change(this)">'.($row->is_active?"nonaktifkan":"aktifkan").' </button>';
-            
-            // $btn = $btn.'<form method="POST" action="'.route("password.email").'"  id="reset-form"><input type="hidden" name="_token" value="' . csrf_token() . '"> <input type="hidden" name="email" id="email"  value="'.$row->email.'" > <button type="submit" class="btn btn-sm btn-danger my-1"> Reset Password </button></form>';
-             return $btn;
+            $btn = $btn.'<div class="btn-group me-3">
+            <button class="btn btn-sm btn-warning dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Aksi
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">';              
+        $btn = $btn.'<li><a class="dropdown-item" data-email="'.$row->email.'" data-username="'.$row->username.'" href="'.route('password.email',$row).'" onclick="send(this)">Kirim Reset Password</a></li>';
+        $btn = $btn.'<li><a class="dropdown-item" onclick="change(this)" href="'.route("users.status",$row).'">'.($row->is_active?"Nonaktifkan":"Aktifkan").'</a></li>';
+            $btn = $btn.'</ul></div>';
+            return $btn;
              
         })
         ->addColumn('status', function($row){
@@ -46,7 +51,7 @@ class UsersDataTable extends DataTable
      */
     public function query(User $model): QueryBuilder
     {
-        return $model->newQuery()->with(['warga'])->select('users.*')->latest();
+        return $model->newQuery()->with(['warga']);
     }
 
     /**
@@ -58,11 +63,40 @@ class UsersDataTable extends DataTable
                     ->setTableId('users-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
-                    ->orderBy(1)
                     ->selectStyleSingle()
+                    ->paging(true)
                     ->parameters([
-                        'dom'          => 'Bfrtip',
+                        'dom'          => 'Blfrtip',
                         'buttons'      => ['pdf','excel', 'print', 'reload'],
+                        'initComplete' => "function () {
+                            this.api()
+                                .columns()
+                                .every(function (index) {
+                                    if (index == 0 || index == 1) return;
+                                    let column = this;
+                     
+                                    // Create select element
+                                    let select = document.createElement('select');
+                                    select.add(new Option(''));
+                                    column.footer().replaceChildren(select);
+                     
+                                    // Apply listener for user change in value
+                                    select.addEventListener('change', function () {
+                                        column
+                                            .search(select.value, {exact: true})
+                                            .draw();
+                                    });
+                     
+                                    // Add list of options
+                                    column
+                                        .data()
+                                        .unique()
+                                        .sort()
+                                        .each(function (d, j) {
+                                            select.add(new Option(d.replace(/<(\/)?([a-zA-Z]*)(\s[a-zA-Z]*=[^>]*)?(\s)*(\/)?>/g, '')));
+                                        });
+                                });
+                        }",
                     ]);
     }
 

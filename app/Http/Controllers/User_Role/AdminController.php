@@ -9,6 +9,9 @@ use App\DataTables\AdminDataTable;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Facades\Hash;
 use App\Imports\AdminImport;
+use App\Notifications\PasswordSend;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Validator;
 
 class AdminController extends Controller
 {
@@ -18,7 +21,11 @@ class AdminController extends Controller
     public function index(AdminDataTable $dataTable)
     {
        $title = 'Manajemen Admin';
-        return $dataTable->render('admin.admin.index',compact('title'));
+       $import = [
+        'format' => '/import_format/admin.xlsx',
+        'link' => route('admin-list.import'),
+       ];
+        return $dataTable->render('admin.admin.index',compact(['title','import']));
     }
 
     /**
@@ -45,6 +52,7 @@ class AdminController extends Controller
 		$user = Admin::create($data);
 		$user->assignRole('admin');
 
+        Notification::send($user, new PasswordSend($request['password'],route('admin.login')));
 		$user->sendEmailVerificationNotification();
 
 		return back()->withSuccess('Data admin berhasil ditambahkan');
@@ -89,7 +97,47 @@ class AdminController extends Controller
      */
     public function update(Request $request, Admin $admin)
     {
-        //
+        $validasi = [
+            'username' => ['required', 'string','unique:admin,username,'.$admin->id],
+            'nama' => ['required','string'],
+			'email' => ['required','string','email','unique:admin,email,'.$admin->id],
+        ];
+        
+        $data = Validator::make($request->all(), $validasi);
+        if ($data->fails()) {
+            return back()->withError('Update Admin gagal');
+        }
+        $data = $data->valid();
+        $email = $admin->email;
+		
+
+		$admin->update($data);
+
+		if($data['email']!=$email){
+			$admin->sendEmailVerificationNotification();
+			$admin->update(['email_verified_at' => NULL]);
+		}
+        return back()->withSuccess('Data admin berhasil diubah');
+    }
+
+    public function get(Admin $admin)
+    {
+		return json_encode($admin);
+    }
+
+    public function resetPass(Request $request, Admin $admin)
+    {
+       $pass = Validator::make($request->all(), [
+			'password' => ['required', 'string','confirmed',Password::min(8)->letters()->numbers()],
+		]);
+        if ($pass->fails()) {
+            return back()->withError('Update password gagal');
+        }
+        $data = $pass->valid();
+        $data['password'] = Hash::make($data['password']);
+        $admin->update($data);
+        Notification::send($admin, new PasswordSend($request['password'],route('admin.login')));
+        return back()->withSuccess('Password admin berhasil diubah');
     }
 
     public function status(Request $request, Admin $user)

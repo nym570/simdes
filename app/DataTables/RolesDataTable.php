@@ -39,7 +39,7 @@ class RolesDataTable extends DataTable
      */
     public function query(Role $model): QueryBuilder
     {
-        return $model->newQuery()->where('guard_name','web')->select('roles.*');
+        return $model->newQuery()->where('guard_name','web')->withCount('users');
     }
 
     /**
@@ -53,9 +53,39 @@ class RolesDataTable extends DataTable
                     ->minifiedAjax()
                     ->orderBy(3)
                     ->selectStyleSingle()
+                    ->paging(true)
                     ->parameters([
-                        'dom'          => 'Bfrtip',
-                        'buttons'      => ['pdf','excel', 'print'],
+                        'dom'          => 'Blfrtip',
+                        'buttons'      => ['pdf','excel', 'print', 'reload'],
+                        'initComplete' => "function () {
+                            this.api()
+                                .columns()
+                                .every(function (index) {
+                                    if (index == 0 || index == 1) return;
+                                    let column = this;
+                     
+                                    // Create select element
+                                    let select = document.createElement('select');
+                                    select.add(new Option(''));
+                                    column.footer().replaceChildren(select);
+                     
+                                    // Apply listener for user change in value
+                                    select.addEventListener('change', function () {
+                                        column
+                                            .search(select.value, {exact: true})
+                                            .draw();
+                                    });
+                     
+                                    // Add list of options
+                                    column
+                                        .data()
+                                        .unique()
+                                        .sort()
+                                        .each(function (d, j) {
+                                            select.add(new Option(d));
+                                        });
+                                });
+                        }",
                     ]);
     }
 
@@ -69,16 +99,18 @@ class RolesDataTable extends DataTable
                     ->title('#')
                     ->orderable(false)
                     ->searchable(false),
+                    Column::computed('action')
+                    ->exportable(false)
+                    ->printable(false)
+                    ->addClass('text-center'),
             Column::make('name')
                     ->title('nama'),
             Column::make('category')
                     ->title('kategori'),
             Column::make('status')
                     ->title('cakupan'),
-            Column::computed('action')
-                  ->exportable(false)
-                  ->printable(false)
-                  ->addClass('text-center'),
+            Column::make('users_count')->title('jumlah')->data('users_count')
+           
             
         ];
     }

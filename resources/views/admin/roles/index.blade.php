@@ -6,7 +6,7 @@
 				{{ __('Daftar Role') }}
 			</h5>
 
-			@include('admin.users._partials.table')
+			@include('admin.components.table')
 
 		</div>
 	</div>

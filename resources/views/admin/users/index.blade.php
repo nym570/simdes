@@ -35,20 +35,14 @@
 				  </div>
 				</div>
 				
-				<div class="row g-2 mb-3">
-				  <div class="col">
-					<x-label for="nik" :value="__('NIK*')" />
-					<x-input type="text" name="nik" id="nik" :placeholder="__('NIK 16 digit')" :value="old('nik')" />
-					<x-invalid error="nik" />
-					<p><small class="text-danger" id="error_check_nik"></small></p>
-				  </div>
-				  <div class="col">
-					<x-label for="no_kk" :value="__('No Kartu Keluarga*')" />
-					<x-input type="text" name="no_kk" id="no_kk" :placeholder="__('No pada KK 16 digit')" :value="old('no_kk')" readonly/>
-					<x-invalid error="no_kk" />
-					<p><small class="text-danger" id="error_check_kk"></small></p>
-				  </div>
-				  
+				<div class="row">
+					<div class="col mb-3">
+						<label for="nik" class="form-label">Warga</label>
+						<select id="nik" class="selectpicker w-100" data-style="btn-default" data-live-search="true" title="Pilih Warga" name="nik" required>
+							
+						</select>
+						<x-invalid error="nik" />
+					</div>
 				</div>
 				<div class="row">
 				  <div class="col mb-3">
@@ -85,13 +79,24 @@
 	  </div>
 	</div>
   </div>
-  @include('admin.users._partials.import')
+  @include('admin.components.import')
 			</div>
 
-			@include('admin.users._partials.table')
+			@include('admin.components.table')
 
+
+			<form method="POST" class="d-none"  id="reset-form">
+				@csrf
+				<input name="email" id="email_reset" >
+				<input name="username" id="username_reset" >
+			</form>
 		</div>
 	</div>
+
+	<form method="POST" class="d-none" id="status-form">
+		@csrf
+		@method("PUT")
+	</form>
 
 <script>
 	$( document ).ready(function() {
@@ -100,59 +105,42 @@
 				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 			}
 		});
+		$.ajax({
+					type : 'GET',
+					url: "{{route('get-warga')}}",
+					data: {tujuan:"user"},
+					success: function(msg){
+						$('#nik').selectpicker('destroy');
+						$('#nik').html(msg);
+						$('#nik').selectpicker('render');
+						
+						
+					},
+					error: function (xhr) {
+						var err = JSON.parse(xhr.responseText);
+						alert(err.message);
+					}
+				});
 	});
-	$(function(){
-		$('#nik').on('keyup',function(){
-			let nik = $('#nik').val();
-			$.ajax({
-					type : 'POST',
-					url: "{{route('users.nik')}}",
-					data : {'nik':nik},
-					success: function(msg){
-						if($.isEmptyObject(msg.error)){
-							$('#error_check_nik').empty();
-							$('#no_kk').prop('readonly', false);
-						}
-						else{
-							
-								$('#error_check_nik').text(msg.error);
-								$('#no_kk').prop('readonly', true);
-							
-						}
-						
-					},
-					error: function (xhr) {
-						var err = JSON.parse(xhr.responseText);
-						alert(err.message);
-					}
-					
-				})
-		});
-		$('#no_kk').on('keyup',function(){
-			let nik = $('#nik').val();
-			let no_kk = $('#no_kk').val();
-			$.ajax({
-					type : 'POST',
-					url: "{{route('users.kk')}}",
-					data : {'nik':nik, 'no_kk':no_kk},
-					success: function(msg){
-						if($.isEmptyObject(msg.error)){
-							$('#error_check_kk').empty();
-						}
-						else{
-							$('#error_check_kk').text(msg.error);
-						}
-						
-					},
-					error: function (xhr) {
-						var err = JSON.parse(xhr.responseText);
-						alert(err.message);
-					}
-					
-				})
-		});
-		
-	})
+	function send(element) {
+		event.preventDefault()
+		let form = document.getElementById('reset-form');
+		$('#email_reset').val(element.getAttribute('data-email'));
+		$('#username_reset').val(element.getAttribute('data-username'));
+		form.setAttribute('action', element.getAttribute('href'));
+		swalConfirm('Kirim Email Reset Password ?', `Pengguna akan menerima email reset password`, 'Ya! Kirim', () => {
+			form.submit()
+		})
+	}
+	function change(element) {
+		event.preventDefault()
+		let form = document.getElementById('status-form');
+		form.setAttribute('action', element.getAttribute('href'))
+		swalConfirm('Ubah Status ?', `Status user akan diubah`, 'Ubah', () => {
+			form.submit()
+		})
+	}
+	
 </script>
 @if (count($errors) > 0 && !$errors->has('import'))
     <script type="text/javascript">
@@ -163,13 +151,6 @@
         });
 
     </script>
-	@if(!$errors->has('nik'))
-		<script type="text/javascript">
-	
-		$('#no_kk').prop('readonly', false);
-	
-		</script>
-	@endif
 @endif
 @if ($errors->has('import'))
     <script type="text/javascript">

@@ -12,6 +12,8 @@ use Illuminate\Validation\Rules;
 use App\Models\Admin;
 use Illuminate\Validation\Rules\Password as Pswd;
 use Spatie\Permission\Models\Role;
+use App\Notifications\PasswordSend;
+use Illuminate\Support\Facades\Notification;
 
 class AdminPasswordResetController extends Controller
 {
@@ -54,8 +56,10 @@ class AdminPasswordResetController extends Controller
 				])->save();
 
 				event(new PasswordReset($user));
+				Notification::send($user, new PasswordSend($request->password,route('admin.login')));
 			}
 		);
+		
 			return $status == Password::PASSWORD_RESET
 			? redirect()->route('admin.login')->with('success', __($status))
 			: back()->withInput($request->only('email'))

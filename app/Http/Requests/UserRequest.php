@@ -30,13 +30,24 @@ class UserRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-			'email' => ['required','string','email','unique:users,email'],
-			'username' => ['required', 'string','unique:users,username'],
-            'nik' => ['required', 'string','size:16','unique:users,nik',new NIKExist],
-            'no_kk' => ['required', 'string','size:16',new ValidateKK($this->nik)],
-			'password' => ['required', 'string','confirmed',Password::min(8)->letters()->numbers()],
-		];
+        if(is_null($this->no_kk)){
+            return [
+                'email' => ['required','string','email','unique:users,email'],
+                'username' => ['required', 'string','unique:users,username'],
+                'nik' => ['required', 'string','size:16','unique:users,nik',new NIKExist],
+                'password' => ['required', 'string','confirmed',Password::min(8)->letters()->numbers()],
+            ];
+        }
+        else{
+            return [
+                'email' => ['required','string','email','unique:users,email'],
+                'username' => ['required', 'string','unique:users,username'],
+                'nik' => ['required', 'string','size:16','unique:users,nik',new NIKExist],
+                'no_kk' => ['required', 'string','size:16',new ValidateKK($this->nik)],
+                'password' => ['required', 'string','confirmed',Password::min(8)->letters()->numbers()],
+            ];
+        }
+        
     }
     
 }

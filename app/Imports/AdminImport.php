@@ -16,6 +16,9 @@ use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Concerns\SkipsErrors;
 use Maatwebsite\Excel\Concerns\SkipsFailures;
 use Maatwebsite\Excel\Concerns\SkipsOnFailure;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Validator;
+use App\Notifications\PasswordSend;
 
 
 class AdminImport implements ToModel, WithUpserts, WithHeadingRow, WithBatchInserts, WithChunkReading, WithValidation, SkipsOnError,SkipsOnFailure
@@ -28,12 +31,15 @@ class AdminImport implements ToModel, WithUpserts, WithHeadingRow, WithBatchInse
     */
     public function model(array $row)
     {
-        return new Admin([
+
+        $admin = new Admin([
             'username'     => $row['username'],
            'nama'    => $row['nama'], 
            'email'    => $row['email'], 
            'password' => Hash::make($row['password']),
         ]);
+        Notification::send($admin, new PasswordSend($row['password'],route('admin.login')));
+        return $admin;
     }
 
     public function batchSize(): int

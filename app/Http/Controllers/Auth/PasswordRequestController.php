@@ -29,6 +29,7 @@ class PasswordRequestController extends Controller
 	 */
 	public function store(Request $request)
 	{
+		
 		$request->validate([
 			'username' => ['required'],
 			'email' => ['required', 'email'],

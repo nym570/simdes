@@ -24,13 +24,7 @@ class DusunDataTable extends DataTable
     {
         return (new EloquentDataTable($query))
         ->addColumn('action', function($row){
-   
-            $btn = ' <a href='.route("users.show",$row).' class="btn btn-sm btn-success my-1 mx-1"> Lihat</a>';
-
-            $btn = $btn.'<button class="btn btn-sm btn-dark my-1 mx-1 open_modal" value="'.$row->kepala_dusun.'"> Kepala Dusun</button>';
-
-            
-            
+            $btn = '<button class="btn btn-sm btn-dark my-1 mx-1 open_modal" value="'.$row->kepala_dusun.'"> Kepala Dusun</button>';
              return $btn;
              
         })
@@ -58,6 +52,7 @@ class DusunDataTable extends DataTable
                     ->minifiedAjax(route('m.lkd.getDusun'))
                     ->orderBy(1)
                     ->selectStyleSingle()
+                    
                     ->paging(true)
                     ->parameters([
                         'dom'          => 'Blfrtip',

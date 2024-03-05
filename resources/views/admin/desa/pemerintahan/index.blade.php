@@ -184,6 +184,16 @@
 	@method("DELETE")
 </form>
 
+@if (count($errors) > 0)
+    <script type="text/javascript">
+	
+        $( document ).ready(function() {
+			
+             $('#addPemerintahan').modal('show');
+        });
+
+    </script>
+@endif
 @push('js')
 <script>
 	$( document ).ready(function() {

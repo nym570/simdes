@@ -48,7 +48,7 @@ class PemerintahanDataTable extends DataTable
      */
     public function query(Pemerintahan $model): QueryBuilder
     {
-        return $model->newQuery()->with(['warga'])->select('pemerintahan.*')->latest();
+        return $model->newQuery()->with(['warga']);
     }
 
     /**

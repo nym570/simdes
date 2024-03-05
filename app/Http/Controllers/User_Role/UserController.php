@@ -28,7 +28,11 @@ class UserController extends Controller
 	 public function index(UsersDataTable $dataTable)
 	 {
 		$title = 'Manajemen Pengguna';
-		 return $dataTable->render('admin.users.index',compact('title'));
+		$import = [
+			'format' => '/import_format/user.xlsx',
+			'link' => route('users.import'),
+		   ];
+		 return $dataTable->render('admin.users.index',compact(['title','import']));
 	 }
 
 	/**

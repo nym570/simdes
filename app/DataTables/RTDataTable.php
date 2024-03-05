@@ -23,10 +23,8 @@ class RTDataTable extends DataTable
     {
         return (new EloquentDataTable($query))
         ->addColumn('action', function($row){
-   
-            $btn = ' <a href='.route("users.show",$row).' class="btn btn-sm btn-success mx-1 my-1"> Lihat</a>';
 
-            $btn = $btn.'<button class="btn btn-sm btn-dark mx-1 my-1 open_modal" value="'.$row->ketua_rt.'"> Ketua RT</button>';
+            $btn = '<button class="btn btn-sm btn-dark mx-1 my-1 open_modal" value="'.$row->ketua_rt.'"> Ketua RT</button>';
 
             
             
@@ -55,7 +53,6 @@ class RTDataTable extends DataTable
                     ->setTableId('rt-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax(route('m.lkd.getRT'))
-                    ->orderBy(1)
                     ->selectStyleSingle()
                     ->parameters([
                         'dom'          => 'Bfrtip',

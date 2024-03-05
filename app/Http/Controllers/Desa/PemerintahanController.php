@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\DataTables\PemerintahanDataTable;
 use App\Rules\NIKExist;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class PemerintahanController extends Controller
 {
@@ -86,7 +87,11 @@ class PemerintahanController extends Controller
         if(isset($request['foto'])){
             $validasi['foto'] = [ 'mimes:jpg,png','max:1024'];
         }
-        $data = $request->validate($validasi);
+        $data = Validator::make($request->all(), $validasi);
+        if ($data->fails()) {
+            return back()->withError('Update perangkat gagal');
+        }
+        $data = $data->valid();
         $data['nik'] = $request['nik_current'];
         $data['tugas'] = $request['tugas'];
         $data['wewenang'] = $request['wewenang'];

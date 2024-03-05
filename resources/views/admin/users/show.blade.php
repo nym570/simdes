@@ -20,7 +20,7 @@
 	  <li>
 		<hr class="dropdown-divider">
 	  </li>
-	  <li><a class="dropdown-item" href="{{route('users.delete', $user)}}" onclick='del(this)'>Hapus Pengguna</a></li>
+	  
 	</ul>
   </div>
 
