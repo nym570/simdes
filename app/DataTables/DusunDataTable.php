@@ -24,7 +24,7 @@ class DusunDataTable extends DataTable
     {
         return (new EloquentDataTable($query))
         ->addColumn('action', function($row){
-            $btn = '<button class="btn btn-sm btn-dark my-1 mx-1 open_modal" value="'.$row->kepala_dusun.'"> Kepala Dusun</button>';
+            $btn = '<button class="btn btn-sm btn-dark my-1 mx-1 open_modal" data-kode="2" data-name="'.$row->name.'" data-link="'.route('m.lkd.dusun.get',$row).'"> Kepala Dusun</button>';
              return $btn;
              
         })
@@ -55,7 +55,8 @@ class DusunDataTable extends DataTable
                     
                     ->paging(true)
                     ->parameters([
-                        'dom'          => 'Blfrtip',
+ 
+                        'dom'          => 'Bfrtip',
                         'buttons'      => ['pdf','excel', 'print', 'reload'],
                         'responsive'    => true,
                         'auto-width'    =>false,

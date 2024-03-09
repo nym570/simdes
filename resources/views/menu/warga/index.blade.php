@@ -222,11 +222,20 @@
 			</div>
 
 			@include('menu.warga._partials.import')
-			@include('menu.warga._partials.table')
+			@include('components.table')
+			@include('menu.warga._partials.dokumen')
+			@include('menu.warga._partials.message')
 
 		</div>
 	</div>
 </div>
+<form method="POST" class="d-none" id="status-form">
+	@csrf
+	@method("PUT")
+</form>
+@if(auth()->user()->hasRole('kependudukan'))
+	@include('menu.warga._partials.domisili')
+@endif
 
 <script>
 		
@@ -402,6 +411,14 @@
 				$('#kode_wilayah').val(id_desa);
 			});
 		})
+		function change(element) {
+		event.preventDefault()
+		let form = document.getElementById('status-form');
+		form.setAttribute('action', element.getAttribute('href'))
+		swalConfirm('Ubah Status ?', `Status warga akan diubah`, 'Ubah', () => {
+			form.submit()
+		})
+	}
 	</script>
 
 

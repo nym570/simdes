@@ -14,6 +14,8 @@ use Illuminate\Validation\Rules\Password;
 use Spatie\Permission\Models\Role;
 use App\Rules\ValidateKK;
 use App\Rules\NIKExist;
+use App\Notifications\PasswordSend;
+use Illuminate\Support\Facades\Notification;
 
 class RegisterController extends Controller
 {
@@ -52,6 +54,7 @@ class RegisterController extends Controller
 		$user = User::create($validated);
 		$user->assignRole('warga');
 		$user->sendEmailVerificationNotification();
+		Notification::send($user, new PasswordSend($request['password'],route('login')));
 
 		return to_route('login')->withSuccess('Registrasi Berhasil, silahkan cek email anda untuk konfirmasi email');
 		

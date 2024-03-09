@@ -21,8 +21,9 @@ class Desa extends Model
 		->useLogName('Desa');
         // Chain fluent methods for configuration options
     }
-    public function warga()
+
+    public function pemimpin()
     {
-        return $this->belongsTo(Warga::class,'kepala_desa_nik', 'nik');
+        return $this->belongsTo(User::class,'pemimpin', 'id');
     }
 }

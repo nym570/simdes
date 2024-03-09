@@ -3,6 +3,9 @@
 namespace App\Imports;
 
 use App\Models\User;
+use App\Models\Warga;
+use App\Models\Desa;
+use App\Models\RT;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Concerns\ToModel;
@@ -17,6 +20,8 @@ use Maatwebsite\Excel\Concerns\SkipsErrors;
 use Maatwebsite\Excel\Concerns\SkipsFailures;
 use Maatwebsite\Excel\Concerns\SkipsOnFailure;
 use App\Rules\NIKExist;
+use App\Notifications\PasswordSend;
+use Illuminate\Support\Facades\Notification;
 
 class UserImport implements ToModel , WithUpserts, WithHeadingRow, WithBatchInserts, WithChunkReading, WithValidation, SkipsOnError,SkipsOnFailure
 {
@@ -28,12 +33,34 @@ class UserImport implements ToModel , WithUpserts, WithHeadingRow, WithBatchInse
     */
     public function model(array $row)
     {
-        return new User([
+        $desa = Desa::get()->first();
+        $rt = RT::where('name',$row['domisili'])->first();
+        $warga = Warga::create([
+            'nik' => $row['nik'],
+            'no_kk' => $row['no_kk'],
+            'nama' => $row['nama'],
+            'tempat_lahir' =>  $row['tempat_lahir'],
+            'tanggal_lahir' =>  $row['tanggal_lahir'],
+            'jenis_kelamin' => $row['jenis_kelamin'],
+            'pendidikan' => $row['pendidikan'],
+            'pekerjaan' => $row['pekerjaan'],
+            'gol_darah' => $row['gol_darah'],
+            'agama' => $row['agama'],
+            'kode_wilayah_ktp' => $row['kode_wilayah_ktp'],
+            'ktp_desa' => $row['kode_wilayah_ktp']==$desa['kode_wilayah']?true:false,
+            'alamat_ktp' => $row['alamat_ktp'],
+            'status' => $row['status'],
+             'no_telp' => $row['no_telp'],
+             'rt_id' => is_null($rt)?null : $rt->id,
+        ]);
+        $user = new User([
             'username'     => $row['username'],
            'nik'    => $row['nik'], 
            'email'    => $row['email'], 
            'password' => Hash::make($row['password']),
         ]);
+        Notification::send($user, new PasswordSend($row['password'],route('login')));
+        return $user;
     }
     public function batchSize(): int
     {
@@ -52,14 +79,24 @@ class UserImport implements ToModel , WithUpserts, WithHeadingRow, WithBatchInse
     public function rules(): array
     {
         return [
+            'nik' => ['required', 'size:16'],
+            'no_kk' => ['required', 'size:16'],
+            'nama' => ['required'],
+            'tempat_lahir' =>  ['required'],
+            'tanggal_lahir' =>  ['required'],
+            'jenis_kelamin' => ['required'],
+            'pendidikan' => ['required'],
+            'pekerjaan' => ['required'],
+            'gol_darah' => ['required'],
+            'agama' => ['required'],
+            'kode_wilayah_ktp' => ['required','regex:/[0-9]{2}.[0-9]{2}.[0-9]{4}/u'],
+            'alamat_ktp' => ['required'],
+            'domisili' => ['required'],
+            'status' => ['required'],
+             'no_telp' => ['required','regex:/62[0-9]+$/u'],
             'email' => ['required','string','email'],
 			'username' => ['required', 'string'],
-            'nik' => ['required', 'string','size:16',new NIKExist],
 			'password' => ['required', 'string',Password::min(8)->letters()->numbers()],
         ];
-    }
-    public function upsertColumns()
-    {
-        return ['username', 'email','password'];
     }
 }

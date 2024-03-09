@@ -210,10 +210,10 @@
 		<h5 class="modal-title" id="judulModal"></h5>
 		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 		</div>
-		<form id="formRole" class="mb-3" action="{{ route('roles.add-one') }}" data-remote="true" method="POST">
+		<form id="formRole" class="mb-3" data-remote="true" method="POST">
+			@method('PUT')
 			@csrf
 			<div class="modal-body">
-				<x-input type="text" name="role" id="roleLKD"  value="" class="d-none" />
 				<div class="row">
 					<div class="col mb-3">
 						<x-input type="text" name="user" id="userLKD"  value="" placeholder="Tidak Ditemukan" readonly />
@@ -222,7 +222,7 @@
 				<div class="row">
 					<div class="col mb-3">
 						<label for="selectpickerLiveSearch" class="form-label">Username</label>
-						<select id="selectpickerLiveSearch" class="selectpicker w-100" data-style="btn-default" data-live-search="true" title="Pilih pengguna baru" required name="user">
+						<select id="selectpickerLiveSearch" class="selectpicker w-100" data-style="btn-default" data-live-search="true" title="Pilih pengguna baru" required name="pemimpin">
 							
 						</select>
 					</div>
@@ -231,137 +231,19 @@
 			</div>
 			<div class="modal-footer">
 				<x-button type="submit" class="btn btn-primary d-grid w-100" :value="__('Assign')"/>
+				<x-button type="button" id="remove" class="btn btn-danger d-grid w-100 d-none" onclick="del(this)" href="" :value="__('Hapus Pemimpin')"/>
 			</div>
 		</form>
 	</div>
 	</div>
 </div>
 	
-	
+<form method="POST" class="d-none" id="delete-form">
+	@csrf
+	@method("PUT")
+</form>
 
 
-
-	<script>
-		
-		$( document ).ready(function() {
-			
-			$.ajaxSetup({
-			headers: {
-				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-			}
-		});
-		    
-		});
-		$(document).on('click','.open_modal',function(){
-				let id= $(this).val();
-				var ajax1= $.ajax({
-					type : 'GET',
-					url: "{{route('roles.get')}}",
-					data : {id_role:id},
-					success: function(msg){
-						let data = JSON.parse(msg);
-						$('#judulModal').text('Assign role: '+data['role'].name);
-						$('#formRole').attr('action', data['link']);
-						$('#roleLKD').val(data['role'].name);
-						if(data['user']){
-							$('#userLKD').val(data['user'].username);
-						}
-						else{
-							$('#userLKD').val('');
-						}
-						
-						
-					},
-					error: function (xhr) {
-						var err = JSON.parse(xhr.responseText);
-						alert(err.message);
-					}
-					
-				});
-				var ajax2 = $.ajax({
-					type : 'GET',
-					url: "{{route('roles.user-list')}}",
-					data : {id_role:id},
-					success: function(msg){
-						$('#selectpickerLiveSearch').selectpicker('destroy');
-						$('#selectpickerLiveSearch').html(msg);
-						$('#selectpickerLiveSearch').selectpicker('render');
-						
-					},
-					error: function (xhr) {
-						var err = JSON.parse(xhr.responseText);
-						alert(err.message);
-					}
-					
-				});
-				$.when(ajax1, ajax2).done(function(data, data1) {
-				$('#myModal').modal('show');
-			});
-				}); 
-				
-	</script>
-	<script>
-		
-		$(function(){
-			$('#buttonRW').on('click',function(){
-				
-				$.ajax({
-					type : 'GET',
-					url: "{{route('master-desa.get-dusun')}}",
-					success: function(msg){
-						$('#dusunMRW').selectpicker('destroy');
-						$('#dusunMRW').html(msg);
-						$('#dusunMRW').selectpicker('render');
-					},
-					error: function (xhr) {
-						var err = JSON.parse(xhr.responseText);
-						alert(err.message);
-					}
-					
-				})
-			});
-			$('#buttonRT').on('click',function(){
-				
-				$.ajax({
-					type : 'GET',
-					url: "{{route('master-desa.get-dusun')}}",
-					success: function(msg){
-						$('#dusunMRT').selectpicker('destroy');
-						$('#dusunMRT').html(msg);
-						$('#dusunMRT').selectpicker('render');
-					},
-					error: function (xhr) {
-						var err = JSON.parse(xhr.responseText);
-						alert(err.message);
-					}
-					
-				})
-			});
-			$('#dusunMRT').on('change',function(){
-				$('#dusunMRT').selectpicker('render');
-				let id_dusun = $('#dusunMRT').val();
-
-				$.ajax({
-					type : 'GET',
-					url: "{{route('master-desa.get-rw')}}",
-					
-					data : {id:id_dusun},
-
-					success: function(msg){
-						$('#rwMRT').selectpicker('destroy');
-						$('#rwMRT').html(msg);
-						$('#rwMRT').selectpicker('render');
-					},
-					error: function (xhr) {
-						var err = JSON.parse(xhr.responseText);
-						alert(err.message);
-					}
-					
-				})
-			});
-			
-		})
-	</script>
 
 
 
@@ -373,6 +255,146 @@
 {!! $rwDT->scripts() !!}
 
 {!! $dusunDT->scripts() !!}
+
+
+<script>
+		
+	$( document ).ready(function() {
+		
+		$.ajaxSetup({
+		headers: {
+			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+		}
+	});
+		
+	});
+	function del(element) {
+	event.preventDefault()
+	let form = document.getElementById('delete-form');
+	form.setAttribute('action', element.getAttribute('href'));
+	$('#myModal').modal('hide');
+	swalConfirm('Yakin menghapus pemimpin wilayah ?', `Posisi akan kosong`, 'Ya! Hapus', () => {
+		form.submit()
+	})
+}
+	$(document).on('click','.open_modal',function(){
+		let link= $(this).attr('data-link');
+		let name= $(this).attr('data-name');
+		let kode= $(this).attr('data-kode');
+			var ajax1= $.ajax({
+				type : 'GET',
+				url: link,
+				success: function(msg){
+					 let data = JSON.parse(msg);
+					
+					
+					 $('#judulModal').text('Assign Kepala/Ketua : '+data['lkd'].name);
+					$('#formRole').attr('action', data['link']);
+					if(data['lkd'].pemimpin){
+						$('#userLKD').val(data['lkd'].pemimpin.username);
+						$('#remove').removeClass('d-none');
+						$('#remove').attr('href',data['delete']);
+					}
+					else{
+						$('#userLKD').val('');
+						$('#remove').addClass('d-none');
+					}
+					
+					
+				},
+				error: function (xhr) {
+					var err = JSON.parse(xhr.responseText);
+					alert(err.message);
+				}
+				
+			});
+			var ajax2 = $.ajax({
+				type : 'GET',
+				url: "{{route('roles.user-list.pemimpin')}}",
+				data: {kode:kode, name:name},
+				success: function(msg){
+console.log(msg);
+					$('#selectpickerLiveSearch').selectpicker('destroy');
+					$('#selectpickerLiveSearch').html(msg);
+					$('#selectpickerLiveSearch').selectpicker('render');
+					
+				},
+				error: function (xhr) {
+					var err = JSON.parse(xhr.responseText);
+					alert(err.message);
+				}
+				
+			});
+			$.when(ajax1, ajax2).done(function(data, data1) {
+			$('#myModal').modal('show');
+		});
+			}); 
+			
+			
+</script>
+<script>
+	
+	$(function(){
+		$('#buttonRW').on('click',function(){
+			
+			$.ajax({
+				type : 'GET',
+				url: "{{route('master-desa.get-dusun')}}",
+				success: function(msg){
+					$('#dusunMRW').selectpicker('destroy');
+					$('#dusunMRW').html(msg);
+					$('#dusunMRW').selectpicker('render');
+				},
+				error: function (xhr) {
+					var err = JSON.parse(xhr.responseText);
+					alert(err.message);
+				}
+				
+			})
+		});
+		$('#buttonRT').on('click',function(){
+			
+			$.ajax({
+				type : 'GET',
+				url: "{{route('master-desa.get-dusun')}}",
+				success: function(msg){
+					$('#dusunMRT').selectpicker('destroy');
+					$('#dusunMRT').html(msg);
+					$('#dusunMRT').selectpicker('render');
+				},
+				error: function (xhr) {
+					var err = JSON.parse(xhr.responseText);
+					alert(err.message);
+				}
+				
+			})
+		});
+		$('#dusunMRT').on('change',function(){
+			$('#dusunMRT').selectpicker('render');
+			let id_dusun = $('#dusunMRT').val();
+
+			$.ajax({
+				type : 'GET',
+				url: "{{route('master-desa.get-rw')}}",
+				
+				data : {id:id_dusun},
+
+				success: function(msg){
+					$('#rwMRT').selectpicker('destroy');
+					$('#rwMRT').html(msg);
+					$('#rwMRT').selectpicker('render');
+				},
+				error: function (xhr) {
+					var err = JSON.parse(xhr.responseText);
+					alert(err.message);
+				}
+				
+			})
+		});
+		
+	})
+</script>
+
 <script>
 	document.querySelectorAll('button[data-bs-toggle="tab"]').forEach((el) => {
 		

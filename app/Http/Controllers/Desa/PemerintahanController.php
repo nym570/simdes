@@ -100,7 +100,10 @@ class PemerintahanController extends Controller
         if($request->file('foto')){
             $extension = $request->file('foto')->extension();
             $data['foto'] = Storage::disk('public')->putFileAs('pemerintahan', $request->file('foto'),date('Ymd').'_'.$data['jabatan'].'_'.$data['nik'].'.'.$extension);
-            Storage::disk('public')->delete($request['current_foto_path']);
+            if(isset($request['current_foto_path'])){
+                Storage::disk('public')->delete($request['current_foto_path']);
+            }
+            
         }
         $pemerintahan->update($data);
         return back()->withSuccess('Data perangkat desa berhasil diubah');

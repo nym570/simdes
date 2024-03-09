@@ -5,7 +5,7 @@
 	  <div class="card h-100">
 		<div class="card-body row widget-separator">
 		  <div class="col-sm-5 border-shift border-end">
-			<h1 class="text-primary text-center mb-0">{{$data['warga']['warga']+$data['warga']['tinggal ditempat lain karena bekerja/bersekolah']}}</h1>
+			{{-- <h1 class="text-primary text-center mb-0">{{$data['warga']['warga']+$data['warga']['tinggal ditempat lain karena bekerja/bersekolah']}}</h1> --}}
 			<h3 class=" text-center">Warga Desa Hidup</h3>
 		  </div>
   

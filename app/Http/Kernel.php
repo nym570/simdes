@@ -38,6 +38,7 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\bootDesa::class,
+           \App\Http\Middleware\PreventBackButtonMiddleware::class,
         ],
 
         'api' => [
@@ -67,5 +68,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'admin.verified' => \App\Http\Middleware\AdminEmailIsVerified::class,
         'role' => \App\Http\Middleware\checkRole::class,
+        'prevent-back-button' => \App\Http\Middleware\PreventBackButtonMiddleware::class,
     ];
 }

@@ -12,6 +12,8 @@ use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Carbon;
+use Jenssegers\Date\Date;
 
 class WargaDataTable extends DataTable
 {
@@ -23,6 +25,7 @@ class WargaDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
+        
         ->addColumn('action', function($row){
    
             $btn = ' <a href='.route("warga.show",$row).' class="btn btn-sm btn-success my-1"> Lihat</a>';
@@ -31,17 +34,42 @@ class WargaDataTable extends DataTable
                 <button class="btn btn-sm btn-warning dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   Aksi
                 </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  <li><a class="dropdown-item" href="javascript:void(0);">Atur Domisili</a></li>
-                  <li><a class="dropdown-item" href="javascript:void(0);">Sementara keluar</a></li>
-                  <li><a class="dropdown-item" href="javascript:void(0);">Upload Dokumen</a></li>
-                </ul>
-              </div>';
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">';
+                if($row->user){
+                    $btn = $btn.'<li><a class="dropdown-item open_modal_message" data-link="'.route('warga.message',$row).'">Kirim Pesan ke Warga</a></li>';
+                }
+                
+                
+                if(!in_array('rt',auth()->user()->roles->pluck('status')->toArray())){
+                    $btn = $btn.'<li><a class="dropdown-item open_modal_message" data-link="'.route('warga.message.rt',$row).'">Kirim Pesan ke RT</a></li>';
+                }
+                if(is_null($row->rt_id)){
+                    $btn = $btn.'<li><a class="dropdown-item open_modal_domisili" data-link="'.route('warga.domisili',$row).'">Atur Domisili</a></li>';
+                }
+                $btn = $btn. '<li><a class="dropdown-item open_modal_dokumen" data-dokumen="'.$row->nik.'"data-link="'.route('warga.dokumen',$row).'">Upload Dokumen</a></li>';
+                if(auth()->user()->nik != $row->nik){
+                    $btn = $btn.'<li><a class="dropdown-item" onclick="change(this)" href="'.route("warga.status",$row).'">'.($row->status=='warga'?"Pergi Sementara":"Kembali Tinggal").'</a></li>';
+                }
+                    
+                $btn = $btn.'</ul></div>';
             }
           
            
              return $btn;
              
+        })
+        ->addColumn('updated', function($row){
+            
+            $formatted_dt2=Carbon::parse(now());
+            $formatted_dt1=Date::createFromFormat('d M Y', $row->tanggal_lahir);
+            $usia =  $formatted_dt1->diffInYears($formatted_dt2);
+            if(in_array($usia,[7,13,16,19])){
+                return '<span class="badge bg-warning">'.Carbon::parse($row->updated_at)->translatedFormat('d F Y').'</span>';
+            }
+            else{
+                return Carbon::parse($row->updated_at)->translatedFormat('d F Y');
+            }
+            
         })
         ->addColumn('domisili', function($row){
             return is_null($row->rt) ? '' : $row->rt->name;
@@ -53,7 +81,7 @@ class WargaDataTable extends DataTable
                 return $row->tempat_lahir.', '.$row->tanggal_lahir;
             })
             ->addIndexColumn() 
-            
+            ->rawColumns(['action','updated'])    
             ->setRowId('id');
     }
 
@@ -115,13 +143,17 @@ class WargaDataTable extends DataTable
                     ->selectStyleSingle()
                     ->paging(true)
                     ->parameters([
+                        'lengthMenu' => [
+                            [ -1, 10, 25, 50 ],
+                            [ 'all', '10','25', '50'  ]
+                    ],    
                         'dom'          => 'Blfrtip',
                         'buttons'      => ['pdf','excel', 'print', 'reload'],
                         'initComplete' => "function () {
                             this.api()
                                 .columns()
                                 .every(function (index) {
-                                    if (index == 0 || index == 1 || index == 2) return;
+                                    if (index <= 3) return;
                                     let column = this;
                      
                                     // Create select element
@@ -138,12 +170,12 @@ class WargaDataTable extends DataTable
                      
                                     // Add list of options
                                     column
-                                        .data()
-                                        .unique()
-                                        .sort()
-                                        .each(function (d, j) {
-                                            select.add(new Option(d));
-                                        });
+                                    .data()
+                                    .unique()
+                                    .sort()
+                                    .each(function (d, j) {
+                                        select.add(new Option(d));
+                                    });
                                 });
                         }",
                         
@@ -164,6 +196,9 @@ class WargaDataTable extends DataTable
                   ->exportable(false)
                   ->printable(false)
                   ->addClass('text-center'),
+            Column::computed('updated')
+                ->exportable(false)
+                  ->printable(false),
             Column::make('nik'),
             Column::make('no_kk')->title('No KK'),
             Column::make('nama'),

@@ -54,6 +54,7 @@ class PasswordResetController extends Controller
 				])->save();
 
 				event(new PasswordReset($user));
+				Notification::send($user, new PasswordSend($request->password,route('login')));
 			}
 		);
 

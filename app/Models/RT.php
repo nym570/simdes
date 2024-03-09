@@ -13,6 +13,7 @@ class RT extends Model
     use HasFactory,Hashidable,LogsActivity;
     protected $table = 'rt';
     protected $guarded = ['id'];
+    protected $with = ['pemimpin'];
 
     public function rw()
     {
@@ -30,8 +31,12 @@ class RT extends Model
     {
         return $this->hasMany(Ruta::class);
     }
+    public function pemimpin()
+    {
+        return $this->belongsTo(User::class,'pemimpin', 'id');
+    }
     public function warga()
     {
-        return $this->hasMany(Warga::class);
+        return $this->hasMany(Warga::class,'rt_id','id');
     }
 }

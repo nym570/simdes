@@ -22,8 +22,8 @@ return new class extends Migration
             $table->string('email_desa')->nullable();
             $table->string('no_telp')->nullable();
             $table->text('deskripsi')->nullable();
-            $table->unsignedBigInteger('kepala_desa');
-            $table->foreign('kepala_desa')->references('id')->on('roles')->constrained();
+            $table->unsignedBigInteger('pemimpin')->nullable();
+            $table->foreign('pemimpin')->references('id')->on('users')->constrained();
             $table->timestamps();
         });
     }

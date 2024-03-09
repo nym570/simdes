@@ -32,7 +32,7 @@ class WargaFactory extends Factory
             'alamat_ktp' => $this->faker->streetAddress(),
             'no_telp' => $this->faker->unique()->phoneNumber(),
             'ktp_desa' => $this->faker->boolean(),
-            'status' => $this->faker->randomElement(['warga','tinggal ditempat lain karena bekerja/bersekolah','meninggal','pindah']),
+            'status' => $this->faker->randomElement(['warga','sementara tidak berdomisili','meninggal','pindah']),
             
 
         ];

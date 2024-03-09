@@ -33,6 +33,11 @@ class DashboardController extends Controller
     }
     public function index()
 	{
+        if(auth()->user()){
+            if(!auth()->user()->hasVerifiedEmail()){
+                return redirect(route('verification.notice'));
+            }
+        }
         $title = 'Dashboard';
         $kelahiran = Kelahiran::whereYear('waktu',now()->year)->where('verifikasi',1);
         $kedatangan = Kedatangan::whereYear('waktu',now()->year)->where('verifikasi',1);

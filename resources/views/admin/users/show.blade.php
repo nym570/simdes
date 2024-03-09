@@ -15,7 +15,7 @@
 	  <i class="bx bx-dots-vertical-rounded"></i>
 	</button>
 	<ul class="dropdown-menu">
-	  <li><a class="dropdown-item" href="{{route("users.status",$user)}}" onclick='change(this)'>{{$user->status=="aktif"?"Nonaktifkan":"Aktifkan"}}</a></li>
+	  <li><a class="dropdown-item" href="{{route("users.status",$user)}}" onclick='change(this)'>{{$user->is_active?"Nonaktifkan":"Aktifkan"}}</a></li>
 	  {{-- <li><a class="dropdown-item" href="{{route('password.email')}}" onclick='send(this)'>Reset Password</a></li> --}}
 	  <li>
 		<hr class="dropdown-divider">

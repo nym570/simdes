@@ -23,7 +23,7 @@ class RWDataTable extends DataTable
     {
         return (new EloquentDataTable($query))
         ->addColumn('action', function($row){
-            $btn = '<button class="btn btn-sm btn-dark my-1 mx-1 open_modal" value="'.$row->ketua_rw.'"> Ketua RW</button>';
+            $btn = '<button class="btn btn-sm btn-dark my-1 mx-1 open_modal" data-kode="3"  data-name="'.$row->name.'" data-link="'.route('m.lkd.rw.get',$row).'"> Ketua RW</button>';
 
             
              return $btn;
@@ -53,7 +53,8 @@ class RWDataTable extends DataTable
                     ->minifiedAjax(route('m.lkd.getRW'))
                     ->selectStyleSingle()
                     ->parameters([
-                        'dom'          => 'Blfrtip',
+  
+                        'dom'          => 'Bfrtip',
                         'responsive' => true,
                         'autoWidth' => false
                     ]);

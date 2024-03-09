@@ -24,7 +24,7 @@ class RTDataTable extends DataTable
         return (new EloquentDataTable($query))
         ->addColumn('action', function($row){
 
-            $btn = '<button class="btn btn-sm btn-dark mx-1 my-1 open_modal" value="'.$row->ketua_rt.'"> Ketua RT</button>';
+            $btn = '<button class="btn btn-sm btn-dark my-1 mx-1 open_modal" data-kode="4" data-name="'.$row->name.'" data-link="'.route('m.lkd.rt.get',$row).'"> Ketua RT</button>';
 
             
             
@@ -55,6 +55,7 @@ class RTDataTable extends DataTable
                     ->minifiedAjax(route('m.lkd.getRT'))
                     ->selectStyleSingle()
                     ->parameters([
+                       
                         'dom'          => 'Bfrtip',
                         'responsive' => true,
                         'autoWidth' => false

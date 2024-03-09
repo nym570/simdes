@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User_Role;
 
 use Spatie\Permission\Models\Role;
 use App\Models\User;
+use App\Models\RT;
 use Spatie\Permission\Models\Permission;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -13,6 +14,7 @@ use Illuminate\Support\Arr;
 use DataTables;
 use App\DataTables\RolesDataTable;
 use App\Http\Controllers\Controller;
+use Illuminate\Database\Eloquent\Builder;
 
 class RoleController extends Controller
 {
@@ -54,19 +56,39 @@ class RoleController extends Controller
     {
         $users = User::role($role->name)->where('is_active',true)->paginate(10);
         $title = 'Role : '.$role->name;
-        $category = Role::where('category',$role->category)->where('category','!=','warga')->where('guard_name','web')->pluck('name')->toArray();
-        $allUsers = User::with('warga')->withoutRole($category)->get();
-        
+        $allUsers = User::with('warga')->withoutRole($role)->get();
         
 		return view('admin.roles.show', compact(['role','users','title','allUsers']));
     }
-    public function userWithout(Request $request){
-        $id = $request->only('id_role');
-        $role = Role::where('id',$id)->first();
-        $category = Role::where('category',$role->category)->where('category','!=','warga')->where('guard_name','web')->pluck('name')->toArray();
-        $allUsers = User::with('warga')->withoutRole($category)->get();
+    public function userWithoutPemimpin(Request $request){
+        $allUsers = User::with('warga')->withoutRole(['kepala desa','kepala dusun','ketua rw','ketua rt']);
+        if($request['kode']==1){
+            $allUsers = $allUsers->get();
+        }
+        else if($request['kode']==2){
+            $rt = RT::whereHas("rw.dusun", function(Builder $builder) use($request) {
+                $builder->where('name', '=', $request['name']);
+            })->pluck('id');
+            $allUsers = $allUsers->whereHas("warga", function(Builder $builder) use($request,$rt) {
+                $builder->whereIn('rt_id',$rt );
+            })->get();
+        }
+        else if($request['kode']==3){
+            $rt = RT::whereHas("rw", function(Builder $builder) use($request) {
+                $builder->where('name', '=', $request['name']);
+            })->pluck('id');
+            $allUsers = $allUsers->whereHas("warga", function(Builder $builder) use($request,$rt) {
+                $builder->whereIn('rt_id',$rt );
+            })->get();
+        }
+        else if($request['kode']==4){
+            $rt = RT::where('name',$request['name'])->pluck('id');
+            $allUsers = $allUsers->whereHas("warga", function(Builder $builder) use($request,$rt) {
+                $builder->whereIn('rt_id',$rt );
+            })->get();
+        }
         foreach($allUsers as $item){
-            echo "<option data-tokens='".$item->username."' value='".$item->username."'>".$item->username.' | '.$item->warga->nama."</option>";
+            echo "<option data-tokens='".$item->username.$item->warga->nama."' value='".$item->id."'>".$item->username.' | '.$item->warga->nama."</option>";
         }
         
     }

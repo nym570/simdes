@@ -25,7 +25,7 @@ class UsersDataTable extends DataTable
         return (new EloquentDataTable($query))
         ->addColumn('action', function($row){
    
-            $btn = ' <a href='.route("users.show",$row).' class="btn btn-sm btn-success my-1"> Lihat</a>';
+            $btn = ' <a href='.route("users.show",$row).' class="btn btn-sm btn-success my-1 mx-1"> Lihat</a>';
 
             $btn = $btn.'<div class="btn-group me-3">
             <button class="btn btn-sm btn-warning dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -66,6 +66,10 @@ class UsersDataTable extends DataTable
                     ->selectStyleSingle()
                     ->paging(true)
                     ->parameters([
+                        'lengthMenu' => [
+                            [ -1, 10, 25, 50 ],
+                            [ 'all', '10','25', '50'  ]
+                    ],    
                         'dom'          => 'Blfrtip',
                         'buttons'      => ['pdf','excel', 'print', 'reload'],
                         'initComplete' => "function () {

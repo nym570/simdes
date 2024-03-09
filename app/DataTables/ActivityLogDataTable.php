@@ -45,6 +45,7 @@ class ActivityLogDataTable extends DataTable
            
             return $row->created_at->toDateString();
         })
+        
         ->addColumn('waktu', function($row){
            
             return $row->created_at->toTimeString();
@@ -75,6 +76,7 @@ class ActivityLogDataTable extends DataTable
            
             
         })
+        ->rawColumns(['objek','subjek','tanggal']) 
         ->addIndexColumn() ;
         // ->setRowId('nik');
     }
@@ -99,13 +101,17 @@ class ActivityLogDataTable extends DataTable
                     ->selectStyleSingle()
                     ->paging(true)
                     ->parameters([
+                        'lengthMenu' => [
+                            [ -1, 10, 25, 50 ],
+                            [ 'all', '10','25', '50'  ]
+                    ],    
                         'dom'          => 'Blfrtip',
                         'buttons'      => ['pdf','excel', 'print', 'reload'],
                         'initComplete' => "function () {
                             this.api()
                                 .columns()
                                 .every(function (index) {
-                                    if (index == 0||index==5) return;
+                                    if (index == 0||index==5||index==7) return;
                                     let column = this;
                      
                                     // Create select element
@@ -126,7 +132,7 @@ class ActivityLogDataTable extends DataTable
                                         .unique()
                                         .sort()
                                         .each(function (d, j) {
-                                            select.add(new Option(d.replace(/<(\/)?([a-zA-Z]*)(\s[a-zA-Z]*=[^>]*)?(\s)*(\/)?>/g, '')));
+                                            select.add(new Option(d));
                                         });
                                 });
                         }",

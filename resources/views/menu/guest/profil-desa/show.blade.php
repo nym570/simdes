@@ -118,9 +118,10 @@
 		<h4 class="text-center">Perangkat Desa {{$desa->desa}}</h4>
 	</div>
 	<div class="card-body">
-		<div class="slider-container swiper">
-			<div class="slider-content">
-			  <div class="card-wrapper swiper-wrapper">
+				@if(!$pemerintahan->empty())
+				<div class="slider-container swiper">
+					<div class="slider-content">
+					  <div class="card-wrapper swiper-wrapper">
 				@foreach ($pemerintahan as $item)
 				<div class="card swiper-slide">
 					<div class="image-content">
@@ -139,12 +140,17 @@
 					</div>
 				</div>
 				@endforeach
-			  </div>
 			</div>
-			<div class="swiper-button-next swiper-navBtn"></div>
-			<div class="swiper-button-prev swiper-navBtn"></div>
-			<div class="swiper-pagination"></div>
-		  </div>
+		</div>
+		<div class="swiper-button-next swiper-navBtn"></div>
+		<div class="swiper-button-prev swiper-navBtn"></div>
+		<div class="swiper-pagination"></div>
+	  </div>
+				@else
+				<p class="text-center">Tidak ada data ditampilkan</p>
+				@endif
+				
+			  
 	</div>
 </div>
 

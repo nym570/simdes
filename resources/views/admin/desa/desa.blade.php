@@ -18,7 +18,7 @@
 							<button type="button" class="btn btn-warning mb-4" data-bs-toggle="modal" data-bs-target="#editDesa">
 								Edit Profil Desa
 							</button>
-							<button class="btn btn-dark mb-4 open_modal" value="{{$desa->kepala_desa}}"> Kepala Desa</button>
+							<button class="btn btn-dark mb-4 open_modal" value="{{$desa->pemimpin}}"> Kepala Desa</button>
 
 							
 
@@ -68,10 +68,10 @@
 		<h5 class="modal-title" id="judulModal"></h5>
 		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 		</div>
-		<form id="formRole" class="mb-3" action="{{ route('roles.add-one') }}" data-remote="true" method="POST">
+		<form id="formRole" class="mb-3" action="{{ route('m.desa.kades') }}" data-remote="true" method="POST">
+			@method('PUT')
 			@csrf
 			<div class="modal-body">
-				<x-input type="text" name="role" id="roleLKD"  value="" class="d-none" />
 				<div class="row">
 					<div class="col mb-3">
 						<x-input type="text" name="user" id="userLKD"  value="" placeholder="Tidak Ditemukan" readonly />
@@ -80,7 +80,7 @@
 				<div class="row">
 					<div class="col mb-3">
 						<label for="selectpickerLiveSearch" class="form-label">Username</label>
-						<select id="selectpickerLiveSearch" class="selectpicker w-100" data-style="btn-default" data-live-search="true" title="Pilih pengguna baru" required name="user">
+						<select id="selectpickerLiveSearch" class="selectpicker w-100" data-style="btn-default" data-live-search="true" title="Pilih pengguna baru" required name="pemimpin">
 							
 						</select>
 					</div>
@@ -89,6 +89,7 @@
 			</div>
 			<div class="modal-footer">
 				<x-button type="submit" class="btn btn-primary d-grid w-100" :value="__('Assign')"/>
+				<x-button type="button" id="remove" class="btn btn-danger d-grid w-100 d-none" onclick="del(this)" href="{{route('m.desa.kades.hapus')}}" :value="__('Hapus Kepala Desa')"/>
 			</div>
 		</form>
 	</div>
@@ -191,7 +192,10 @@
 
 
 
-
+	<form method="POST" class="d-none" id="delete-form">
+		@csrf
+		@method("PUT")
+	</form>
 
 
 	<script>
@@ -204,6 +208,15 @@
 		});
 			
 		});
+		function del(element) {
+		event.preventDefault()
+		let form = document.getElementById('delete-form');
+		form.setAttribute('action', element.getAttribute('href'));
+		$('#AssignRole').modal('hide');
+		swalConfirm('Yakin menghapus Kepala Desa ?', `Posisi Kepala Desa akan Kosong`, 'Ya! Hapus', () => {
+			form.submit()
+		})
+	}
 		
 	</script>
 	
@@ -211,22 +224,20 @@
 <script>
 		
 	$(document).on('click','.open_modal',function(){
-			let id= $(this).val();
 			
 			var ajax1 = $.ajax({
 				type : 'GET',
-				url: "{{route('roles.get')}}",
-				data : {id_role:id},
+				url: "{{route('m.desa.get')}}",
 				success: function(msg){
 					let data = JSON.parse(msg);
-					$('#judulModal').text('Assign role: '+data['role'].name);
-					$('#formRole').attr('action', data['link']);
-					$('#roleLKD').val(data['role'].name);
-					if(data['user']){
-						$('#userLKD').val(data['user'].username);
+					$('#judulModal').text('Assign Kepala Desa : '+data.desa);
+					if(data.pemimpin){
+						$('#userLKD').val(data.pemimpin.username);
+						$('#remove').removeClass('d-none');
 					}
 					else{
 						$('#userLKD').val('');
+						$('#remove').addClass('d-none');
 					}
 					
 					
@@ -240,8 +251,8 @@
 			});
 			var ajax2 = $.ajax({
 				type : 'GET',
-				url: "{{route('roles.user-list')}}",
-				data : {id_role:id},
+				url: "{{route('roles.user-list.pemimpin')}}",
+				data: {kode:1},
 				success: function(msg){
 					$('#selectpickerLiveSearch').selectpicker('destroy');
 					$('#selectpickerLiveSearch').html(msg);

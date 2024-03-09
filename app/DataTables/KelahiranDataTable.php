@@ -61,7 +61,11 @@ class KelahiranDataTable extends DataTable
                     ->orderBy(1)
                     ->selectStyleSingle()
                     ->parameters([
-                        'dom'          => 'Bfrtip',
+                        'lengthMenu' => [
+                            [ -1, 10, 25, 50 ],
+                            [ 'all', '10','25', '50'  ]
+                    ],    
+                        'dom'          => 'Blfrtip',
                         'buttons'      => ['pdf','excel', 'print', 'reload'],
                     ]);
     }

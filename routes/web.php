@@ -56,6 +56,8 @@ Route::controller(UserController::class)->middleware(['admin.auth','admin.verifi
 	Route::delete('/admin/users/{user}/delete', 'delete')->name('delete');
 	Route::post('/users/{user}/del-role', 'deleteRole')->name('hapusRole');
 	Route::post('/users/{user}/role', 'role')->name('role');
+	Route::get('/admin/users/dusun-count', 'dusunCount')->name('dusun-count');
+	Route::get('/admin/users/rw-count', 'rwCount')->name('rw-count');
 });
 
 Route::controller(UserController::class)->name('users.')->group(function () {
@@ -76,11 +78,23 @@ Route::controller(AdminController::class)->middleware(['admin.auth','admin.verif
 
 Route::controller(DesaController::class)->middleware(['admin.auth','admin.verified'])->name('m.desa.')->group(function () {
 	Route::get('/admin/desa', 'index')->name('index');
+	Route::get('/admin/desa/get', 'get')->name('get');
+	Route::put('/admin/desa/kades', 'kades')->name('kades');
+	Route::put('/admin/desa/kades/hapus', 'kadesDelete')->name('kades.hapus');
 	Route::put('/admin/desa/{desa}/update', 'update')->name('update');
 	Route::put('/admin/desa/{desa}/update-deskripsi', 'updateDesc')->name('deskripsi');
 });
 Route::controller(DesaController::class)->middleware(['admin.auth','admin.verified'])->name('m.lkd.')->group(function () {
 	Route::get('/admin/desa/kemasyarakatan', 'lkd')->name('index');
+	Route::get('/admin/desa/kemasyarakatan/{dusun}/dusun', 'dusun')->name('dusun.get');
+	Route::put('/admin/desa/kemasyarakatan/{dusun}/dusun/pemimpin', 'kadus')->name('dusun.kadus');
+	Route::put('/admin/desa/kemasyarakatan/{dusun}/dusun/pemimpin/hapus', 'kadusDelete')->name('dusun.kadus.hapus');
+	Route::get('/admin/desa/kemasyarakatan/{rw}/rw', 'rw')->name('rw.get');
+	Route::put('/admin/desa/kemasyarakatan/{rw}/rw/pemimpin', 'ketuaRW')->name('rw.pemimpin');
+	Route::put('/admin/desa/kemasyarakatan/{rw}/rw/pemimpin/hapus', 'ketuaRWDelete')->name('rw.pemimpin.hapus');
+	Route::get('/admin/desa/kemasyarakatan/{rt}/rt', 'rt')->name('rt.get');
+	Route::put('/admin/desa/kemasyarakatan/{rt}/rt/pemimpin', 'ketuaRT')->name('rt.pemimpin');
+	Route::put('/admin/desa/kemasyarakatan/{rt}/rt/pemimpin/hapus', 'ketuaRTDelete')->name('rt.pemimpin.hapus');
 	Route::get('/admin/desa/kemasyarakatan/dusun-list', 'getDusun')->name('getDusun');
 	Route::get('/admin/desa/kemasyarakatan/rw-list', 'getRW')->name('getRW');
 	Route::get('/admin/desa/kemasyarakatan/rt-list', 'getRT')->name('getRT');
@@ -114,8 +128,8 @@ Route::controller(LogActivityController::class)->middleware(['admin.auth','admin
 
 Route::controller(RoleController::class)->middleware(['admin.auth','admin.verified'])->name('roles.')->group(function () {
 	Route::get('/admin/roles', 'index')->name('index');
-	Route::get('/admin/roles/get', 'get')->name('get');
-	Route::get('/admin/roles/user-list', 'userWithout')->name('user-list');
+	// Route::get('/admin/roles/get', 'get')->name('get');
+	Route::get('/admin/roles/user-list', 'userWithoutPemimpin')->name('user-list.pemimpin');
 	Route::get('/admin/roles/{role}/show', 'show')->name('show');
 	Route::post('/admin/roles/{user}/update', 'update')->name('update');
 	Route::post('/admin/roles/add-one', 'addOne')->name('add-one');
@@ -144,7 +158,13 @@ Route::controller(WargaController::class)->middleware(['auth','verified'])->name
 	Route::post('/warga', 'store')->name('store');
 	Route::get('warga/get-warga', 'getWargaHidup')->name('get-warga');
 	Route::get('/warga/{warga}', 'show')->name('show');
+	Route::post('/warga/get-dokumen', 'getDokumen')->name('get-dokumen');
+	Route::put('/warga/{warga}/domisili', 'domisili')->name('domisili');
+	Route::put('/warga/{warga}/dokumen', 'dokumen')->name('dokumen');
+	Route::put('/warga/{warga}/status', 'status')->name('status');
 	Route::post('/warga/import', 'import')->name('import');
+	Route::post('/warga/{warga}/message', 'message')->name('message');
+	Route::post('/warga/{warga}/message-rt', 'messageRT')->name('message.rt');
 });
 Route::controller(WargaController::class)->group(function () {
 	Route::get('/get-warga', 'getWargaHidup')->name('get-warga');

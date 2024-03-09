@@ -55,6 +55,10 @@ class RolesDataTable extends DataTable
                     ->selectStyleSingle()
                     ->paging(true)
                     ->parameters([
+                        'lengthMenu' => [
+                            [ -1, 10, 25, 50 ],
+                            [ 'all', '10','25', '50'  ]
+                    ],    
                         'dom'          => 'Blfrtip',
                         'buttons'      => ['pdf','excel', 'print', 'reload'],
                         'initComplete' => "function () {
@@ -105,10 +109,6 @@ class RolesDataTable extends DataTable
                     ->addClass('text-center'),
             Column::make('name')
                     ->title('nama'),
-            Column::make('category')
-                    ->title('kategori'),
-            Column::make('status')
-                    ->title('cakupan'),
             Column::make('users_count')->title('jumlah')->data('users_count')
            
             

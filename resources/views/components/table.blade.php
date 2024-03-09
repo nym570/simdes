@@ -22,16 +22,7 @@
 <script>
   
 </script>
-<script>
-	function change(element) {
-		event.preventDefault()
-		let form = document.getElementById('status-form');
-		form.setAttribute('action', element.getAttribute('href'))
-		swalConfirm('Ubah Status ?', `Status pengguna akan diubah`, 'Ubah', () => {
-			form.submit()
-		})
-	}
-</script>
+
 @endpush
 
 

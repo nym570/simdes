@@ -54,4 +54,5 @@ class Warga extends Model
         return $this->hasMany(Dinamika::class,'nik', 'nik');
     }
     
+    
 }

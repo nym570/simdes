@@ -24,16 +24,22 @@ class AdminHomeController extends Controller
 		$title = 'Dashboard Admin';
 		$user = User::where('is_active',true);
 		$login = Activity::where('description','login')->where('created_at','>=', Carbon::today())->get()->unique('causer_id','causer_type')->count();
-		$activity = Activity::where('causer_type', 'App\Models\Admin')->where('causer_id', auth()->guard('admin')->user()->id)->where('created_at','>', Carbon::now()->subMonths(1));
-		$client_id = 0;
+		$activity = Activity::where('causer_type', 'App\Models\Admin')->where('causer_id', auth()->guard('admin')->user()->id);
+		
 	
 		$data = [
-			'user' => $user->count(),
-			'last_month_user' => $user->where('created_at','>', Carbon::now()->subMonths(1))->count(),
-			'login' => $login,
-			'activity' => $activity->count(),
-			'activities' => $activity->groupby('event')->selectRaw('count(*) as total, event')->orderBy('total','desc')->pluck('total','event')->all(),
+			'user' => [
+				'count' => $user->count(),
+				'last_month' => $user->where('created_at','>', Carbon::now()->subMonths(1))->count(),
+				'login' => $login
+			],
+			'activity' => [
+				'last' => $activity->latest()->limit(5)->get(),
+				'event_last_month' => $activity->where('created_at','>', Carbon::now()->subMonths(1))->groupby('event')->selectRaw('count(*) as total, event')->orderBy('total','desc')->pluck('total','event')->all(),
+			]
+			
 		];
+
 		$dusun = Dusun::all();
 		return view('admin.home', compact(['title','data','dusun']));
 	}

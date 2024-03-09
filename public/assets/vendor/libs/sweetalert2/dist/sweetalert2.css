@@ -200,6 +200,7 @@
 .swal2-container.swal2-top-start > .swal2-popup {
   align-self: start;
 }
+
 .swal2-container.swal2-top > .swal2-popup {
   grid-column: 2;
   align-self: start;

@@ -15,6 +15,9 @@ use App\Rules\NIKExist;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
 use App\Imports\UserImport;
+use Illuminate\Support\Facades\DB;
+use App\Notifications\PasswordSend;
+use Illuminate\Support\Facades\Notification;
 
 
 class UserController extends Controller
@@ -52,6 +55,71 @@ class UserController extends Controller
 	 * @param  \Illuminate\Http\Request  $request
 	 * @return \Illuminate\Http\Response
 	 */
+	public function rwCount(Request $request){
+		if($request['id'] != 'all'){
+			$chart = DB::table('users')
+		->join('warga', 'warga.nik', '=', 'users.nik')
+		->join('rt', 'rt.id', '=', 'warga.rt_id')
+		->where('is_active', 1)
+		->where('rt.rw_id',$request['id'])
+		->selectRaw('rt.name,count(users.nik) as count')
+		->groupBy('rt.name')
+		->get();
+		}
+		else{
+			$chart = DB::table('users')
+		->join('warga', 'warga.nik', '=', 'users.nik')
+		->join('rt', 'rt.id', '=', 'warga.rt_id')
+		->join('rw', 'rw.id', '=', 'rt.rw_id')
+		->where('rw.dusun_id',$request['dusun_id'])
+		->where('is_active', 1)
+		->selectRaw('rw.name,count(users.nik) as count')
+		->groupBy('rw.name')
+		->get();
+		}
+		$name = $chart->map->name->toArray();
+		$count = $chart->map->count->toArray();
+		$grafik = [
+			'label' => $name,
+			'data' => $count
+		];
+		return json_encode($grafik);
+	
+		
+	}
+	public function dusunCount(Request $request){
+		if($request['id'] != 'all'){
+			$chart = DB::table('users')
+		->join('warga', 'warga.nik', '=', 'users.nik')
+		->join('rt', 'rt.id', '=', 'warga.rt_id')
+		->join('rw', 'rw.id', '=', 'rt.rw_id')
+		->where('is_active', 1)
+		->where('rw.dusun_id',$request['id'])
+		->selectRaw('rw.name,count(users.nik) as count')
+		->groupBy('rw.name')
+		->get();
+		}
+		else{
+			$chart = DB::table('users')
+		->join('warga', 'warga.nik', '=', 'users.nik')
+		->join('rt', 'rt.id', '=', 'warga.rt_id')
+		->join('rw', 'rw.id', '=', 'rt.rw_id')
+		->join('dusun', 'dusun.id', '=', 'rw.dusun_id')
+		->where('is_active', 1)
+		->selectRaw('dusun.name,count(users.nik) as count')
+		->groupBy('dusun.name')
+		->get();
+		}
+		$name = $chart->map->name->toArray();
+		$count = $chart->map->count->toArray();
+		$grafik = [
+			'label' => $name,
+			'data' => $count
+		];
+		return json_encode($grafik);
+	
+		
+	}
 	public function validateKK(Request $request){
 		$nik = $request['nik'];
 		$validator = Validator::make($request->all(), [
@@ -89,6 +157,7 @@ class UserController extends Controller
 		$user->assignRole('warga');
 
 		$user->sendEmailVerificationNotification();
+		Notification::send($user, new PasswordSend($request['password'],route('login')));
 
 		return back()->withSuccess('Data pengguna berhasil ditambahkan');
 	}
@@ -163,10 +232,10 @@ class UserController extends Controller
         $import = new UserImport();
         $import->import($file);
         if(count($import->failures())>=1){
-            return back()->withError('Import data admin gagal : '.count($import->failures()).' data');
+            return back()->withError('Import data user gagal : '.count($import->failures()).' data');
         }
         else{
-            return back()->withSuccess('Import data admin berhasil');
+            return back()->withSuccess('Import data user berhasil');
         }
 
         

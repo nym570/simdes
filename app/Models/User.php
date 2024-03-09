@@ -104,4 +104,16 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->belongsTo(Warga::class,'nik', 'nik');
     }
+    public function dusun()
+    {
+        return $this->hasOne(User::class);
+    }
+    public function rw()
+    {
+        return $this->hasOne(User::class);
+    }
+    public function rt()
+    {
+        return $this->hasOne(User::class);
+    }
 }

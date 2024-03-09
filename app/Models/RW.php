@@ -13,6 +13,7 @@ class RW extends Model
     use HasFactory,Hashidable,LogsActivity;
     protected $table = 'rw';
     protected $guarded = ['id'];
+    protected $with = ['pemimpin'];
 
     public function getActivitylogOptions(): LogOptions
     {
@@ -26,8 +27,12 @@ class RW extends Model
     {
         return $this->belongsTo(Dusun::class);
     }
+    public function pemimpin()
+    {
+        return $this->belongsTo(User::class,'pemimpin', 'id');
+    }
     public function rt()
     {
-        return $this->hasMany(RT::class);
+        return $this->hasMany(RT::class,'rw_id','id');
     }
 }

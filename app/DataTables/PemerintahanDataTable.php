@@ -63,6 +63,10 @@ class PemerintahanDataTable extends DataTable
                     ->selectStyleSingle()
                     ->paging(true)
                     ->parameters([
+                        'lengthMenu' => [
+                            [ -1, 10, 25, 50 ],
+                            [ 'all', '10','25', '50'  ]
+                    ],    
                         'dom'          => 'Blfrtip',
                         'buttons'      => ['pdf','excel', 'print', 'reload'],
                         'initComplete' => "function () {

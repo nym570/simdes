@@ -22,6 +22,16 @@ let config = {
     body: '#f4f5fb',
     headingColor: '#566a7f',
     axisColor: '#a1acb8',
-    borderColor: '#eceef1'
+    borderColor: '#eceef1',
+   purpleColor: '#836AF9',
+    yellowColor: '#ffe800',
+    cyanColor: '#28dac6',
+    orangeColor: '#FF8132',
+    orangeLightColor: '#FDAC34',
+    oceanBlueColor: '#299AFF',
+    greyColor: '#4F5D70',
+    greyLightColor: '#EDF1F4',
+    blueColor: '#2B9AFF',
+    blueLightColor: '#84D0FF',
   }
 };

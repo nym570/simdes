@@ -36,7 +36,7 @@ class LoginController extends Controller
 				$request->authenticate();
 			$request->session()->regenerate();
 
-			session()->flash('success', __('Selamat Datang ' . auth()->guard('web')->user()->nama));
+			session()->flash('success', __('Selamat Datang ' . auth()->guard('web')->user()->warga->nama));
 			activity()
 				->causedBy($user)
 				->log('login');
