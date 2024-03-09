@@ -43,15 +43,9 @@
 				  </div>
 		  
 				  <div class="col-sm-7 gy-1 text-nowrap d-flex flex-column justify-content-between ps-4 gap-2 pe-3">
-					@foreach ($data['activity']['event_last_month'] as $key => $item)
-					<div class="d-flex align-items-center gap-2">
-						<small class="text-wrap" style="width: 40%">{{$key==''? 'lainnya' :$key}}</small>
-						<div class="progress w-100 bg-transparent" style="height:10px;">
-						  <div class="progress-bar bg-primary" role="progressbar" style="width: {{$item*100/array_sum($data['activity']['event_last_month']).'%'}}" aria-valuenow="{{$item*100/array_sum($data['activity']['event_last_month'])}}" aria-valuemin="0" aria-valuemax="100"></div>
-						</div>
-						<small class="w-px-20 text-end">{{$item}}</small>
+					<div id="activityStatisticsChart">
+						<canvas id="activityChart" class="chartjs" data-height="150"></canvas>
 					  </div>
-					@endforeach
 		
 				  </div>
 			</div>
@@ -190,6 +184,92 @@
     chartListItem.height = chartListItem.dataset.height;
   });
 
+  const activityChart = document.getElementById('activityChart');
+  if (activityChart) {
+    const activityChartVar = new Chart(activityChart, {
+      type: 'bar',
+      data: {
+        labels: @json($data['activity']['graph']['label']),
+        datasets: [
+          {
+            data: @json($data['activity']['graph']['data']),
+            backgroundColor: orangeColor,
+            borderColor: 'transparent',
+            maxBarThickness: 5,
+            borderRadius: {
+              topRight: 5,
+              topLeft: 5
+            }
+          }
+        ]
+      },
+      options: {
+		indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: {
+          duration: 500,
+		  
+		  
+        },
+        plugins: {
+			title: {
+                display: true,
+                text: 'Aktivitas Berdasarkan Events'
+            },
+          tooltip: {
+            backgroundColor: cardColor,
+            titleColor: headingColor,
+            bodyColor: legendColor,
+            borderWidth: 1,
+            borderColor: borderColor
+          },
+          legend: {
+            display: false
+          },
+		  datalabels: {
+            anchor: 'end',
+            align: 'top',
+            formatter: Math.round,
+            font: {
+                weight: 'bold'
+            }
+        }
+		  
+        },
+        scales: {
+          x: {
+			min :0,
+				max:Math.max(...@json($data['activity']['graph']['data']))+2,
+            grid: {
+				
+              color: borderColor,
+              drawBorder: false,
+              borderColor: borderColor
+            },
+            ticks: {
+				stepSize:	 Math.max(...@json($data['activity']['graph']['data']))%5,
+              color: labelColor,
+			  precision: 0
+            }
+          },
+          y: {
+            grid: {
+              color: borderColor,
+              drawBorder: false,
+              borderColor: borderColor
+            },
+            ticks: {
+              
+              color: labelColor,
+			  
+            }
+          }
+        }
+      }
+	});
+}
+
   // Bar Chart
   // --------------------------------------------------------------------
   const barChart = document.getElementById('barChart');
@@ -220,6 +300,10 @@
 		  
         },
         plugins: {
+			title: {
+                display: true,
+                text: 'Pengguna Aktif Berdasarkan Wilayah'
+            },
           tooltip: {
             backgroundColor: cardColor,
             titleColor: headingColor,
@@ -268,6 +352,10 @@
         }
       }
     });
+
+
+
+    
 
 	$.ajax({
 					type : 'GET',

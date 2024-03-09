@@ -43,14 +43,21 @@ class DashboardController extends Controller
         $kedatangan = Kedatangan::whereYear('waktu',now()->year)->where('verifikasi',1);
         $kematian = Kematian::whereYear('waktu',now()->year)->where('verifikasi',1);
         $kepindahan = Kepindahan::whereYear('waktu',now()->year)->where('verifikasi',1);
-        $warga = Warga::groupby('status')->whereIn('status',['warga','tinggal ditempat lain karena bekerja/bersekolah'])->selectRaw('count(*) as total, status')->pluck('total','status')->all();
+        $warga = Warga::groupby('status')->whereIn('status',['warga','sementara tidak berdomisili'])->selectRaw('count(*) as total, status')->pluck('total','status')->all();
+        $ktp = Warga::selectRaw('count(*) as count, ktp_desa')->groupby('ktp_desa')->get();
         $ruta = Ruta::count();
         $data = [
             'kelahiran' => $kelahiran->count(),
             'kedatangan' => $kedatangan->count(),
             'kematian' => $kematian->count(),
             'kepindahan' => $kepindahan->count(),
-            'warga' => $warga,
+            'warga' => [
+                'status' => $warga,
+                'graph' => [
+                    'label' => ['desa','luar desa'],
+					'data' => $ktp->map->count->toArray()
+                ]
+            ],
             'ruta' => $ruta
 
         ];
