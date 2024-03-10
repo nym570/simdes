@@ -13,6 +13,7 @@ class Dinamika extends Model
     use HasFactory,Hashidable,LogsActivity;
     protected $table = 'dinamika';
     protected $guarded = ['id'];
+    protected $with = ['warga'];
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()

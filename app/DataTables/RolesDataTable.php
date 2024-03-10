@@ -39,7 +39,7 @@ class RolesDataTable extends DataTable
      */
     public function query(Role $model): QueryBuilder
     {
-        return $model->newQuery()->where('guard_name','web')->withCount('users');
+        return $model->newQuery()->where('guard_name','web')->whereNotIn('name',['ketua rt','ketua rw','kepala dusun','kepala desa','warga'])->withCount('users');
     }
 
     /**

@@ -11,22 +11,6 @@
 			@csrf
 			
 			<div class="modal-body">
-				<div class="row g-2 mb-3 {{in_array('rt',auth()->user()->roles->pluck('status')->toArray())?'d-none':''}}">
-					<div class="col">
-						<label for="rw_edit" class="form-label">RW*</label>
-						<select id="rw_edit" class="selectpicker w-100" data-style="btn-default" data-live-search="true" name="rw_id" {{in_array('rt',auth()->user()->roles->pluck('status')->toArray())?'':'required'}}>
-							
-						</select>
-						<x-invalid error="rw_id" />
-					</div>
-					<div class="col">
-						<label for="rt_edit" class="form-label">RT*</label>
-						<select id="rt_edit" class="selectpicker w-100" data-style="btn-default" data-live-search="true"  name="rt_id" {{in_array('rt',auth()->user()->roles->pluck('status')->toArray())?'':'required'}}>
-							
-						</select>
-						<x-invalid error="rt_id" />
-					</div>
-				</div>
 				
 				<div class="row ">
 				  <div class="col mb-3">
@@ -51,17 +35,11 @@
     $(document).on('click','.open_modal',function(){
 				var ajax1= $.ajax({
 					type : 'GET',
-					url: $(this).val(),
+					url: $(this).attr('data-link'),
 					success: function(msg){
 						let data = JSON.parse(msg);
 						 $('#judulEdit').text('Edit Rumah Tangga');
-                        $('#rw_edit').val(data['keterangan']['rw_id']);
-                        $('#rw_edit').selectpicker("refresh");
-                        $('#rw_edit').trigger('change');
-                        $('#rw_edit').selectpicker("render");
                         $('#alamat_domisili_edit').val(data['ruta']['alamat_domisili']);
-                        $('#rt_edit').val(data['ruta']['rt_id']);
-                        $('#rt_edit').selectpicker("refresh");
                         $('#formUpdate').attr('action',data['keterangan']['link'] );
                         
                        

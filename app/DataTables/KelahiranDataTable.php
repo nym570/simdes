@@ -11,6 +11,7 @@ use Yajra\DataTables\Html\Editor\Editor;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
+use Illuminate\Database\Eloquent\Builder;
 
 class KelahiranDataTable extends DataTable
 {
@@ -24,12 +25,9 @@ class KelahiranDataTable extends DataTable
         return (new EloquentDataTable($query))
         ->addColumn('action', function($row){
             $btn = "";
-            if(!$row->verifikasi){
+            if(!$row->verifikasi&&in_array('kependudukan',auth()->user()->getRoleNames()->toArray())){
                 $btn = '<button class="btn btn-sm btn-warning mx-1 my-1 verif_modal" onclick="verif(this)" href="'.route('dinamika.kelahiran.verifikasi',$row).'"> Verif</button>';
             }
-            
-
-            // $btn = $btn.'<button class="btn btn-sm btn-dark my-1 open_modal" value="'.$row->kepala_dusun.'"> Kepala Dusun</button>';
 
              return $btn;
              
@@ -46,7 +44,30 @@ class KelahiranDataTable extends DataTable
      */
     public function query(Kelahiran $model): QueryBuilder
     {
-        return $model->newQuery()->with(['dinamika.warga'])->select('kelahiran.*');
+        $cakupan = auth()->user()->getRoleNames()->toArray(); 
+        if(!empty(array_intersect(['kependudukan','kepala desa'],$cakupan))){
+            return $model->newQuery()->with(['dinamika.warga']);
+        }
+            else if(in_array('kepala dusun',$cakupan)){
+                   return $model->newQuery()->with(['dinamika.warga'])->whereHas("dinamika.warga.rt.rw.dusun", function(Builder $builder) {
+                     $builder->where('pemimpin', '=', auth()->user()->id);
+                 });
+                
+            }
+            else if(in_array('ketua rw',$cakupan)){
+                return $model->newQuery()->with(['dinamika.warga'])->whereHas("dinamika.warga.rt.rw", function(Builder $builder) {
+                    $builder->where('pemimpin', '=', auth()->user()->id);
+                });
+                
+            }
+            else if(in_array('ketua rt',$cakupan)){
+                
+                return $model->newQuery()->with(['dinamika.warga'])->whereHas("dinamika.warga.rt", function(Builder $builder) {
+                    $builder->where('pemimpin', '=', auth()->user()->id);
+                });
+                
+            }
+
     }
 
     /**

@@ -10,9 +10,12 @@
 			<div class="mb-4">
 				<!-- Button trigger modal -->
 
-@if(in_array('rt',auth()->user()->roles->pluck('status')->toArray()))
+@if(in_array('ketua rt',auth()->user()->getRoleNames()->toArray()))
 <button type="button" class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target="#addRuta">
 	Tambah Rumah Tangga
+  </button>
+  <button type="button" class="btn btn-success mb-4" data-bs-toggle="modal" data-bs-target="#importExcel">
+	Import Excel
   </button>
 
 
@@ -30,22 +33,6 @@
 			@csrf
 			
 			<div class="modal-body">
-				<div id = "domisili" class="row g-2 mb-3 {{in_array('rt',auth()->user()->roles->pluck('status')->toArray())?'d-none':''}}">
-					<div class="col">
-						<label for="rw_id" class="form-label">RW*</label>
-						<select id="rw_id" class="selectpicker w-100" data-style="btn-default" data-live-search="true" title="Pilih RW" name="rw_id" {{in_array('rt',auth()->user()->roles->pluck('status')->toArray())?'':'required'}}>
-							
-						</select>
-						<x-invalid error="rw" />
-					</div>
-					<div class="col">
-						<label for="rt_id" class="form-label">RT*</label>
-						<select id="rt_id" class="selectpicker w-100" data-style="btn-default" data-live-search="true" title="Pilih RT" name="rt_id" {{in_array('rt',auth()->user()->roles->pluck('status')->toArray())?'':'required'}}>
-							
-						</select>
-						<x-invalid error="rt_id" />
-					</div>
-				</div>
 				
 				<div class="row ">
 				  <div class="col mb-3">
@@ -78,14 +65,14 @@
 	</div>
   </div>
 
-  
+@include('menu.ruta._partials.import')
 @include('menu.ruta._partials.edit')
 @endif
   
 
 			</div>
 
-			@include('menu.ruta._partials.table')
+			@include('components.table')
 
 		</div>
 	</div>
@@ -103,26 +90,7 @@
 				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 			}
 		});
-		if(!$('#domisili').hasClass('d-none')){
-			$.ajax({
-					type : 'GET',
-					url: "{{route('master-desa.get-rw')}}",
-					success: function(msg){
-						$('#rw_id').selectpicker('destroy');
-						$('#rw_id').html(msg);
-						$('#rw_id').selectpicker('render');
-						$('#rw_edit').selectpicker('destroy');
-						$('#rw_edit').html(msg);
-						$('#rw_edit').selectpicker('render');
-						
-						
-					},
-					error: function (xhr) {
-						var err = JSON.parse(xhr.responseText);
-						alert(err.message);
-					}
-				});
-		}
+		
 		
 		
 				$.ajax({
@@ -142,28 +110,7 @@
 				});
 		
 	});
-	$('#rw_id').on('change',function(){
-				$('#rw_id').selectpicker('render');
-				let id_rw = $('#rw_id').val();
-
-				$.ajax({
-					type : 'GET',
-					url: "{{route('master-desa.get-rt')}}",
-					
-					data : {id:id_rw},
-
-					success: function(msg){
-						$('#rt_id').selectpicker('destroy');
-						$('#rt_id').html(msg);
-						$('#rt_id').selectpicker('render');
-					},
-					error: function (xhr) {
-						var err = JSON.parse(xhr.responseText);
-						alert(err.message);
-					}
-					
-				})
-		});
+	
 		
 		
 	</script>

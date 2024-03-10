@@ -12,6 +12,8 @@ use Illuminate\Http\Request;
 use App\DataTables\KelahiranDataTable;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use App\Rules\KepalaRuta;
 
 class KelahiranController extends Controller
 {
@@ -42,7 +44,7 @@ class KelahiranController extends Controller
 			'nik' => ['required','string','size:16'],
             'ibu_nik' => ['required','string','size:16'],
             'bapak_nik' => ['required','string','size:16'],
-            'kepala_nik' => ['required','string','size:16'],
+            'kepala_nik' => ['required','string','size:16',new KepalaRuta],
             'no_kk' => ['required', 'string','size:16'],
             'nama' => ['required', 'string'],
             'tempat_lahir' =>  ['required', 'string'],
@@ -60,11 +62,13 @@ class KelahiranController extends Controller
             'bukti' => ['required','mimes:jpg,png,pdf','max:1024']
             
 		]);
-        
+
+        $kepala = Warga::where('nik',$data['kepala_nik'])->first();
         $data['tanggal_lahir']  = Carbon::parse(explode('T', $data['waktu'])[0]);
         $data['pendidikan'] = 'Tidak / Belum Sekolah';
         $data['pekerjaan'] = 'Belum/ Tidak Bekerja';
-        $data['no_telp'] = '62753825483589';
+        $data['no_telp'] = $kepala->no_telp;
+        $data['tempat_lahir'] = Str::title($data['tempat_lahir']);
         $desa = Desa::get()->first();
         if($data['kode_wilayah_ktp']==$desa['kode_wilayah']){
             $data['ktp_desa'] = 1;
@@ -93,6 +97,7 @@ class KelahiranController extends Controller
             'no_telp' => $data['no_telp'],
             'ktp_desa' => $data['ktp_desa'],
             'status' => $data['status'],
+            'rt_id' => auth()->user()->warga->rt_id,
         ];
         $lahir = [
             'ibu_nik' => $data['ibu_nik'],

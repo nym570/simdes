@@ -13,7 +13,7 @@
 				<td style="width: 10%">{{ $loop->iteration}}</td>
 				<td style="width: 25%">{{ $user->username }}</td>
 				<td style="width: 25%">
-					@if($role->name != 'warga')
+					@if(!in_array($role->name,['warga','ketua rt','ketua rw','kepala desa','kepala dusun']))
 						<button href={{route('users.hapusRole', $user)}} class="btn btn-sm btn-danger my-1" onclick='del(this)'>Hapus Role User</button>
 					@endif
 					

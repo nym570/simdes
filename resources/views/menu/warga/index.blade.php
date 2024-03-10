@@ -217,11 +217,12 @@
 	  </div>
 	</div>
   </div>
+  @include('menu.warga._partials.import')
 @endif
 
 			</div>
 
-			@include('menu.warga._partials.import')
+			
 			@include('components.table')
 			@include('menu.warga._partials.message')
 

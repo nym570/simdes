@@ -76,6 +76,7 @@ class AnggotaRutaDataTable extends DataTable
             Column::make('hubungan'),
             Column::make('anggota_nik')->title('nik')->data('anggota_nik'),
             Column::make('warga.nama')->title('nama')->data('warga.nama'),
+            Column::make('warga.status')->title('status')->data('warga.status'),
 
         ];
     }

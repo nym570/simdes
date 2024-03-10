@@ -11,6 +11,9 @@ use App\DataTables\RutaDataTable;
 use App\DataTables\AnggotaRutaDataTable;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
+use App\Imports\RutaImport;
+use App\Imports\AnggotaRutaImport;
+use Illuminate\Support\Facades\Validator;
 
 class RutaController extends Controller
 {
@@ -25,12 +28,9 @@ class RutaController extends Controller
 
     public function getWargaNonRuta()
     {
-        $anggota = AnggotaRuta::pluck('anggota_nik')->all();
-
-        
-        $warga = Warga::where('status','warga')->whereNotIn('nik', $anggota)->whereHas("rt", function(Builder $builder) {
-            $builder->where('ketua_rt', '=', auth()->user()->roles->where('status','rt')->value('id'));
-        })->get();
+        $warga = Warga::whereIn('status',['warga','sementara tidak berdomisili'])->whereHas("rt", function(Builder $builder) {
+            $builder->where('pemimpin', '=', auth()->user()->id);
+        })->doesntHave('anggota_ruta')->get();
         if($warga){
             foreach($warga as $item){
                 echo "<option data-tokens='".$item['nik'].$item['nama']."' value='".$item['nik']."'>".$item['nik'].' | '.$item['nama']."</option>";
@@ -40,7 +40,7 @@ class RutaController extends Controller
     public function getKepalaRuta()
     {
         $kepala = AnggotaRuta::where('hubungan','Kepala Keluarga')->with('warga')->whereHas("ruta.rt", function(Builder $builder) {
-            $builder->where('ketua_rt', '=', auth()->user()->roles->where('status','rt')->value('id'));
+            $builder->where('pemimpin', '=', auth()->user()->id);
         })->get();
         if($kepala){
             foreach($kepala as $item){
@@ -63,11 +63,9 @@ class RutaController extends Controller
     {
         $validated =$request->validate([
 			'alamat_domisili' => ['required','string'],
-            'kepala_ruta' => ['required'],
+            'kepala_ruta' => ['required','unique:anggota_ruta,anggota_nik','exists:warga,nik'],
 		]);
-        if(auth()->user()->roles->where('status','rt')){
-            $validated['rt_id'] = RT::where('ketua_rt',auth()->user()->roles->where('status','rt')->value('id'))->value('id');
-        }
+            $validated['rt_id'] = auth()->user()->warga->rt_id;
         $validated['jumlah_art'] = 1;
         $ruta = Ruta::create($validated)->id;
         $kepala = [
@@ -132,6 +130,49 @@ class RutaController extends Controller
             }
         }
         
+        
+    }
+    public function import(Request $request)
+    {
+        $validasi = [];
+        if(isset($request['ruta'])){
+            $validasi['ruta'] = 'mimes:csv,xls,xlsx';
+        }
+        if(isset($request['anggota'])){
+            $validasi['anggota'] = 'mimes:csv,xls,xlsx';
+        }
+        $data = Validator::make($request->all(), $validasi);
+        if ($data->fails()) {
+            return back()->withError('Upload file gagal, tipe file salah');
+        }
+        else{
+            if(isset($request['ruta'])){
+                $file1 = $request->file('ruta');
+                $import1 = new RutaImport();
+                $import1->import($file1);
+
+            }
+            if(isset($request['anggota'])){
+                $file2 = $request->file('anggota');
+                $import2 = new AnggotaRutaImport();
+                $import2->import($file2);
+
+            }
+        }
+        
+        if(isset($request['ruta'])&&isset($request['anggota'])&&count($import1->failures())>=1&&count($import2->failures())>=1){
+            return back()->withError('Import data ruta gagal : '.count($import1->failures()).' data & Import data anggota gagal : '.count($import1->failures()).' data');
+        }
+        else if(isset($request['ruta'])&&count($import1->failures())>=1){
+            return back()->withError('Import data ruta gagal : '.count($import1->failures()).' data');
+        }
+        else if(isset($request['anggota'])&&count($import2->failures())>=1){
+            return back()->withError('Import data anggota gagal : '.count($import2->failures()).' data');
+        }
+        else{
+            return back()->withSuccess('Import data ruta berhasil');
+        }
+
         
     }
 

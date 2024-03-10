@@ -27,6 +27,6 @@ class Ruta extends Model
     }
     public function rt()
     {
-        return $this->belongsTo(RT::class);
+        return $this->belongsTo(RT::class,'rt_id', 'id');
     }
 }

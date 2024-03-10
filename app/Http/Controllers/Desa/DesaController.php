@@ -278,7 +278,7 @@ class DesaController extends Controller
             'pemimpin' => null,
         ];
             $lama = User::where('id',$rt['pemimpin'])->first();
-            $lama->removeRole('ketua rw');
+            $lama->removeRole('ketua rt');
         $rt->update($data);
         return back()->withSuccess('Ketua RT berhasil dihapus');
     }

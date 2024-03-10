@@ -10,7 +10,7 @@
 			<div class="mb-4">
 				<!-- Button trigger modal -->
 				<a href="{{route('ruta.index')}}" class="btn btn-dark"> Kembali </a>
-@if(in_array('rt',auth()->user()->roles->pluck('status')->toArray()))
+@if(in_array('ketua rt',auth()->user()->getRoleNames()->toArray()))
 <button type="button" class="btn btn-primary" id="buttonAdd">
 	Tambah Anggota
   </button>
@@ -125,7 +125,7 @@
 			</form>
 			@endif	
 		</div>	
-			@include('menu.warga._partials.table')
+			@include('components.table')
 
 		</div>
 	</div>
@@ -184,10 +184,10 @@
 					url: "{{route('ruta.anggota-get')}}",
 					data:{id:<?=$ruta->id?>},
 					success: function(msg){
+						
 						$('#kepala_nik').selectpicker('destroy');
 						$('#kepala_nik').html(msg);
 						$('#kepala_nik').selectpicker('render');
-						
 						
 					},
 					error: function (xhr) {
@@ -198,7 +198,7 @@
 				var ajax2=$.ajax({
 					type : 'GET',
 					url: "{{route('master.ruta.get-hubungan')}}",
-					data:{uncheck:1},
+					data:{uncheck:[1]},
 					success: function(msg){
 						$('#hubungan_lama').selectpicker('destroy');
 						$('#hubungan_lama').html(msg);

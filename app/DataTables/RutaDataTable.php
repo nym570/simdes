@@ -25,15 +25,22 @@ class RutaDataTable extends DataTable
         return (new EloquentDataTable($query))
             ->addColumn('action', function($row){
                 $btn = ' <a href='.route("ruta.show",$row).' class="btn btn-sm btn-success my-1 mx-1"> Lihat</a>';
-                if(in_array('rt',auth()->user()->roles->pluck('status')->toArray())){
-                    $btn = $btn.'<button class="btn btn-sm btn-dark mx-1 my-1 open_modal" value="'.route('ruta.edit',$row).'"> Update</button>';
-                    $btn = $btn.'<button class="btn btn-sm btn-danger mx-1 my-1 delete_modal" onclick="del(this)" href="'.route('ruta.delete',$row).'"> Hapus</button>';
+                if(in_array('ketua rt',auth()->user()->getRoleNames()->toArray())){
+                    $btn = $btn.'<div class="btn-group me-3">
+                    <button class="btn btn-sm btn-warning dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Aksi
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">';      
+                    $btn = $btn.' <li><a class="dropdown-item open_modal" data-link="'.route('ruta.edit',$row).'">Update</a></li>';
+                    $btn = $btn.' <li><a class="dropdown-item" onclick="del(this)" href="'.route('ruta.delete',$row).'">Hapus</a></li>';
+                    $btn = $btn.'</ul></div>';
                 }
                 
                 return $btn;
             })
             ->addColumn('kepala keluarga', function($row){
-                return $row->anggota_ruta->where('hubungan','Kepala Keluarga')->value('warga.nama');
+                $kepala = $row->anggota_ruta->where('hubungan','Kepala Keluarga')->first()->warga;
+                return $kepala->nama.' ['.$kepala->nik.']';
             })
             ->addIndexColumn() 
             ->setRowId('id');
@@ -44,41 +51,30 @@ class RutaDataTable extends DataTable
      */
     public function query(Ruta $model): QueryBuilder
     {
-        $user_role = auth()->user()->roles->pluck('category')->toArray(); 
-        if(in_array('kependudukan',$user_role)){
-            return $model->newQuery()->with(['anggota_ruta.warga','rt'])->latest();
+        $cakupan = auth()->user()->getRoleNames()->toArray(); 
+        if(!empty(array_intersect(['kependudukan','kepala desa'],$cakupan))){
+            return $model->newQuery()->with(['anggota_ruta.warga','rt']);
         }
-        else if(in_array('pemimpin',$user_role)){
-            $cakupan = auth()->user()->roles->pluck('status')->toArray();
-            if(in_array('desa',$cakupan)){
-                return $model->newQuery()->with(['anggota_ruta.warga','rt'])->latest();
-            }
-            else if(in_array('dusun',$cakupan)){
+            else if(in_array('kepala dusun',$cakupan)){
                    return $model->newQuery()->with(['anggota_ruta.warga','rt'])->whereHas("rt.rw.dusun", function(Builder $builder) {
-                     $builder->where('kepala_dusun', '=', auth()->user()->roles->where('status','dusun')->value('id'));
+                     $builder->where('pemimpin', '=', auth()->user()->id);
                  });
                 
             }
-            else if(in_array('rw',$cakupan)){
-                // return $model->newQuery()->whereHas("anggota_ruta.ruta.rt.rw", function(Builder $builder) {
-                //     $builder->where('ketua_rw', '=', auth()->user()->roles->where('status','rw')->value('id'));
-                // });
+            else if(in_array('ketua rw',$cakupan)){
                 return $model->newQuery()->with(['anggota_ruta.warga','rt'])->whereHas("rt.rw", function(Builder $builder) {
-                    $builder->where('ketua_rw', '=', auth()->user()->roles->where('status','rw')->value('id'));
+                    $builder->where('pemimpin', '=', auth()->user()->id);
                 });
                 
             }
-            else if(in_array('rt',$cakupan)){
-                // return $model->newQuery()->whereHas("anggota_ruta.ruta.rt", function(Builder $builder) {
-                //     $builder->where('ketua_rt', '=', auth()->user()->roles->where('status','rt')->value('id'));
-                // });
+            else if(in_array('ketua rt',$cakupan)){
                 return $model->newQuery()->with(['anggota_ruta.warga','rt'])->whereHas("rt", function(Builder $builder) {
-                    $builder->where('ketua_rt', '=', auth()->user()->roles->where('status','rt')->value('id'));
+                    $builder->where('pemimpin', '=', auth()->user()->id);
                 });
                 
             }
         }
-    }
+    
 
     /**
      * Optional method if you want to use the html builder.
@@ -89,7 +85,6 @@ class RutaDataTable extends DataTable
                     ->setTableId('ruta-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
-                    ->orderBy(1)
                     ->selectStyleSingle()
                     ->parameters([
                         'lengthMenu' => [
