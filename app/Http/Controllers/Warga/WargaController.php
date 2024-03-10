@@ -6,6 +6,7 @@ use App\Models\Warga;
 use App\Models\RT;
 use App\Models\Desa;
 use App\Models\User;
+use Illuminate\Support\Str;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreWargaRequest;
@@ -67,9 +68,9 @@ class WargaController extends Controller
             $validated['ktp_desa'] = 0;
         }
         $validated['status'] = 'warga';
-        if(auth()->user()->roles->where('status','rt')){
-            $validated['rt_id'] = RT::where('ketua_rt',auth()->user()->roles->where('status','rt')->value('id'))->value('id');
-        }
+        $validated['rt_id'] = auth()->user()->warga->rt_id;
+        $validated['tempat_lahir'] = Str::title($validated['tempat_lahir']);
+        
        
         $warga = Warga::create($validated);
 

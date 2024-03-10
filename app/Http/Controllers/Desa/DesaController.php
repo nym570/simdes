@@ -256,7 +256,7 @@ class DesaController extends Controller
         return json_encode($data);
     }
 
-    public function ketuaRT(Request $request, RW $rt)
+    public function ketuaRT(Request $request, RT $rt)
     {
         $data = $request->validate([
 			'pemimpin' => ['required','exists:users,id'],

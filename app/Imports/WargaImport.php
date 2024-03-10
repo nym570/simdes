@@ -30,7 +30,7 @@ class WargaImport implements ToModel, WithUpserts, WithHeadingRow, WithBatchInse
     public function model(array $row)
     {
         $desa = Desa::get()->first();
-        $rt_id = RT::where('ketua_rt',auth()->user()->roles->where('status','rt')->value('id'))->value('id');
+        $rt_id = auth()->user()->warga->rt_id;
         return new Warga([
             'nik' => $row['nik'],
             'no_kk' => $row['no_kk'],

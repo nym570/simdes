@@ -18,7 +18,7 @@
 							<x-label for="dokumen_kk" :value="__('Upload Kartu Keluarga (.jpg/.png)')"/>
 							<x-input class="form-control" type="file" id="dokumen_kk" name="dokumen_kk" />
 							<x-invalid error="dokumen_kk" />
-							<button class="btn btn-sm btn-primary me-1 mt-2" type="button" data-bs-toggle="collapse" data-bs-target="#collapseKK" aria-expanded="false" aria-controls="collapseKK">
+							<button class="btn btn-sm btn-primary me-1 mt-2 d-none" id="btn-kk" type="button" data-bs-toggle="collapse" data-bs-target="#collapseKK" aria-expanded="false" aria-controls="collapseKK">
 								Lihat KK
 							  </button>
 						  </div>
@@ -26,7 +26,7 @@
 							<x-label for="dokumen_ktp" :value="__('Upload KTP (.jpg/.png)')"/>
 							<x-input class="form-control" type="file" id="dokumen_ktp" name="dokumen_ktp" />
 							<x-invalid error="dokumen_ktp" />
-							<button class="btn btn-sm btn-primary me-1 mt-2" type="button" data-bs-toggle="collapse" data-bs-target="#collapseKTP" aria-expanded="false" aria-controls="collapseKTP">
+							<button class="btn btn-sm btn-primary me-1 mt-2 d-none" type="button" id="btn-ktp" data-bs-toggle="collapse" data-bs-target="#collapseKTP" aria-expanded="false" aria-controls="collapseKTP">
 								Lihat KTP
 							  </button>
 						  </div>
@@ -34,7 +34,7 @@
 							<x-label for="foto" :value="__('Upload Foto (.jpg/.png)')"/>
 							<x-input class="form-control" type="file" id="foto" name="foto" />
 							<x-invalid error="foto" />
-							<button class="btn btn-sm btn-primary me-1 mt-2" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFoto" aria-expanded="false" aria-controls="collapseFoto">
+							<button class="btn btn-sm btn-primary me-1 mt-2 d-none" type="button" id="btn-foto" data-bs-toggle="collapse" data-bs-target="#collapseFoto" aria-expanded="false" aria-controls="collapseFoto">
 								Lihat Foto
 							  </button>
 						  </div>
@@ -111,21 +111,24 @@
 						
 						if(data.dokumen_kk){
 							$('#kk_view').html('<label class="form-label">KK Saat Ini</label><div class="d-flex mb-3 w-100" ><img class="object-fit-fill w-100" src="/storage/' + data.dokumen_kk + '"/></div>');
+							$('#btn-kk').removeClass('d-none');
 						}
 						else{
-							$('#kk_view').html('<p>Tidak ada data kk yang tersimpan</p>');
+							$('#btn-kk').addClass('d-none');
 						}
 						if(data.dokumen_ktp){
 							$('#ktp_view').html('<label class="form-label">KTP Saat Ini</label><div class="d-flex mb-3 w-100"><img class="object-fit-fill w-100" src="/storage/' + data.ktp + '"/></div>');
+							$('#btn-ktp').removeClass('d-none');
 						}
 						else{
-							$('#ktp_view').html('<p>Tidak ada data ktp yang tersimpan</p>');
+							$('#btn-ktp').addClass('d-none');
 						}
 						if(data.foto){
 							$('#foto_view').html('<label class="form-label">Foto Saat Ini</label><div class="d-flex mb-3 w-100"><img class="object-fit-fill w-100" src="/storage/' + data.foto + '"/></div>');
+							$('#btn-foto').removeClass('d-none');
 						}
 						else{
-							$('#foto_view').html('<p>Tidak ada foto yang tersimpan</p>');
+							$('#btn-foto').addClass('d-none');
 						}
 						
 						

@@ -27,7 +27,7 @@ class WargaDataTable extends DataTable
         return (new EloquentDataTable($query))
         
         ->addColumn('action', function($row){
-   
+            $role = auth()->user()->getRoleNames()->toArray();
             $btn = ' <a href='.route("warga.show",$row).' class="btn btn-sm btn-success my-1"> Lihat</a>';
             if(!($row->status == 'meninggal' || $row->status == 'pindah')){
                 $btn = $btn.'<div class="btn-group me-3">
@@ -40,14 +40,20 @@ class WargaDataTable extends DataTable
                 }
                 
                 
-                if(!in_array('rt',auth()->user()->roles->pluck('status')->toArray())){
+                if(!in_array('ketua rt',$role)){
                     $btn = $btn.'<li><a class="dropdown-item open_modal_message" data-link="'.route('warga.message.rt',$row).'">Kirim Pesan ke RT</a></li>';
                 }
-                if(is_null($row->rt_id)){
+                if(is_null($row->rt_id)&&in_array('kependudukan',$role)){
                     $btn = $btn.'<li><a class="dropdown-item open_modal_domisili" data-link="'.route('warga.domisili',$row).'">Atur Domisili</a></li>';
                 }
-                $btn = $btn. '<li><a class="dropdown-item open_modal_dokumen" data-dokumen="'.$row->nik.'"data-link="'.route('warga.dokumen',$row).'">Upload Dokumen</a></li>';
-                if(auth()->user()->nik != $row->nik){
+                if(in_array('ketua rt',$role)){
+                    $btn = $btn. '<li><a class="dropdown-item open_modal_update" data-get="'.route('warga.get',$row).'"data-link="'.route('warga.update',$row).'">Update Data</a></li>';
+                }
+                if(!empty(array_intersect(['ketua rt','kependudukan'],$role))){
+                    $btn = $btn. '<li><a class="dropdown-item open_modal_dokumen" data-dokumen="'.$row->nik.'"data-link="'.route('warga.dokumen',$row).'">Upload Dokumen</a></li>';
+                }
+               
+                if(auth()->user()->nik != $row->nik&&!empty(array_intersect(['ketua rt','kependudukan'],$role))){
                     $btn = $btn.'<li><a class="dropdown-item" onclick="change(this)" href="'.route("warga.status",$row).'">'.($row->status=='warga'?"Pergi Sementara":"Kembali Tinggal").'</a></li>';
                 }
                     
@@ -63,7 +69,7 @@ class WargaDataTable extends DataTable
             $formatted_dt2=Carbon::parse(now());
             $formatted_dt1=Date::createFromFormat('d M Y', $row->tanggal_lahir);
             $usia =  $formatted_dt1->diffInYears($formatted_dt2);
-            if(in_array($usia,[7,13,16,19])){
+            if(in_array($usia,[7,13,16,19])&&($row->status=='warga'||$row->status=='sementara tidak berdomisili')){
                 return '<span class="badge bg-warning">'.Carbon::parse($row->updated_at)->translatedFormat('d F Y').'</span>';
             }
             else{
@@ -78,6 +84,7 @@ class WargaDataTable extends DataTable
                 return $row->ktp_desa == 1 ? 'desa' : 'luar desa';
             })
             ->addColumn('ttl', function($row){
+                
                 return $row->tempat_lahir.', '.$row->tanggal_lahir;
             })
             ->addIndexColumn() 
@@ -90,43 +97,28 @@ class WargaDataTable extends DataTable
      */
     public function query(Warga $model): QueryBuilder
     {
-        $user_role = auth()->user()->roles->pluck('category')->toArray(); 
-        if(in_array('kependudukan',$user_role)){
+        $cakupan = auth()->user()->getRoleNames()->toArray(); 
+        if(!empty(array_intersect(['kependudukan','kepala desa'],$cakupan))){
             return $model->newQuery()->with('rt');
         }
-        else if(in_array('pemimpin',$user_role)){
-            $cakupan = auth()->user()->roles->pluck('status')->toArray();
-            if(in_array('desa',$cakupan)){
-                return $model->newQuery()->with('rt');
-            }
-            else if(in_array('dusun',$cakupan)){
-                // return $model->newQuery()->whereHas("anggota_ruta.ruta.rt.rw.dusun", function(Builder $builder) {
-                //     $builder->where('kepala_dusun', '=', auth()->user()->roles->where('status','dusun')->value('id'));
-                // });
+            else if(in_array('kepala dusun',$cakupan)){
                    return $model->newQuery()->with('rt')->whereHas("rt.rw.dusun", function(Builder $builder) {
-                     $builder->where('kepala_dusun', '=', auth()->user()->roles->where('status','dusun')->value('id'));
+                     $builder->where('pemimpin', '=', auth()->user()->id);
                  });
                 
             }
-            else if(in_array('rw',$cakupan)){
-                // return $model->newQuery()->whereHas("anggota_ruta.ruta.rt.rw", function(Builder $builder) {
-                //     $builder->where('ketua_rw', '=', auth()->user()->roles->where('status','rw')->value('id'));
-                // });
+            else if(in_array('ketua rw',$cakupan)){
                 return $model->newQuery()->with('rt')->whereHas("rt.rw", function(Builder $builder) {
-                    $builder->where('ketua_rw', '=', auth()->user()->roles->where('status','rw')->value('id'));
+                    $builder->where('pemimpin', '=', auth()->user()->id);
                 });
                 
             }
-            else if(in_array('rt',$cakupan)){
-                // return $model->newQuery()->whereHas("anggota_ruta.ruta.rt", function(Builder $builder) {
-                //     $builder->where('ketua_rt', '=', auth()->user()->roles->where('status','rt')->value('id'));
-                // });
+            else if(in_array('ketua rt',$cakupan)){
                 return $model->newQuery()->with('rt')->whereHas("rt", function(Builder $builder) {
-                    $builder->where('ketua_rt', '=', auth()->user()->roles->where('status','rt')->value('id'));
+                    $builder->where('pemimpin', '=', auth()->user()->id);
                 });
                 
             }
-        }
         
     }
 

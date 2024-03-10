@@ -22,6 +22,6 @@ class checkRole
                
               return $next($request);
             }
-          }        return redirect(route('home'));
+          }        return  back()->withError('Anda tidak memiliki akses');
     }
 }

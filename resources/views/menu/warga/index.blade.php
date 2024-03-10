@@ -9,7 +9,7 @@
 
 			<div class="mb-4">
 				<!-- Button trigger modal -->
-@if(in_array('rt',auth()->user()->roles->pluck('status')->toArray()))
+@if(in_array('ketua rt',auth()->user()->getRoleNames()->toArray()))
 <button type="button" class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target="#addWarga">
 	Tambah Warga
   </button>
@@ -223,7 +223,6 @@
 
 			@include('menu.warga._partials.import')
 			@include('components.table')
-			@include('menu.warga._partials.dokumen')
 			@include('menu.warga._partials.message')
 
 		</div>
@@ -235,6 +234,7 @@
 </form>
 @if(auth()->user()->hasRole('kependudukan'))
 	@include('menu.warga._partials.domisili')
+	@include('menu.warga._partials.dokumen')
 @endif
 
 <script>
@@ -303,7 +303,7 @@
 			$('#provinsi-lahir').on('change',function(){
 				$('#provinsi-lahir').selectpicker('render');
 				let id_prov = $('#provinsi-lahir').val();
-				let el = $("#provinsi-lahir option:selected").attr("data-tokens");
+
 
 				$.ajax({
 					type : 'GET',
@@ -324,7 +324,7 @@
 			$('#kabupaten-lahir').on('change',function(){
 				$('#kabupaten-lahir').selectpicker('render');
 				let id_kab = $('#kabupaten-lahir').val();
-				let el = $("#kabupaten-lahir option:selected").attr("data-tokens");
+				let el = $("#kabupaten-lahir option:selected").text();
 				$('#tempat_lahir').val(el);
 
 				
@@ -336,8 +336,7 @@
 			$('#provinsi').on('change',function(){
 				$('#provinsi').selectpicker('render');
 				let id_prov = $('#provinsi').val();
-				let el = $("#provinsi option:selected").attr("data-tokens");
-				$('#nama_prov').val(el);
+
 				
 				$.ajax({
 					type : 'GET',
@@ -358,8 +357,7 @@
 			$('#kabupaten').on('change',function(){
 				$('#kabupaten').selectpicker('render');
 				let id_kab = $('#kabupaten').val();
-				let el = $("#kabupaten option:selected").attr("data-tokens");
-				$('#nama_kab').val(el);
+
 
 				$.ajax({
 					type : 'GET',
@@ -382,8 +380,7 @@
 			$('#kecamatan').on('change',function(){
 				$('#kecamatan').selectpicker('render');
 				let id_kec = $('#kecamatan').val();
-				let el = $("#kecamatan option:selected").attr("data-tokens");
-				$('#nama_kec').val(el);
+
 				$.ajax({
 					type : 'GET',
 					url: "{{route('wilayah.get-des')}}",
@@ -406,8 +403,6 @@
 			$('#desa').on('change',function(){
 				$('#desa').selectpicker('render');
 				let id_desa = $('#desa').val();
-				let el = $("#desa option:selected").attr("data-tokens");
-				$('#nama_des').val(el);
 				$('#kode_wilayah').val(id_desa);
 			});
 		})

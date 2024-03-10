@@ -22,6 +22,7 @@ use Maatwebsite\Excel\Concerns\SkipsOnFailure;
 use App\Rules\NIKExist;
 use App\Notifications\PasswordSend;
 use Illuminate\Support\Facades\Notification;
+use App\Helper\wilayahHelper;
 
 class UserImport implements ToModel , WithUpserts, WithHeadingRow, WithBatchInserts, WithChunkReading, WithValidation, SkipsOnError,SkipsOnFailure
 {
@@ -39,7 +40,7 @@ class UserImport implements ToModel , WithUpserts, WithHeadingRow, WithBatchInse
             'nik' => $row['nik'],
             'no_kk' => $row['no_kk'],
             'nama' => $row['nama'],
-            'tempat_lahir' =>  $row['tempat_lahir'],
+            'tempat_lahir' =>  wilayahHelper::getNamaKab($row['tempat_lahir']),
             'tanggal_lahir' =>  $row['tanggal_lahir'],
             'jenis_kelamin' => $row['jenis_kelamin'],
             'pendidikan' => $row['pendidikan'],
@@ -53,12 +54,12 @@ class UserImport implements ToModel , WithUpserts, WithHeadingRow, WithBatchInse
              'no_telp' => $row['no_telp'],
              'rt_id' => is_null($rt)?null : $rt->id,
         ]);
-        $user = new User([
+        $user = User::create([
             'username'     => $row['username'],
            'nik'    => $row['nik'], 
            'email'    => $row['email'], 
            'password' => Hash::make($row['password']),
-        ]);
+        ])->assignRole('warga');
         Notification::send($user, new PasswordSend($row['password'],route('login')));
         return $user;
     }

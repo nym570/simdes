@@ -44,8 +44,7 @@
 			</a>
 		</li>
 @auth
-		
-	@if(!empty(array_intersect(['kependudukan','pemimpin'],auth()->user()->roles->pluck('category')->toArray())))
+	@if(!empty(array_intersect(['ketua rt','ketua rw','kependudukan','kepala desa','kepala dusun'],auth()->user()->getRoleNames()->toArray())))
 		<li class="menu-header small text-uppercase">
 			<span class="menu-header-text">
 				{{ __('Manajemen Warga') }}

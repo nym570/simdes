@@ -128,7 +128,6 @@ Route::controller(LogActivityController::class)->middleware(['admin.auth','admin
 
 Route::controller(RoleController::class)->middleware(['admin.auth','admin.verified'])->name('roles.')->group(function () {
 	Route::get('/admin/roles', 'index')->name('index');
-	// Route::get('/admin/roles/get', 'get')->name('get');
 	Route::get('/admin/roles/user-list', 'userWithoutPemimpin')->name('user-list.pemimpin');
 	Route::get('/admin/roles/{role}/show', 'show')->name('show');
 	Route::post('/admin/roles/{user}/update', 'update')->name('update');
@@ -153,18 +152,26 @@ Route::controller(MasterController::class)->name('master.')->group(function () {
 	Route::get('/master/get-hubungan', 'getHubungan')->name('ruta.get-hubungan');
 });
 
-Route::controller(WargaController::class)->middleware(['auth','verified'])->name('warga.')->group(function () {
+Route::controller(WargaController::class)->middleware(['auth','verified','role:ketua rt|ketua rw|kependudukan|kepala dusun|kepala desa'])->name('warga.')->group(function () {
+	Route::get('warga/{warga}/get', 'get')->name('get');
 	Route::get('/warga', 'index')->name('index');
-	Route::post('/warga', 'store')->name('store');
 	Route::get('warga/get-warga', 'getWargaHidup')->name('get-warga');
 	Route::get('/warga/{warga}', 'show')->name('show');
 	Route::post('/warga/get-dokumen', 'getDokumen')->name('get-dokumen');
-	Route::put('/warga/{warga}/domisili', 'domisili')->name('domisili');
-	Route::put('/warga/{warga}/dokumen', 'dokumen')->name('dokumen');
-	Route::put('/warga/{warga}/status', 'status')->name('status');
-	Route::post('/warga/import', 'import')->name('import');
 	Route::post('/warga/{warga}/message', 'message')->name('message');
 	Route::post('/warga/{warga}/message-rt', 'messageRT')->name('message.rt');
+});
+Route::controller(WargaController::class)->middleware(['auth','verified','role:ketua rt|kependudukan'])->name('warga.')->group(function () {
+	Route::put('/warga/{warga}/dokumen', 'dokumen')->name('dokumen');
+	Route::put('/warga/{warga}/update', 'update')->name('update');
+	Route::put('/warga/{warga}/status', 'status')->name('status');
+});
+Route::controller(WargaController::class)->middleware(['auth','verified','role:ketua rt'])->name('warga.')->group(function () {
+	Route::post('/warga', 'store')->name('store');
+	Route::post('/warga/import', 'import')->name('import');
+});
+Route::controller(WargaController::class)->middleware(['auth','verified','role:kependudukan'])->name('warga.')->group(function () {
+	Route::put('/warga/{warga}/domisili', 'domisili')->name('domisili');
 });
 Route::controller(WargaController::class)->group(function () {
 	Route::get('/get-warga', 'getWargaHidup')->name('get-warga');
