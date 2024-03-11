@@ -30,9 +30,9 @@ return new class extends Migration
             $table->string('keterangan')->nullable();
             $table->string('ibu_nik');
             $table->string('bapak_nik');
-            $table->string('kepala_nik');
-            $table->string('hubungan_ruta');
-            $table->foreign('kepala_nik')->references('nik')->on('warga');
+            $table->unsignedBigInteger('ruta_id')->nullable();
+            $table->string('hubungan_ruta')->nullable();
+            $table->foreign('ruta_id')->references('id')->on('ruta')->onDelete('set null');
             $table->timestamps();
         });
         Schema::create('kematian', function (Blueprint $table) {

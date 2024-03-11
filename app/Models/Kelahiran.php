@@ -31,4 +31,5 @@ class Kelahiran extends Model
     {
         return $this->morphOne(Dinamika::class,'dinamika');
     }
+    
 }

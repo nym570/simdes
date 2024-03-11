@@ -119,6 +119,21 @@
 			</ul>
 		</li>
 	@endif
+@if(auth()->user()->hasRole('warga')&&!is_null(\App\Models\AnggotaRuta::where('anggota_nik',auth()->user()->nik)->first()))
+	<li class="menu-header small text-uppercase">
+		<span class="menu-header-text">
+			{{ __('Layanan Warga') }}
+		</span>
+	</li>
+	<li class="menu-item {{ menuIsActive('home') }}">
+		<a href="{{ route('pengajuan.warga.kependudukan.index') }}" class="menu-link">
+			<i class="menu-icon tf-icons bx bx-home-circle"></i>
+			<div data-i18n="Analytics">
+				{{ __('Kependudukan') }}
+			</div>
+		</a>
+	</li>
+@endif
 @endauth
 		
 

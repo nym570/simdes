@@ -24,7 +24,7 @@ class AnggotaRutaDataTable extends DataTable
         return (new EloquentDataTable($query))
             ->addColumn('action', function($row){
                 $btn = ' <a href='.route("warga.show",$row->warga).' class="btn btn-sm btn-success my-1"> Lihat</a>';
-                if(in_array('rt',auth()->user()->roles->pluck('status')->toArray())){
+                if(in_array('ketua rt',auth()->user()->getRoleNames()->toArray())){
                     $btn = $btn.'<button class="btn btn-sm btn-danger mx-1 my-1 delete_modal" onclick="del(this)" href="'.route('ruta.anggota.delete',$row).'">Hapus</button>';
                 }
                 return $btn;

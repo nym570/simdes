@@ -1,22 +1,4 @@
 
-@extends('layouts.app')
-@section('container')
-	<div class="card">
-		<div class="card-body">
-			<h5 class="card-title">
-				{{ __('Daftar Kelahiran') }}
-			</h5>
-
-			
-				<!-- Button trigger modal -->
-@if(in_array('ketua rt',auth()->user()->getRoleNames()->toArray()))
-<div class="mb-4">
-<button type="button" class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target="#addLahir">
-	Tambah Data Kelahiran
-  </button>
-
-</div>
-
 			
 	<!-- Create App Modal -->
 	<div class="modal fade" id="addLahir" tabindex="-1" aria-hidden="true">
@@ -66,7 +48,7 @@
 				  </div>
 				</div>
 				<div class="bs-stepper-content mt-2">
-					<form id="formKelahiran" class="mb-3" action="{{ route('dinamika.kelahiran.store') }}" data-remote="true" method="POST" enctype="multipart/form-data">
+					<form id="formKelahiran" class="mb-3" action="{{ route('pengajuan.warga.kependudukan.kelahiran.store') }}" data-remote="true" method="POST" enctype="multipart/form-data">
 						@csrf
 					<!-- Details -->
 					<div id="details" class="content pt-3 pt-lg-0">
@@ -271,14 +253,8 @@
 					</div>
 				<!-- submit -->
 				<div id="submit" class="content pt-3 pt-lg-0">
-					<div class="row g-2 mb-3">
-						<div class="col">
-							<label for="kepala_nik" class="form-label">Kepala Rumah Tangga Bayi*</label>
-						<select id="kepala_nik" class="selectpicker w-100" data-style="btn-default" data-live-search="true" title="Pilih Kepala Rumah Tangga" name="ruta_id" required>
-							
-						</select>
-							<x-invalid error="kepala_nik" />
-						  </div>
+					<div class="row mb-3">
+						
 						  <div class="col">
 							<x-label for="hubungan_ruta" :value="__('hubungan dengan Kepala Rumah Tangga')" />
 							<select id="hubungan_ruta" class="selectpicker w-100" data-style="btn-default" data-live-search="true" title="Hubungan Rumah Tangga" name="hubungan_ruta" required>
@@ -319,66 +295,10 @@
 		  </div>
 		</div>
 	  </div>
-	
-	  <div class="modal  fade" id="messageModal" tabindex="-1" aria-hidden="true">
-		<div class="modal-dialog" role="document">
-		  <div class="modal-content">
-			<div class="modal-header">
-			  <h5 class="modal-title" id="exampleModalLabel1">Alasan Penolakan</h5>
-			  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			
-				<div class="modal-body">
-					<form id="formMessage" class="mb-3" data-remote="true" method="POST" enctype="multipart/form-data">
-						@csrf
-						
-						<div>
-							<label for="exampleFormControlTextarea1" class="form-label">Pesan</label>
-							<textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="message"></textarea>
-						  </div>
-						  <small class="mb-2 text-muted">Setelah data ditolak, data akan terhapus. Pesan penolakan akan dikirm ke email pengaju</small>
-				  </div>
-				  <div class="modal-footer">
-					<x-button type="submit" class="btn btn-primary d-grid w-100" :value="__('Kirim Pesan')"/>
-				  </div>
-				</form>
-			</form>
-		  </div>
-		</div>
-	  </div>
-@endif	
-	@include('components.table')
-	<!-- Modal -->
-<div class="modal fade" id="modalLihat" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	<div class="modal-dialog" role="document">
-	  <div class="modal-content">
-		<div class="modal-header">
-		  <h4 class="modal-title" >Detail Kelahiran</h4>
-		  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-			</button>
-		</div>
-		<div class="modal-body">
-		<div class="mb-3" id="biodata">
 
-		</div>
-
-		</div>
-		<div class="modal-footer">
-		  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-		</div>
-	  </div>
-	</div>
-  </div>
 	  <!--/ Create App Modal -->
 		</div>
-	</div>
-</div>
 
-
-	<form method="POST" class="d-none" id="verif-form">
-		@csrf
-		@method("PUT")
-	</form>
 	
 	
 
@@ -445,16 +365,9 @@
 	});
 	
 	</script>
-@if(in_array('ketua rt',auth()->user()->getRoleNames()->toArray()))
+
 <script>
-	function verif(element) {
-		event.preventDefault()
-		let form = document.getElementById('verif-form');
-		form.setAttribute('action', element.getAttribute('href'))
-		swalConfirm('Yakin ingin verifikasi data kelahiran ?', `Setelah verifikasi, warga akan diubah status dan rutanya`, 'Ya! verif', () => {
-			form.submit()
-		})
-	}
+
 	
 	$(function(){
 		$(document).on('click','.open_modal_tolak',function(){
@@ -567,60 +480,9 @@
 				$('#kode_wilayah').val(id_desa);
 			});
 		});
-		$(document).on('click','.open_modal_lihat',function(){
-			$('#biodata').empty();
-				let url= $(this).val();
-				$.ajax({
-					type : 'GET',
-					url: url,
-					success: function(msg){
-						
-						let data = JSON.parse(msg);
-						$('#biodata').append('<p><strong>Nama : </strong>'+data.dinamika.warga.nama+'</p>');
-						$('#biodata').append('<p><strong>NIK : </strong>'+data.dinamika.warga.nik+'</p>');
-						$('#biodata').append('<p><strong>Waktu Kelahiran : </strong>'+data.waktu+'</p>');
-						$('#biodata').append('<p><strong>Berat Lahir : </strong>'+data.berat+'</p>');
-						$('#biodata').append('<p><strong>Panjang Lahir : </strong>'+data.panjang+'</p>');
-						if(data.bapak!=null){
-							$('#biodata').append('<p><strong>Ayah : </strong>'+data.bapak_nik+' ['+data.bapak+']</p>');
-						}
-						else{
-							$('#biodata').append('<p><strong>Ayah : </strong>'+data.bapak_nik+' [warga luar]</p>');
-						}
-						if(data.ibu!=null){
-							$('#biodata').append('<p><strong>Ayah : </strong>'+data.ibu_nik+' ['+data.ibu+']</p>');
-						}
-						else{
-							$('#biodata').append('<p><strong>Ayah : </strong>'+data.ibu_nik+' [warga luar]</p>');
-						}
-						if(data.ruta_id!=null){
-							$('#biodata').append('<p><strong>Kepala Rumah Tangga : </strong>'+data.kepala_nik+' ['+data.kepala_nama+']</p>');
-							$('#biodata').append('<p><strong>Hubungan pada Rumah Tangga : </strong>'+data.hubungan_ruta+'</p>');
-						}
-						
-						$('#biodata').append('<p><strong>Keterangan : </strong></p><p>'+data.keterangan+'</p>');
-						$('#biodata').append('<div class="mt-2"><h5 class=" text-center">Foto Bukti</h5><img class="w-75 mx-auto d-block" src="/storage/' + data.bukti + '"/></div>');
-						// $('#biodata').append('<p class="text-center"><strong>'+data.warga.nama+'</strong></p>');
-						
-						// $('#jabatan-pem').append(data.jabatan);
-						// $('#tugas-pem').append('<h5>Tugas</h5>');
-						// $('#tugas-pem').append(data.tugas);
-						// $('#wewenang-pem').append('<h5>Wewenang</h5>');
-						// $('#wewenang-pem').append(data.wewenang);
-						$('#modalLihat').modal('show');
-						
-						
-					},
-					error: function (xhr) {
-						var err = JSON.parse(xhr.responseText);
-						alert(err.message);
-					}
-					
-				});
-				
-			}); 
+		
 </script>
-@endif
+
 <script>
 	/**
  *  Modal Example Wizard
@@ -676,6 +538,4 @@ $(function () {
 </script>
 
 
-
-@endsection
 

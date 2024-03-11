@@ -25,9 +25,23 @@ class KelahiranDataTable extends DataTable
         return (new EloquentDataTable($query))
         ->addColumn('action', function($row){
             $btn = "";
-            if(!$row->verifikasi&&in_array('kependudukan',auth()->user()->getRoleNames()->toArray())){
-                $btn = '<button class="btn btn-sm btn-warning mx-1 my-1 verif_modal" onclick="verif(this)" href="'.route('dinamika.kelahiran.verifikasi',$row).'"> Verif</button>';
+            $btn = '<button class="btn btn-sm btn-success my-1 open_modal_lihat" value="'.route('kelahiran.get',$row).'"> Lihat</button>';
+            $btn = $btn.'<div class="btn-group me-3">
+                <button class="btn btn-sm btn-warning dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Aksi
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">';
+                if($row->verifikasi){
+                    $btn = $btn.'<li><a class="dropdown-item" href="'.route('warga.show',$row->dinamika->warga).'" >Lihat Warga</a></li>';
+                }
+            if(!$row->verifikasi&&in_array('ketua rt',auth()->user()->getRoleNames()->toArray())){
+                
+                
+                $btn = $btn.'<li><a class="dropdown-item" href="'.route('dinamika.kelahiran.verifikasi',$row).'" onclick="verif(this)">Verif</a></li>';
+                $btn = $btn.'<li><a class="dropdown-item open_modal_tolak" data-link="'.route('dinamika.kelahiran.tolak',$row).'">Tolak</a></li>';
+                  
             }
+            $btn = $btn.'</ul></div>';
 
              return $btn;
              

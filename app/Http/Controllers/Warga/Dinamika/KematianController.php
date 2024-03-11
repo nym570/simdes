@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use App\DataTables\KematianDataTable;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
+use App\Notifications\Message;
+use Illuminate\Support\Facades\Notification;
 
 class KematianController extends Controller
 {
@@ -59,6 +61,7 @@ class KematianController extends Controller
         $kematian = Kematian::create($data);
         $kematian->dinamika()->create([ 'nik' => $data['nik'] ]);
 
+        $this->verifikasi($kematian);
        
         
         return back()->withSuccess('Data Kematian berhasil ditambahkan');

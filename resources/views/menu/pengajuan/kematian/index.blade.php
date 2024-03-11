@@ -6,13 +6,13 @@
 			<h5 class="card-title">
 				{{ __('Daftar Kematian') }}
 			</h5>
-@if(in_array('ketua rt',auth()->user()->getRoleNames()->toArray()))
+
 			<div class="mb-4">
 				<!-- Button trigger modal -->
 <button type="button" class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target="#addMati">
 	Tambah Data Kematian
   </button>
-</div>
+
 
   
   
@@ -121,10 +121,10 @@
   </div>
 
   
-@endif
+
   
 
-	
+			</div>
 
 			@include('menu.dinamika._partials.table')
 

@@ -7,16 +7,17 @@
 				{{ __('Daftar Warga') }}
 			</h5>
 
-			<div class="mb-4">
+			
 				<!-- Button trigger modal -->
 @if(in_array('ketua rt',auth()->user()->getRoleNames()->toArray()))
+<div class="mb-4">
 <button type="button" class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target="#addWarga">
 	Tambah Warga
   </button>
   <button type="button" class="btn btn-success mb-4" data-bs-toggle="modal" data-bs-target="#importExcel">
 	Import Excel
   </button>
-
+</div>
 
   
   
@@ -207,28 +208,33 @@
 				</div>
 
 				</div>
-
+			</div>
 				
 			  </div>
 			  <div class="modal-footer">
 				<x-button type="submit" class="btn btn-primary d-grid w-100" :value="__('Tambah Warga')"/>
 			  </div>
+			
 		</form>
 	  </div>
 	</div>
   </div>
+  @include('menu.warga._partials.edit')
   @include('menu.warga._partials.import')
+
+
+
 @endif
 
-			</div>
 
 			
-			@include('components.table')
-			@include('menu.warga._partials.message')
+			
 
-		</div>
+		@include('components.table')
+			@include('menu.warga._partials.message')
 	</div>
 </div>
+
 <form method="POST" class="d-none" id="status-form">
 	@csrf
 	@method("PUT")

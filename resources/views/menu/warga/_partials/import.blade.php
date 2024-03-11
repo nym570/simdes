@@ -18,14 +18,14 @@
 							<x-input class="form-control" type="file" id="import" name="import" required/>
 							<x-invalid error="import" />
 						  </div>
-					  </div>
+					</div>
 				
 			  </div>
 			  <div class="modal-footer">
 				<x-button type="submit" class="btn btn-primary d-grid w-100" :value="__('Import')"/>
 			  </div>
 			</form>
-		</form>
+		
 	  </div>
 	</div>
   </div>

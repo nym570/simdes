@@ -11,7 +11,7 @@ class UpdateWargaRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,19 @@ class UpdateWargaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'nik' => ['required', 'string','unique:warga,nik,'. $this->warga->id,'size:16'],
+            'no_kk' => ['required', 'string','size:16'],
+            'nama' => ['required', 'string'],
+            'tempat_lahir' =>  ['required', 'string'],
+            'tanggal_lahir' =>  ['required', 'date'],
+            'jenis_kelamin' => ['required', 'string'],
+            'pendidikan' => ['required', 'string'],
+            'pekerjaan' => ['required', 'string'],
+            'agama' => ['required', 'string'],
+            'gol_darah' => ['required', 'string'],
+            'kode_wilayah_ktp' => ['required', 'string','regex:/[0-9]{2}.[0-9]{2}.[0-9]{4}/u'],
+            'alamat_ktp' => ['required', 'string'],
+             'no_telp' => ['required', 'string','regex:/62[0-9]+$/u'],
         ];
     }
 }

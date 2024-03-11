@@ -11,6 +11,7 @@ use Yajra\DataTables\Html\Editor\Editor;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
+use Illuminate\Database\Eloquent\Builder;
 
 class KematianDataTable extends DataTable
 {
@@ -46,7 +47,29 @@ class KematianDataTable extends DataTable
      */
     public function query(Kematian $model): QueryBuilder
     {
-        return $model->newQuery()->with(['dinamika.warga'])->select('kematian.*');
+        $cakupan = auth()->user()->getRoleNames()->toArray(); 
+        if(!empty(array_intersect(['kependudukan','kepala desa'],$cakupan))){
+            return $model->newQuery()->with(['dinamika.warga']);
+        }
+            else if(in_array('kepala dusun',$cakupan)){
+                   return $model->newQuery()->with(['dinamika.warga'])->whereHas("dinamika.warga.rt.rw.dusun", function(Builder $builder) {
+                     $builder->where('pemimpin', '=', auth()->user()->id);
+                 });
+                
+            }
+            else if(in_array('ketua rw',$cakupan)){
+                return $model->newQuery()->with(['dinamika.warga'])->whereHas("dinamika.warga.rt.rw", function(Builder $builder) {
+                    $builder->where('pemimpin', '=', auth()->user()->id);
+                });
+                
+            }
+            else if(in_array('ketua rt',$cakupan)){
+                
+                return $model->newQuery()->with(['dinamika.warga'])->whereHas("dinamika.warga.rt", function(Builder $builder) {
+                    $builder->where('pemimpin', '=', auth()->user()->id);
+                });
+                
+            }
     }
 
     /**

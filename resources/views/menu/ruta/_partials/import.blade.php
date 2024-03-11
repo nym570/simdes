@@ -14,17 +14,20 @@
 					<input type="hidden" id="token" value="{{ csrf_token() }}">
 					<div class="row">
 						<div class="col mt-3">
-							<a href="/import_format/ruta.xlsx" download>Download Format Excel Ruta</a>
+							
+							
 							<x-label for="import" :value="__('Upload File Ruta .xlsx')"/>
 							<x-input class="form-control" type="file"  name="ruta" />
+							<div><a href="/import_format/ruta.xlsx" download>Download Format Excel Ruta</a></div>
 							<x-invalid error="ruta" />
 						  </div>
 					  </div>
 					  <div class="row">
 						<div class="col mt-3">
-							<a href="/import_format/anggota.xlsx" download>Download Format Excel Anggota Ruta</a>
+							
 							<x-label for="import" :value="__('Upload File Anggota Ruta .xlsx')"/>
 							<x-input class="form-control" type="file"  name="anggota" />
+							<div><a href="/import_format/anggota.xlsx" download>Download Format Excel Anggota Ruta</a></div>
 							<x-invalid error="anggota" />
 						  </div>
 					  </div>
@@ -34,7 +37,7 @@
 				<x-button type="submit" class="btn btn-primary d-grid w-100" :value="__('Import')"/>
 			  </div>
 			</form>
-		</form>
+
 	  </div>
 	</div>
   </div>

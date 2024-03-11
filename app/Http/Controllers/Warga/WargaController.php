@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Notifications\Message;
 use Illuminate\Support\Facades\Notification;
+use Jenssegers\Date\Date;
 
 
 class WargaController extends Controller
@@ -30,14 +31,17 @@ class WargaController extends Controller
         $title = 'Manajemen Warga';
 		 return $dataTable->render('menu.warga.index',compact('title'));
     }
+    public function get(Warga $warga)
+    {
+        $warga['tanggal_format'] =  $formatted_dt1=Date::createFromFormat('d M Y', $warga->tanggal_lahir);
+		return json_encode($warga);
+    }
     public function getWargaHidup(Request $request){
         if(isset($request['tujuan'])){
             $data = Warga::doesntHave($request['tujuan'])->where('status','warga')->get();
         }
-        else if($request['warga']=='2'){
-            $data = Warga::where('status','warga')->whereHas("rt", function(Builder $builder) {
-                $builder->where('ketua_rt', '=', auth()->user()->roles->where('status','rt')->value('id'));
-            })->get();
+        else {
+            $data = Warga::where('status','warga')->get();
         }
        
         if($data){
@@ -242,7 +246,9 @@ class WargaController extends Controller
      */
     public function update(UpdateWargaRequest $request, Warga $warga)
     {
-        //
+        $validated = $request->validated();
+        $warga->update($validated);
+        return back()->withSuccess('Data warga berhasil diupdate');
     }
 
     /**

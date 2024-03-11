@@ -39,12 +39,12 @@ class RutaController extends Controller
     }
     public function getKepalaRuta()
     {
-        $kepala = AnggotaRuta::where('hubungan','Kepala Keluarga')->with('warga')->whereHas("ruta.rt", function(Builder $builder) {
+        $kepala = AnggotaRuta::where('hubungan','Kepala Keluarga')->with(['warga','warga.anggota_ruta'])->whereHas("ruta.rt", function(Builder $builder) {
             $builder->where('pemimpin', '=', auth()->user()->id);
         })->get();
         if($kepala){
             foreach($kepala as $item){
-                echo "<option data-tokens='".$item->warga->nik.$item->warga->nama."' value='".$item->warga->nik."'>".$item->warga->nik.' | '.$item->warga->nama."</option>";
+                echo "<option data-tokens='".$item->warga->nik.$item->warga->nama."' value='".$item->warga->anggota_ruta->ruta_id."'>".$item->warga->nik.' | '.$item->warga->nama."</option>";
             }
         }
     }

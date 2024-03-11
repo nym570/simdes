@@ -16,6 +16,7 @@ use App\Http\Controllers\Warga\Dinamika\KelahiranController;
 use App\Http\Controllers\Warga\Dinamika\KematianController;
 use App\Http\Controllers\Warga\Dinamika\KepindahanController;
 use App\Http\Controllers\Warga\Dinamika\KedatanganController;
+use App\Http\Controllers\Pengajuan\PengajuanDinamika;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MasterController;
 
@@ -115,9 +116,7 @@ Route::middleware(['admin.auth','admin.verified'])->group(function () {
 
 Route::middleware(['auth','verified'])->group(function () {
 	Route::middleware(['role:ketua rt|ketua rw|kependudukan|kepala dusun|kepala desa'])->group(function () {
-		Route::controller(WargaController::class)->group(function () {
-			Route::get('/get-warga', 'getWargaHidup')->name('get-warga');
-		});
+		
 		Route::controller(WargaController::class)->name('warga.')->group(function () {
 			Route::get('warga/{warga}/get', 'get')->name('get');
 			Route::get('/warga', 'index')->name('index');
@@ -141,19 +140,19 @@ Route::middleware(['auth','verified'])->group(function () {
 	Route::middleware(['role:ketua rt|kependudukan'])->group(function () {
 		Route::controller(WargaController::class)->name('warga.')->group(function () {
 			Route::put('/warga/{warga}/dokumen', 'dokumen')->name('dokumen');
-			Route::put('/warga/{warga}/update', 'update')->name('update');
+			
 			Route::put('/warga/{warga}/status', 'status')->name('status');
 			Route::put('/warga/{warga}/domisili', 'domisili')->name('domisili');
 			
 		});
-		Route::controller(KelahiranController::class)->name('dinamika.kelahiran.')->group(function () {
-			Route::put('/dinamika/kelahiran/{lahir}/verif', 'verifikasi')->name('verifikasi');
-		});
+		
 
 	});
 	Route::middleware(['role:ketua rt'])->group(function () {
 		Route::controller(WargaController::class)->name('warga.')->group(function () {
 			Route::post('/warga', 'store')->name('store');
+			Route::put('/warga/{warga}/update', 'update')->name('update');
+			
 			Route::post('/warga/import', 'import')->name('import');
 		});
 		Route::controller(RutaController::class)->group(function () {
@@ -172,7 +171,10 @@ Route::middleware(['auth','verified'])->group(function () {
 		});
 		Route::controller(KelahiranController::class)->name('dinamika.kelahiran.')->group(function () {
 			Route::post('/dinamika/kelahiran', 'store')->name('store');
+			Route::put('/dinamika/kelahiran/{lahir}/verif', 'verifikasi')->name('verifikasi');
+			Route::post('/dinamika/kelahiran/{lahir}/tolak', 'tolak')->name('tolak');
 		});
+		
 	});
 	
 
@@ -198,9 +200,20 @@ Route::middleware(['auth','verified'])->group(function () {
 		
 	});
 	
+	Route::middleware(['role:warga'])->name('pengajuan.warga.')->group(function () {
+		Route::controller(PengajuanDinamika::class)->name('kependudukan.')->group(function () {
+			Route::get('/pengajuan/kependudukan', 'index')->name('index');
+			Route::post('/pengajuan/kelahiran', 'kelahiran')->name('kelahiran.store');
+			
+		});
+		
+
+	});
 	
-	
-	
+	Route::controller(KelahiranController::class)->name('kelahiran.')->group(function () {
+		Route::get('/kelahiran/{lahir}/get', 'get')->name('get');
+	});
+
 });
 
 
@@ -208,6 +221,9 @@ Route::middleware(['auth','verified'])->group(function () {
 Route::controller(UserController::class)->name('users.')->group(function () {
 	Route::post('/users/check-nik', 'validateNIK')->name('nik');
 	Route::post('/users/check-kk', 'validateKK')->name('kk');
+});
+Route::controller(WargaController::class)->group(function () {
+	Route::get('/get-warga', 'getWargaHidup')->name('get-warga');
 });
 
 
