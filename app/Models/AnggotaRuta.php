@@ -13,6 +13,7 @@ class AnggotaRuta extends Model
     use HasFactory,Hashidable,LogsActivity;
     protected $table = 'anggota_ruta';
     protected $guarded = ['id'];
+    protected $with = ['warga','ruta'];
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()

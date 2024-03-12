@@ -121,12 +121,22 @@ class RutaController extends Controller
         else{
             $data = AnggotaRuta::where('ruta_id',$request['id'])->with('warga')->get();
             if($data){
-                foreach($data as $item){
-                    if($item->hubungan != 'Kepala Keluarga'){
-                        echo "<option data-tokens='".$item->warga->nik."' value='".$item->warga->nik."'>".$item->warga->nik.' | '.$item->warga->nama."</option>";
+                if(isset($request['all'])){
+                    foreach($data as $item){
+
+                            echo "<option data-tokens='".$item->warga->nik.$item->warga->nama."' value='".$item->warga->nik."'>".$item->warga->nik.' | '.$item->warga->nama."</option>";
+                        
                     }
-                    
                 }
+                else{
+                    foreach($data as $item){
+                        if($item->hubungan != 'Kepala Keluarga'){
+                            echo "<option data-tokens='".$item->warga->nik.$item->warga->nama."' value='".$item->warga->nik."'>".$item->warga->nik.' | '.$item->warga->nama."</option>";
+                        }
+                        
+                    }
+                }
+                
             }
         }
         
@@ -239,6 +249,18 @@ class RutaController extends Controller
             $ruta->update($data);
             return back()->withSuccess('Anggota Rumah Tangga Berhasil dihapus');
         }
+        
+		
+    }
+    public function anggotaUpdate(Request $request, AnggotaRuta $anggota)
+    {
+        $validated = $request->validate([
+			'hubungan' => ['required','string'],
+            
+		]);
+        $anggota->update($validated);
+        return back()->withSuccess('Hubungan Anggota Ruta Berhasil Diubah');
+       
         
 		
     }

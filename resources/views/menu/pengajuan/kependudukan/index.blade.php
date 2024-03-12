@@ -24,7 +24,9 @@
 					<i class='bx bxs-user-x bx-lg'></i>
 					<h5 class="card-title">Kematian</h5>
 					<p class="card-text">Ajukan data kematian anggota rumah tangga anda</p>
-					<a href="#" class="btn btn-sm btn-primary">Ajukan!</a>
+					<button type="button" class="btn btn-sm btn-primary"  data-bs-toggle="modal" data-bs-target="#addMati">
+						Ajukan!
+					  </button>
 				  </div>
 				</div>
 			 </div>
@@ -51,6 +53,7 @@
 		</div>
 
 		@include('menu.pengajuan.kependudukan.kelahiran')
+		@include('menu.pengajuan.kependudukan.kematian')
 	</div>
 </div>
 @endif

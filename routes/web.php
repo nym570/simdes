@@ -19,6 +19,7 @@ use App\Http\Controllers\Warga\Dinamika\KedatanganController;
 use App\Http\Controllers\Pengajuan\PengajuanDinamika;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MasterController;
+use App\Http\Controllers\StatistikController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +36,13 @@ use App\Http\Controllers\MasterController;
 
 Route::get('/', [DashboardController::class,'index'])->name('home');
 
+Route::controller(StatistikController::class)->name('statistik.')->group(function () {
+	Route::get('/statistik/warga/agama', 'agama')->name('warga.agama');
+	Route::get('/statistik/warga/agama/dusun', 'agamaDusun')->name('warga.agama.dusun-count');
+	Route::get('/statistik/warga/agama/rw', 'agamaRW')->name('warga.agama.rw-count');
+	Route::get('/statistik/warga/agama/rt', 'agamaRT')->name('warga.agama.rt-count');
+
+});
 
 
 Route::get('/boot', [DashboardController::class,'boot'])->name('admin.boot');
@@ -136,6 +144,9 @@ Route::middleware(['auth','verified'])->group(function () {
 		Route::controller(KelahiranController::class)->name('dinamika.kelahiran.')->group(function () {
 			Route::get('/dinamika/kelahiran', 'index')->name('index');
 		});
+		Route::controller(KematianController::class)->name('dinamika.kematian.')->group(function () {
+			Route::get('/dinamika/kematian', 'index')->name('index');
+		});
 	});
 	Route::middleware(['role:ketua rt|kependudukan'])->group(function () {
 		Route::controller(WargaController::class)->name('warga.')->group(function () {
@@ -163,6 +174,7 @@ Route::middleware(['auth','verified'])->group(function () {
 			Route::post('/ruta', 'store')->name('store');
 			Route::get('/ruta/{ruta}/edit', 'edit')->name('edit');
 			Route::put('/ruta/{ruta}/update', 'update')->name('update');
+			Route::put('/ruta/anggota/{anggota_ruta}/update', 'anggotaUpdate')->name('anggota.update');
 			Route::delete('/ruta/{ruta}/delete', 'destroy')->name('delete');
 			Route::delete('/ruta/anggota/{anggota_ruta}/delete', 'anggotaDestroy')->name('anggota.delete');
 			Route::post('/ruta/{ruta}/anggota', 'storeAnggota')->name('anggota.store');
@@ -174,17 +186,19 @@ Route::middleware(['auth','verified'])->group(function () {
 			Route::put('/dinamika/kelahiran/{lahir}/verif', 'verifikasi')->name('verifikasi');
 			Route::post('/dinamika/kelahiran/{lahir}/tolak', 'tolak')->name('tolak');
 		});
+		Route::controller(KematianController::class)->name('dinamika.kematian.')->group(function () {
+			Route::get('/dinamika/kematian', 'index')->name('index');
+			Route::post('/dinamika/kematian', 'store')->name('store');
+			Route::put('/dinamika/kematian/{mati}/verif', 'verifikasi')->name('verifikasi');
+			Route::post('/dinamika/kematian/{mati}/tolak', 'tolak')->name('tolak');
+		});
 		
 	});
 	
 
 
 	
-	Route::controller(KematianController::class)->middleware(['auth','verified'])->name('dinamika.kematian.')->group(function () {
-		Route::get('/dinamika/kematian', 'index')->name('index');
-		Route::post('/dinamika/kematian', 'store')->name('store');
-		Route::put('/dinamika/kematian/{mati}/verif', 'verifikasi')->name('verifikasi');
-	});
+	
 	Route::controller(KepindahanController::class)->middleware(['auth','verified'])->name('dinamika.kepindahan.')->group(function () {
 		Route::get('/dinamika/kepindahan', 'index')->name('index');
 		Route::post('/dinamika/kepindahan', 'store')->name('store');
@@ -204,6 +218,7 @@ Route::middleware(['auth','verified'])->group(function () {
 		Route::controller(PengajuanDinamika::class)->name('kependudukan.')->group(function () {
 			Route::get('/pengajuan/kependudukan', 'index')->name('index');
 			Route::post('/pengajuan/kelahiran', 'kelahiran')->name('kelahiran.store');
+			Route::post('/pengajuan/kematian', 'kematian')->name('kematian.store');
 			
 		});
 		

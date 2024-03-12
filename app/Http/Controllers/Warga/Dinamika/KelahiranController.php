@@ -132,8 +132,9 @@ class KelahiranController extends Controller
     }
     public function tolak(Request $request,Kelahiran $kelahiran){
         $nik = $kelahiran->dinamika->nik;
-        Dinamika::where('dinamika_id',$kelahiran->id)->where('nik',$nik)->delete();
-        Warga::where('nik',$kelahiran->dinamika->nik)->delete();
+        Storage::disk('public')->delete($kelahiran->bukti);
+        $kelahiran->dinamika->delete();
+        Warga::where('nik',$nik)->delete();
         if($kelahiran->ruta_id){
             $hal ='Data Kelahiran ditolak';
             $kepala_ruta = User::whereHas("warga.anggota_ruta", function(Builder $builder) use($kelahiran) {
@@ -188,8 +189,11 @@ class KelahiranController extends Controller
         $kepala_ruta = User::whereHas("warga.anggota_ruta", function(Builder $builder) use($kelahiran) {
             $builder->where('ruta_id', '=', $kelahiran->ruta_id)->where('hubungan','Kepala Keluarga');
         })->first();
+        if($kepala_ruta){
             $message = 'Data kelahiran untuk '.$warga->nama.'['.$warga->nik.'] berhasil ditambahkan dan terdaftar sebagai warga anggota rumah tangga anda.';
             Notification::send($kepala_ruta, new Message('ketua RT',$hal,$message,route('login')));
+        }
+            
         
         
         

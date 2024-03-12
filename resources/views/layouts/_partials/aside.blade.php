@@ -35,14 +35,41 @@
 				</div>
 			</a>
 		</li>
-		<li class="menu-item {{ menuIsActive('user') }}">
-			<a href="{{ route('home') }}" class="menu-link">
-				<i class="menu-icon tf-icons bx bx-bar-chart-alt-2"></i>
-				<div data-i18n="Analytics">
-					{{ __('Statistik Desa') }}
-				</div>
-			</a>
+		<li class="menu-item">
+			<a class="menu-link menu-toggle" href="javascript:void(0)"><i class="menu-icon tf-icons bx bx-bar-chart-alt-2"></i>
+			<div>
+			  Statistik Desa
+			</div></a>
+			<ul class="menu-sub">
+				<li class="menu-item {{ menuIsActive('statistik.*') }}">
+					<a class="menu-link menu-toggle" href="javascript:void(0)">
+					<div>
+						Kependudukan
+					  </div></a>
+					<ul class="menu-sub">
+						<li class="menu-item {{ menuIsActive('statistik.warga.*') }}">
+							<a href="{{ route('statistik.warga.agama') }}" class="menu-link">
+								
+								<div data-i18n="Agama">
+									{{ __('Berdasarkan Agama') }}
+								</div>
+							</a>
+						</li>
+						<li class="menu-item {{ menuIsActive('ruta.*') }}">
+							<a href="{{ route('ruta.index') }}" class="menu-link">
+								<div data-i18n="RumahTangga">
+									{{ __('Rumah Tangga') }}
+								</div>
+							</a>
+						  </li>
+					</ul>
+				</li>
+				
+			  
+			  
+			</ul>
 		</li>
+		
 @auth
 	@if(!empty(array_intersect(['ketua rt','ketua rw','kependudukan','kepala desa','kepala dusun'],auth()->user()->getRoleNames()->toArray())))
 		<li class="menu-header small text-uppercase">

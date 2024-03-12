@@ -1,37 +1,20 @@
 
-@extends('layouts.app')
-@section('container')
-	<div class="card">
-		<div class="card-body">
-			<h5 class="card-title">
-				{{ __('Daftar Kematian') }}
-			</h5>
-
-			<div class="mb-4">
-				<!-- Button trigger modal -->
-<button type="button" class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target="#addMati">
-	Tambah Data Kematian
-  </button>
-
-
-  
-  
   <!-- Modal -->
-  <div class="modal fade" id="addMati" tabindex="-1" aria-hidden="true">
+  <div class="modal fade" id="addMati"  tabindex="-1" aria-hidden="true">
 	<div class="modal-dialog " role="document">
 	  <div class="modal-content">
 		<div class="modal-header">
 		  <h5 class="modal-title" id="judulModal">Tambah Data Kematian</h5>
 		  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 		</div>
-		<form id="formAuthentication" class="mb-3" action="{{ route('dinamika.kematian.store') }}" data-remote="true" method="POST" enctype="multipart/form-data">
+		<form id="formAuthentication" class="mb-3" action="{{ route('pengajuan.warga.kependudukan.kematian.store') }}" data-remote="true" method="POST" enctype="multipart/form-data">
 			@csrf
 			
 			<div class="modal-body">
 				<div class="row  mb-3">
 					<div class="col">
 						<label for="nik" class="form-label">Warga*</label>
-						<select id="nik" class="selectpicker w-100" data-style="btn-default" data-live-search="true" title="Pilih Warga" name="nik" required>
+						<select id="nik_anggota" class="selectpicker w-100" data-style="btn-default" data-live-search="true" title="Pilih Warga" name="nik" required>
 							
 						</select>
 						<x-invalid error="nik" />
@@ -118,22 +101,8 @@
 		</form>
 	  </div>
 	</div>
-  </div>
 
-  
-
-  
-
-			</div>
-
-			@include('menu.dinamika._partials.table')
-
-		</div>
-	</div>
-	<form method="POST" class="d-none" id="verif-form">
-		@csrf
-		@method("PUT")
-	</form>
+</div>
 
 
 <script>
@@ -148,14 +117,16 @@
 			date = now.toISOString().split('T');
 			today = date[0];
 			time = 'T'+date[1].split('.')[0];
+			
 			$('#waktu').prop('max', today+time);
 				$.ajax({
-					type : 'GET',
-					url: "{{route('warga.get-warga')}}",
+					type : 'POST',
+					url: "{{route('ruta.anggota-get')}}",
+					data : {id:<?=$ruta?>,all:1},
 					success: function(msg){
-						$('#nik').selectpicker('destroy');
-						$('#nik').html(msg);
-						$('#nik').selectpicker('render');
+						$('#nik_anggota').selectpicker('destroy');
+						$('#nik_anggota').html(msg);
+						$('#nik_anggota').selectpicker('render');
 						
 						
 					},
@@ -169,19 +140,5 @@
 			
 		
 	</script>
-<script>
-	function verif(element) {
-		event.preventDefault()
-		let form = document.getElementById('verif-form');
-		form.setAttribute('action', element.getAttribute('href'))
-		swalConfirm('Yakin ingin verifikasi data kematian ?', `Setelah verifikasi, warga akan diubah status dan rutanya`, 'Ya! verif', () => {
-			form.submit()
-		})
-	}
-</script>
 
-
-
-
-@endsection
 

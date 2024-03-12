@@ -25,15 +25,16 @@ class KelahiranDataTable extends DataTable
         return (new EloquentDataTable($query))
         ->addColumn('action', function($row){
             $btn = "";
-            $btn = '<button class="btn btn-sm btn-success my-1 open_modal_lihat" value="'.route('kelahiran.get',$row).'"> Lihat</button>';
+            $btn = '<button class="btn btn-sm btn-success mb-1 me-1 open_modal_lihat" value="'.route('kelahiran.get',$row).'"> Lihat</button>';
+            if($row->verifikasi){
+                $btn = $btn.'<a class="btn btn-sm me-1 mb-1 btn-dark" href="'.route('warga.show',$row->dinamika->warga).'" >Warga</a>';
+            }
             $btn = $btn.'<div class="btn-group me-3">
                 <button class="btn btn-sm btn-warning dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   Aksi
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">';
-                if($row->verifikasi){
-                    $btn = $btn.'<li><a class="dropdown-item" href="'.route('warga.show',$row->dinamika->warga).'" >Lihat Warga</a></li>';
-                }
+                
             if(!$row->verifikasi&&in_array('ketua rt',auth()->user()->getRoleNames()->toArray())){
                 
                 

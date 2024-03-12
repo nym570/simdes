@@ -9,12 +9,14 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use App\Models\Kelahiran;
+use App\Models\Kematian;
 use App\Models\Desa;
 use App\Models\Dinamika;
 use App\Models\Warga;
 use App\Models\User;
 use App\Models\Ruta;
 use App\Models\AnggotaRuta;
+use Jenssegers\Date\Date;
 
 class PengajuanDinamika extends Controller
 {
@@ -22,7 +24,10 @@ class PengajuanDinamika extends Controller
     {
 
         $title = 'Layanan Kependudukan Warga';
-		return view('menu.pengajuan.kependudukan.index',compact('title'));
+        $ruta = Ruta::whereHas("anggota_ruta", function(Builder $builder)  {
+            $builder->where('anggota_nik', '=', auth()->user()->warga->nik);
+        })->first()->id;
+		return view('menu.pengajuan.kependudukan.index',compact(['title','ruta']));
     }
     public function kelahiran(Request $request){
         $data = $request->validate([
@@ -107,5 +112,34 @@ class PengajuanDinamika extends Controller
         $kelahiran->dinamika()->create([ 'nik' => $data['nik'] ]);
         
         return back()->withSuccess('Data Kelahiran berhasil ditambahkan');
+    }
+    public function kematian(Request $request)
+    {
+        $data = $request->validate([
+			'nik' => ['required','string','size:16'],
+			'tempat' => ['required','string'],
+            'waktu' => ['required','date','before_or_equal:today'],
+            'penyebab' => ['required','string'],
+            'saksi' => ['required','string'],
+            'pelapor_nik' => ['required','string','size:16'],
+            'bukti' => ['required','mimes:jpg,png,pdf','max:1024']
+            
+		]);
+        
+        $warga = Warga::where('nik',$data['nik'])->with('anggota_ruta')->first();
+        $formatted_dt1=Date::createFromFormat('d M Y', $warga['tanggal_lahir']);
+        $formatted_dt2=Date::parse($data['waktu']);
+        $data['usia'] =  $formatted_dt1->diffInYears($formatted_dt2);
+        if($request->file('bukti')){
+            $extension = $request->file('bukti')->extension();
+            $data['bukti'] = Storage::disk('public')->putFileAs('dinamika', $request->file('bukti'),date('Ymd').'_kematian_'.$data['nik'].'.'.$extension);
+        }
+        
+        
+        $kematian = Kematian::create($data);
+        $kematian->dinamika()->create([ 'nik' => $data['nik'] ]);
+
+        
+        return back()->withSuccess('Data Kematian berhasil diajukan');
     }
 }

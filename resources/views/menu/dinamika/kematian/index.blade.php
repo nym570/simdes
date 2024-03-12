@@ -119,7 +119,32 @@
 	  </div>
 	</div>
   </div>
-
+  <div class="modal  fade" id="messageModal" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+	  <div class="modal-content">
+		<div class="modal-header">
+		  <h5 class="modal-title" id="exampleModalLabel1">Alasan Penolakan</h5>
+		  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		</div>
+		
+			<div class="modal-body">
+				<form id="formMessage" class="mb-3" data-remote="true" method="POST" enctype="multipart/form-data">
+					@csrf
+					
+					<div>
+						<label for="exampleFormControlTextarea1" class="form-label">Pesan</label>
+						<textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="message"></textarea>
+					  </div>
+					  <small class="mb-2 text-muted">Setelah data ditolak, data akan terhapus. Pesan penolakan akan dikirm ke email pengaju</small>
+			  </div>
+			  <div class="modal-footer">
+				<x-button type="submit" class="btn btn-primary d-grid w-100" :value="__('Kirim Pesan')"/>
+			  </div>
+			</form>
+		</form>
+	  </div>
+	</div>
+  </div>
   
 @endif
   
@@ -166,12 +191,18 @@
 				});
 		
 	});
-			
+	$(document).on('click','.open_modal_tolak',function(){
+				let link= $(this).attr('data-link');
+				$('#formMessage').attr('action',link);
+				$('#messageModal').modal('show');
+				
+			}); 		
 		
 	</script>
 <script>
 	function verif(element) {
 		event.preventDefault()
+		
 		let form = document.getElementById('verif-form');
 		form.setAttribute('action', element.getAttribute('href'))
 		swalConfirm('Yakin ingin verifikasi data kematian ?', `Setelah verifikasi, warga akan diubah status dan rutanya`, 'Ya! verif', () => {

@@ -17,7 +17,36 @@
  
 
 
-  
+  <div class="modal fade" id="editAnggota" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+	  <div class="modal-content">
+		<div class="modal-header">
+		  <h5 class="modal-title" id="exampleModalLabel1">Edit Hubungan</h5>
+		  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		</div>
+		<form id="formEdit" class="mb-3"  data-remote="true" method="POST">
+			@method('PUT')
+			@csrf
+			
+			<div class="modal-body">
+				<div class="row">
+					<div class="col mb-3">
+						<label for="hubungan_edit" class="form-label">Hubungan</label>
+						<select id="hubungan_edit" class="selectpicker w-100" data-style="btn-default" data-live-search="true" title="Pilih hubungan" name="hubungan" required>
+							
+						</select>
+						<x-invalid error="hubungan" />
+					</div>
+				</div>
+
+			  </div>
+			  <div class="modal-footer">
+				<x-button type="submit" class="btn btn-primary d-grid w-100" :value="__('Tambah Rumah Tangga')"/>
+			  </div>
+		</form>
+	  </div>
+	</div>
+  </div>
   
   <!-- Modal -->
   <div class="modal fade" id="addAnggota" tabindex="-1" aria-hidden="true">
@@ -216,6 +245,30 @@
 			});
 		
 	});
+	$(document).on('click','.open_modal_hubungan',function(){
+		let link= $(this).attr('data-link');
+		$('#formEdit').attr('action',link);
+		$.ajax({
+					type : 'GET',
+					url: "{{route('master.ruta.get-hubungan')}}",
+					data:{uncheck:[1]},
+					success: function(msg){
+						$('#hubungan_edit').selectpicker('destroy');
+						$('#hubungan_edit').html(msg);
+						$('#hubungan_edit').selectpicker('render');
+						$('#editAnggota').modal('show');
+						
+					},
+					error: function (xhr) {
+						var err = JSON.parse(xhr.responseText);
+						alert(err.message);
+					}
+				});
+				
+				
+				
+				
+			}); 
 	
 		
 	</script>
