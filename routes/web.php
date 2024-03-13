@@ -57,8 +57,30 @@ Route::controller(StatistikWargaController::class)->name('statistik.warga.')->gr
 		Route::get('/statistik/warga/pekerjaan/rw', 'pekerjaanRW')->name('rw-count');
 		Route::get('/statistik/warga/pekerjaan/rt', 'pekerjaanRT')->name('rt-count');
 	});
-	
-	
+	Route::name('gol_darah.')->group(function () {
+		Route::get('/statistik/warga/gol_darah', 'gol_darah')->name('index');
+		Route::get('/statistik/warga/gol_darah/dusun', 'gol_darahDusun')->name('dusun-count');
+		Route::get('/statistik/warga/gol_darah/rw', 'gol_darahRW')->name('rw-count');
+		Route::get('/statistik/warga/gol_darah/rt', 'gol_darahRT')->name('rt-count');
+	});
+	Route::name('ktp_desa.')->group(function () {
+		Route::get('/statistik/warga/ktp_desa', 'ktp_desa')->name('index');
+		Route::get('/statistik/warga/ktp_desa/dusun', 'ktp_desaDusun')->name('dusun-count');
+		Route::get('/statistik/warga/ktp_desa/rw', 'ktp_desaRW')->name('rw-count');
+		Route::get('/statistik/warga/ktp_desa/rt', 'ktp_desaRT')->name('rt-count');
+	});
+	Route::name('jenis_kelamin.')->group(function () {
+		Route::get('/statistik/warga/jenis_kelamin', 'jenis_kelamin')->name('index');
+		Route::get('/statistik/warga/jenis_kelamin/dusun', 'jenis_kelaminDusun')->name('dusun-count');
+		Route::get('/statistik/warga/jenis_kelamin/rw', 'jenis_kelaminRW')->name('rw-count');
+		Route::get('/statistik/warga/jenis_kelamin/rt', 'jenis_kelaminRT')->name('rt-count');
+	});
+	Route::name('umur.')->group(function () {
+		Route::get('/statistik/warga/umur', 'umur')->name('index');
+		Route::get('/statistik/warga/umur/dusun', 'umurDusun')->name('dusun-count');
+		Route::get('/statistik/warga/umur/rw', 'umurRW')->name('rw-count');
+		Route::get('/statistik/warga/umur/rt', 'umurRT')->name('rt-count');
+	});
 
 });
 

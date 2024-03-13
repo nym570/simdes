@@ -71,6 +71,38 @@
 								</div>
 							</a>
 						</li>
+						<li class="menu-item {{ menuIsActive('statistik.warga.gol_darah') }}">
+							<a href="{{ route('statistik.warga.gol_darah.index') }}" class="menu-link">
+								
+								<div data-i18n="Gol Darah">
+									{{ __('Berdasarkan Golongan Darah') }}
+								</div>
+							</a>
+						</li>
+						<li class="menu-item {{ menuIsActive('statistik.warga.ktp_desa') }}">
+							<a href="{{ route('statistik.warga.ktp_desa.index') }}" class="menu-link">
+								
+								<div data-i18n="KTP">
+									{{ __('Berdasarkan Kepemilikan KTP') }}
+								</div>
+							</a>
+						</li>
+						<li class="menu-item {{ menuIsActive('statistik.warga.jenis_kelamin') }}">
+							<a href="{{ route('statistik.warga.jenis_kelamin.index') }}" class="menu-link">
+								
+								<div data-i18n="JK">
+									{{ __('Berdasarkan Jenis Kelamin') }}
+								</div>
+							</a>
+						</li>
+						<li class="menu-item {{ menuIsActive('statistik.warga.umur') }}">
+							<a href="{{ route('statistik.warga.umur.index') }}" class="menu-link">
+								
+								<div data-i18n="JK">
+									{{ __('Berdasarkan Kelompok Umur') }}
+								</div>
+							</a>
+						</li>
 					</ul>
 				</li>
 				
