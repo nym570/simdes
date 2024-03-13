@@ -70,10 +70,19 @@ class KematianController extends Controller
         
         return back()->withSuccess('Data Kematian berhasil ditambahkan');
     }
+    public function get(Kematian $kematian)
+    {
+
+		return json_encode($kematian);
+    }
     public function verifikasi(Kematian $kematian){
-        $warga = Warga::where('nik',$kematian->dinamika->nik)->with('anggota_ruta')->first();
+        $warga = Warga::where('nik',$kematian->dinamika->nik)->with(['anggota_ruta','user'])->first();
         $kematian->update(['verifikasi'=>true]);
         $warga->update(['status'=>'meninggal']);
+        $user = User::where('nik',$warga->nik)->first();
+        if($user){
+            $user->update(['is_active'=>0]);
+        }
         if(!is_null($warga->anggota_ruta)){
             $ruta = Ruta::where('id',$warga->anggota_ruta->ruta_id)->first();
             $temp['jumlah_art'] = $ruta['jumlah_art'] - 1;

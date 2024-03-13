@@ -307,22 +307,6 @@
 							  </div>
 						</div>
 						<div class="new_ruta" id="new_ruta">
-							<div class="row g-2 mb-3">
-								<div class="col">
-									<label for="rw_id" class="form-label">RW*</label>
-									<select id="rw_id" class="selectpicker w-100" data-style="btn-default" data-live-search="true" title="Pilih RW" name="rw_id" >
-										
-									</select>
-									<x-invalid error="rw" />
-								</div>
-								<div class="col">
-									<label for="rt_id" class="form-label">RT*</label>
-									<select id="rt_id" class="selectpicker w-100" data-style="btn-default" data-live-search="true" title="Pilih RT" name="rt_id" >
-										
-									</select>
-									<x-invalid error="rt_id" />
-								</div>
-							</div>
 							
 							<div class="row ">
 							  <div class="col mb-3">
@@ -358,7 +342,7 @@
 					
 					<div class="row">
 						<div class="col mb-3">
-							<x-label for="bukti" :value="__('Bukti Kelahiran* (.pdf/.jpg/.png)')"/>
+							<x-label for="bukti" :value="__('Bukti Kedatangan* (.pdf/.jpg/.png)')"/>
 							<x-input class="" type="file" id="bukti" name="bukti" required/>
 							<x-invalid error="bukti" />
 						  </div>
@@ -412,19 +396,7 @@
 			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 		}
 	});
-	$.ajax({
-					type : 'GET',
-					url: "{{route('master-desa.get-rw')}}",
-					success: function(msg){
-						$('#rw_id').selectpicker('destroy');
-						$('#rw_id').html(msg);
-						$('#rw_id').selectpicker('render');
-					},
-					error: function (xhr) {
-						var err = JSON.parse(xhr.responseText);
-						alert(err.message);
-					}
-				});
+	
 	$.ajax({
 				type : 'GET',
 				url: "{{route('wilayah.get-prov')}}",
@@ -480,7 +452,6 @@
 		$('#provinsi-lahir').on('change',function(){
 			$('#provinsi-lahir').selectpicker('render');
 			let id_prov = $('#provinsi-lahir').val();
-			let el = $("#provinsi-lahir option:selected").attr("data-tokens");
 
 			$.ajax({
 				type : 'GET',
@@ -501,7 +472,7 @@
 		$('#kabupaten-lahir').on('change',function(){
 			$('#kabupaten-lahir').selectpicker('render');
 			let id_kab = $('#kabupaten-lahir').val();
-			let el = $("#kabupaten-lahir option:selected").attr("data-tokens");
+			let el = $("#kabupaten-lahir option:selected").text();
 			$('#tempat_lahir').val(el);
 
 			
@@ -510,28 +481,7 @@
 </script>
 <script>
 	$(function(){
-		$('#rw_id').on('change',function(){
-				$('#rw_id').selectpicker('render');
-				let id_rw = $('#rw_id').val();
-
-				$.ajax({
-					type : 'GET',
-					url: "{{route('master-desa.get-rt')}}",
-					
-					data : {id:id_rw},
-
-					success: function(msg){
-						$('#rt_id').selectpicker('destroy');
-						$('#rt_id').html(msg);
-						$('#rt_id').selectpicker('render');
-					},
-					error: function (xhr) {
-						var err = JSON.parse(xhr.responseText);
-						alert(err.message);
-					}
-					
-				})
-		});
+		
 		$('#is_new_ruta').on('change',function(){
 			$('#is_new_ruta').selectpicker('render');
 			let is_new = $('#is_new_ruta').val();
@@ -591,8 +541,6 @@
 		$('#provinsi').on('change',function(){
 			$('#provinsi').selectpicker('render');
 			let id_prov = $('#provinsi').val();
-			let el = $("#provinsi option:selected").attr("data-tokens");
-			$('#nama_prov').val(el);
 			
 			$.ajax({
 				type : 'GET',
@@ -613,8 +561,7 @@
 		$('#kabupaten').on('change',function(){
 			$('#kabupaten').selectpicker('render');
 			let id_kab = $('#kabupaten').val();
-			let el = $("#kabupaten option:selected").attr("data-tokens");
-			$('#nama_kab').val(el);
+
 
 			$.ajax({
 				type : 'GET',
@@ -637,8 +584,7 @@
 		$('#kecamatan').on('change',function(){
 			$('#kecamatan').selectpicker('render');
 			let id_kec = $('#kecamatan').val();
-			let el = $("#kecamatan option:selected").attr("data-tokens");
-			$('#nama_kec').val(el);
+
 			$.ajax({
 				type : 'GET',
 				url: "{{route('wilayah.get-des')}}",
@@ -661,8 +607,6 @@
 		$('#desa').on('change',function(){
 			$('#desa').selectpicker('render');
 			let id_desa = $('#desa').val();
-			let el = $("#desa option:selected").attr("data-tokens");
-			$('#nama_des').val(el);
 			$('#kode_wilayah').val(id_desa);
 		});
 	})

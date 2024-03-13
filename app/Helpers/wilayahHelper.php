@@ -42,4 +42,12 @@ class wilayahHelper
         }
         return;
     }
+    public static function getKode($keyword)
+    {
+        $response =  Http::get('https://api.cahyadsn.com/search/'.$keyword);
+        if($response->successful()){
+            $data = $response['data'];
+            return $data[0]['kode'];
+        }
+    }
 }

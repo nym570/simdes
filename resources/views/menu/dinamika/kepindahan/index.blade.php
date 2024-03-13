@@ -6,14 +6,14 @@
 			<h5 class="card-title">
 				{{ __('Daftar Kepindahan Warga') }}
 			</h5>
-
-			<div class="mb-1">
+@if(in_array('ketua rt',auth()->user()->getRoleNames()->toArray()))
+			<div class="mb-4">
 				<!-- Button trigger modal -->
 <button type="button" class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target="#addPindah">
 	Tambah Kepindahan
   </button>
 
-
+</div>
   
   
   <!-- Modal -->
@@ -178,19 +178,46 @@
 
   
 
+</div>
+<div class="modal  fade" id="messageModal" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+	  <div class="modal-content">
+		<div class="modal-header">
+		  <h5 class="modal-title" id="exampleModalLabel1">Alasan Penolakan</h5>
+		  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		</div>
+		
+			<div class="modal-body">
+				<form id="formMessage" class="mb-3" data-remote="true" method="POST" enctype="multipart/form-data">
+					@csrf
+					
+					<div>
+						<label for="exampleFormControlTextarea1" class="form-label">Pesan</label>
+						<textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="message"></textarea>
+					  </div>
+					  <small class="mb-2 text-muted">Setelah data ditolak, data akan terhapus. Pesan penolakan akan dikirm ke email pengaju</small>
+			  </div>
+			  <div class="modal-footer">
+				<x-button type="submit" class="btn btn-primary d-grid w-100" :value="__('Kirim Pesan')"/>
+			  </div>
+			</form>
+		</form>
+	  </div>
+	</div>
+  </div>
+
+
   
-
-			</div>
-
-			@include('menu.dinamika._partials.table')
-
+@endif
+@include('components.table')
+			@include('menu.dinamika._partials.show')
 		</div>
 	</div>
 	<form method="POST" class="d-none" id="verif-form">
 		@csrf
 		@method("PUT")
 	</form>
-</div>
+
 
 <script>
 		
@@ -223,6 +250,12 @@
 				
 		
 	});
+	$(document).on('click','.open_modal_tolak',function(){
+				let link= $(this).attr('data-link');
+				$('#formMessage').attr('action',link);
+				$('#messageModal').modal('show');
+				
+	}); 
 	$(function(){
 		$('#jenis').on('change',function(){
 				$('#jenis').selectpicker('render');
@@ -275,11 +308,10 @@
 			$('#kepala_nik').on('change',function(){
 				$('#kepala_nik').selectpicker('render');
 				let kepala = $('#kepala_nik').val();
-				
 				$.ajax({
 					type : 'POST',
 					url: "{{route('ruta.anggota-get')}}",
-					data : {'kepala':kepala},
+					data : {'id':kepala},
 					success: function(msg){
 						$('#nik').selectpicker('destroy');
 						$('#nik').html(msg);
@@ -391,6 +423,47 @@
 			form.submit()
 		})
 	}
+	$(document).on('click','.open_modal_lihat',function(){
+		
+			$('#biodata').empty();
+				let url= $(this).val();
+				$.ajax({
+					type : 'GET',
+					url: url,
+					beforeSend: function(){
+						$('#loading').show();
+					},
+					complete: function(){
+						$('#loading').hide();
+					},
+					success: function(msg){
+						
+						let data = JSON.parse(msg);
+						$('#title').html('Detail Kepindahan')
+						$('#biodata').append('<p><strong>Penyebab : </strong>'+data.penyebab+'</p>');
+						$('#biodata').append('<p><strong>Wilayah Pindah : </strong>'+data.nama_wil_pindah+'</p>');
+						$('#biodata').append('<p><strong>Warga Pindah : </strong></p>');
+						for(var i=0; i<data.dinamika.length; i++){
+							$('#biodata').append('<p><strong>+ </strong>'+data.dinamika[i].warga.nama+' ['+data.dinamika[i].warga.nik+']</p>');
+						}
+						if(data.keterangan!=null){
+							$('#biodata').append('<p><strong>Keterangan : </strong></p><p>'+data.keterangan+'</p>');
+						}
+						
+						$('#biodata').append('<div class="mt-2"><h5 class=" text-center">Foto Bukti</h5><img class="w-75 mx-auto d-block" src="/storage/' + data.bukti + '"/></div>');
+						$('#modalLihat').modal('show');
+						
+						
+					},
+					
+					error: function (xhr) {
+						var err = JSON.parse(xhr.responseText);
+						alert(err.message);
+					}
+					
+				});
+				
+			}); 		
 </script>
 
 

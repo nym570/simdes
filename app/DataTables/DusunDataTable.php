@@ -57,7 +57,7 @@ class DusunDataTable extends DataTable
                     ->parameters([
  
                         'dom'          => 'Bfrtip',
-                        'buttons'      => ['pdf','excel', 'print', 'reload'],
+                        'buttons'      => ['excel', 'print', 'reload'],
                         'responsive'    => true,
                         'auto-width'    =>false,
                         

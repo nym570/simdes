@@ -109,9 +109,8 @@ class RutaController extends Controller
     }
     public function getAnggota(Request $request)
     {
-        if(isset($request['kepala'])){
-            $ruta = AnggotaRuta::where('anggota_nik',$request['kepala'])->first()->value('ruta_id');
-            $data = AnggotaRuta::where('ruta_id',$ruta)->with(['warga'])->get();
+        if(isset($request['id'])){
+            $data = AnggotaRuta::with(['warga'])->where('ruta_id',$request['id'])->get();
             if($data){
                 foreach($data as $item){
                         echo "<option data-tokens='".$item->warga->nik."' value='".$item->warga->nik."'>".$item->warga->nik.' | '.$item->warga->nama."</option>";
@@ -240,17 +239,22 @@ class RutaController extends Controller
     {
         $ruta = Ruta::where('id',$anggota->ruta_id)->first();
         $data['jumlah_art'] = $ruta['jumlah_art'] - 1;
-        $anggota->delete();
+        
+        
         if($data['jumlah_art'] == 0){
             $ruta->delete();
             return to_route('ruta.index')->withSuccess('Anggota Rumah Tangga Berhasil dihapus');
         }
         else{
+            if($anggota->hubungan =='Kepala Keluarga'){
+                $lain = AnggotaRuta::where('ruta_id',$anggota->ruta_id)->where('anggota_nik','!=',$anggota->anggota_nik)->orderBy('hubungan')->first();
+                $lain->update(['hubungan'=>'Kepala Keluarga']);
+            }
             $ruta->update($data);
-            return back()->withSuccess('Anggota Rumah Tangga Berhasil dihapus');
+           
         }
-        
-		
+        $anggota->delete();
+        return back()->withSuccess('Anggota Rumah Tangga Berhasil dihapus');
     }
     public function anggotaUpdate(Request $request, AnggotaRuta $anggota)
     {

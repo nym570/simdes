@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Notifications\Message;
 use Illuminate\Support\Facades\Notification;
 use Jenssegers\Date\Date;
+use App\Helper\wilayahHelper;
 
 
 class WargaController extends Controller
@@ -34,6 +35,7 @@ class WargaController extends Controller
     public function get(Warga $warga)
     {
         $warga['tanggal_format'] =  $formatted_dt1=Date::createFromFormat('d M Y', $warga->tanggal_lahir);
+        $warga['kode_lahir'] = wilayahHelper::getKode($warga['tempat_lahir']);
 		return json_encode($warga);
     }
     public function getWargaHidup(Request $request){
@@ -54,10 +56,6 @@ class WargaController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.

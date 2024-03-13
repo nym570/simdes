@@ -18,6 +18,7 @@ use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Concerns\SkipsErrors;
 use Maatwebsite\Excel\Concerns\SkipsFailures;
 use Maatwebsite\Excel\Concerns\SkipsOnFailure;
+use App\Helper\wilayahHelper;
 
 class WargaImport implements ToModel, WithUpserts, WithHeadingRow, WithBatchInserts, WithChunkReading, WithValidation, SkipsOnError,SkipsOnFailure
 {
@@ -35,7 +36,7 @@ class WargaImport implements ToModel, WithUpserts, WithHeadingRow, WithBatchInse
             'nik' => $row['nik'],
             'no_kk' => $row['no_kk'],
             'nama' => $row['nama'],
-            'tempat_lahir' =>  $row['tempat_lahir'],
+            'tempat_lahir' =>  wilayahHelper::getNamaKab($row['tempat_lahir']),
             'tanggal_lahir' =>  $row['tanggal_lahir'],
             'jenis_kelamin' => $row['jenis_kelamin'],
             'pendidikan' => $row['pendidikan'],

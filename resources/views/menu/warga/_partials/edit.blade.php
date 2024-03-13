@@ -201,6 +201,7 @@
 
   <script>
     $(document).on('click','.open_modal_update',function(){
+		$('#loading').show();
         var now = new Date(),
 			today = now.toISOString().split('T')[0];
 			$('#tanggal_lahir_edit').prop('max', today);
@@ -267,7 +268,8 @@
                             $('#no_telp_edit').val(data.no_telp);
                         }
                         let wilayah = data.kode_wilayah_ktp.split('.');
-                        
+						$('#provinsi-lahir_edit').val(data.kode_lahir.split('.')[0]);
+                        $('#provinsi-lahir_edit').selectpicker('refresh').trigger('change',[data.kode_lahir]);
                         $('#provinsi_edit').val(wilayah[0]);
                         $('#provinsi_edit').selectpicker('refresh').trigger('change',[wilayah]);
                         $('#alamat_ktp_edit').val(data.alamat_ktp);
@@ -283,6 +285,7 @@
                         $('#gol_darah_edit').val(data.gol_darah);
                         $('#gol_darah_edit').selectpicker('refresh').trigger('change');
                         $('#formEdit').attr('action',link);
+						$('#loading').hide();
                         $('#editWarga').modal('show');
 						
 						
@@ -311,6 +314,10 @@
 						$('#kabupaten-lahir_edit').selectpicker('destroy');
 						$('#kabupaten-lahir_edit').html(msg);
 						$('#kabupaten-lahir_edit').selectpicker('render');
+						if(a!=null){
+                            $('#kabupaten-lahir_edit').val(a);
+                            $('#kabupaten-lahir_edit').selectpicker('refresh').trigger('change');
+                        }
                         
 					},
 					error: function (xhr) {

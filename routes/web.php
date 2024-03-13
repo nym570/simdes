@@ -19,7 +19,7 @@ use App\Http\Controllers\Warga\Dinamika\KedatanganController;
 use App\Http\Controllers\Pengajuan\PengajuanDinamika;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MasterController;
-use App\Http\Controllers\StatistikController;
+use App\Http\Controllers\StatistikWargaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,12 +35,30 @@ use App\Http\Controllers\StatistikController;
 
 
 Route::get('/', [DashboardController::class,'index'])->name('home');
+Route::get('/dusun-count', [DashboardController::class,'dusunCount'])->name('warga-dusun-count');
+Route::get('/rw-count', [DashboardController::class,'rwCount'])->name('warga-rw-count');
 
-Route::controller(StatistikController::class)->name('statistik.')->group(function () {
-	Route::get('/statistik/warga/agama', 'agama')->name('warga.agama');
-	Route::get('/statistik/warga/agama/dusun', 'agamaDusun')->name('warga.agama.dusun-count');
-	Route::get('/statistik/warga/agama/rw', 'agamaRW')->name('warga.agama.rw-count');
-	Route::get('/statistik/warga/agama/rt', 'agamaRT')->name('warga.agama.rt-count');
+Route::controller(StatistikWargaController::class)->name('statistik.warga.')->group(function () {
+	Route::name('agama.')->group(function () {
+		Route::get('/statistik/warga/agama', 'agama')->name('index');
+		Route::get('/statistik/warga/agama/dusun', 'agamaDusun')->name('dusun-count');
+		Route::get('/statistik/warga/agama/rw', 'agamaRW')->name('rw-count');
+		Route::get('/statistik/warga/agama/rt', 'agamaRT')->name('rt-count');
+	});
+	Route::name('pendidikan.')->group(function () {
+		Route::get('/statistik/warga/pendidikan', 'pendidikan')->name('index');
+		Route::get('/statistik/warga/pendidikan/dusun', 'pendidikanDusun')->name('dusun-count');
+		Route::get('/statistik/warga/pendidikan/rw', 'pendidikanRW')->name('rw-count');
+		Route::get('/statistik/warga/pendidikan/rt', 'pendidikanRT')->name('rt-count');
+	});
+	Route::name('pekerjaan.')->group(function () {
+		Route::get('/statistik/warga/pekerjaan', 'pekerjaan')->name('index');
+		Route::get('/statistik/warga/pekerjaan/dusun', 'pekerjaanDusun')->name('dusun-count');
+		Route::get('/statistik/warga/pekerjaan/rw', 'pekerjaanRW')->name('rw-count');
+		Route::get('/statistik/warga/pekerjaan/rt', 'pekerjaanRT')->name('rt-count');
+	});
+	
+	
 
 });
 
@@ -143,9 +161,20 @@ Route::middleware(['auth','verified'])->group(function () {
 		});
 		Route::controller(KelahiranController::class)->name('dinamika.kelahiran.')->group(function () {
 			Route::get('/dinamika/kelahiran', 'index')->name('index');
+			Route::get('/kelahiran/{lahir}/get', 'get')->name('get');
 		});
 		Route::controller(KematianController::class)->name('dinamika.kematian.')->group(function () {
 			Route::get('/dinamika/kematian', 'index')->name('index');
+			Route::get('/kematian/{mati}/get', 'get')->name('get');
+		});
+
+		Route::controller(KedatanganController::class)->name('dinamika.kedatangan.')->group(function () {
+			Route::get('/dinamika/kedatangan', 'index')->name('index');
+			Route::get('/kedatangan/{datang}/get', 'get')->name('get');
+		});
+		Route::controller(KepindahanController::class)->name('dinamika.kepindahan.')->group(function () {
+			Route::get('/dinamika/kepindahan', 'index')->name('index');
+			Route::get('/kepindahan/{pindah}/get', 'get')->name('get');
 		});
 	});
 	Route::middleware(['role:ketua rt|kependudukan'])->group(function () {
@@ -187,47 +216,39 @@ Route::middleware(['auth','verified'])->group(function () {
 			Route::post('/dinamika/kelahiran/{lahir}/tolak', 'tolak')->name('tolak');
 		});
 		Route::controller(KematianController::class)->name('dinamika.kematian.')->group(function () {
-			Route::get('/dinamika/kematian', 'index')->name('index');
 			Route::post('/dinamika/kematian', 'store')->name('store');
 			Route::put('/dinamika/kematian/{mati}/verif', 'verifikasi')->name('verifikasi');
 			Route::post('/dinamika/kematian/{mati}/tolak', 'tolak')->name('tolak');
 		});
+		Route::controller(KepindahanController::class)->name('dinamika.kepindahan.')->group(function () {
+			Route::post('/dinamika/kepindahan', 'store')->name('store');
+			Route::put('/dinamika/kepindahan/{pindah}/verif', 'verifikasi')->name('verifikasi');
+			Route::post('/dinamika/kepindahan/{pindah}/tolak', 'tolak')->name('tolak');
+		});
+		Route::controller(KedatanganController::class)->name('dinamika.kedatangan.')->group(function () {
+			
+			Route::get('/dinamika/kedatangan/create', 'create')->name('create');
+			Route::post('/dinamika/kedatangan/pendatang', 'pendatang')->name('pendatang');
+			Route::post('/dinamika/kedatangan', 'store')->name('store');
+			Route::put('/dinamika/kedatangan/{datang}/verif', 'verifikasi')->name('verifikasi');
+			
+		});
 		
 	});
-	
 
-
-	
-	
-	Route::controller(KepindahanController::class)->middleware(['auth','verified'])->name('dinamika.kepindahan.')->group(function () {
-		Route::get('/dinamika/kepindahan', 'index')->name('index');
-		Route::post('/dinamika/kepindahan', 'store')->name('store');
-		Route::put('/dinamika/kepindahan/{pindah}/verif', 'verifikasi')->name('verifikasi');
-		
-	});
-	Route::controller(KedatanganController::class)->middleware(['auth','verified'])->name('dinamika.kedatangan.')->group(function () {
-		Route::get('/dinamika/kedatangan', 'index')->name('index');
-		Route::get('/dinamika/kedatangan/create', 'create')->name('create');
-		Route::post('/dinamika/kedatangan/pendatang', 'pendatang')->name('pendatang');
-		Route::post('/dinamika/kedatangan', 'store')->name('store');
-		Route::put('/dinamika/kedatangan/{datang}/verif', 'verifikasi')->name('verifikasi');
-		
-	});
-	
 	Route::middleware(['role:warga'])->name('pengajuan.warga.')->group(function () {
 		Route::controller(PengajuanDinamika::class)->name('kependudukan.')->group(function () {
 			Route::get('/pengajuan/kependudukan', 'index')->name('index');
 			Route::post('/pengajuan/kelahiran', 'kelahiran')->name('kelahiran.store');
 			Route::post('/pengajuan/kematian', 'kematian')->name('kematian.store');
+			Route::post('/pengajuan/kepindahan', 'kepindahan')->name('kepindahan.store');
 			
 		});
 		
 
 	});
 	
-	Route::controller(KelahiranController::class)->name('kelahiran.')->group(function () {
-		Route::get('/kelahiran/{lahir}/get', 'get')->name('get');
-	});
+	
 
 });
 
@@ -271,7 +292,7 @@ Route::controller(MasterDesaController::class)->name('master-desa.')->group(func
 });
 Route::controller(MasterController::class)->name('master.')->group(function () {
 	Route::get('/master/get-pekerjaan', 'getPekerjaan')->name('identitas.get-pekerjaan');
-	Route::get('/master/get-pendidikan', 'getPendidikan')->name('identitas.get-pendidikan');
+	Route::get('/master/get-pekerjaan', 'getPendidikan')->name('identitas.get-pendidikan');
 	Route::get('/master/get-hubungan', 'getHubungan')->name('ruta.get-hubungan');
 });
 

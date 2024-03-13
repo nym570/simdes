@@ -370,12 +370,7 @@
 
 	
 	$(function(){
-		$(document).on('click','.open_modal_tolak',function(){
-				let link= $(this).attr('data-link');
-				$('#formMessage').attr('action',link);
-				$('#messageModal').modal('show');
-				
-			}); 
+
 			$('#provinsi-lahir').on('change',function(){
 				$('#provinsi-lahir').selectpicker('render');
 				let id_prov = $('#provinsi-lahir').val();

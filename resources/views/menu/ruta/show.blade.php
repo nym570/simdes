@@ -169,7 +169,7 @@
 		});
 	});
 	$('#buttonAdd').on('click',function(){
-		
+		$('#loading').show();
 		var ajax1=$.ajax({
 					type : 'GET',
 					url: "{{route('get-warga-nonruta')}}",
@@ -202,12 +202,15 @@
 					}
 				});
 				$.when(ajax1, ajax2).done(function(data, data1) {
+					$('#loading').hide();
 				$('#addAnggota').modal('show');
+
 			});
 		
 	});
 	$('#buttonKepala').on('click',function(){
-		
+
+						$('#loading').show();
 		var ajax1=$.ajax({
 					type : 'POST',
 					url: "{{route('ruta.anggota-get')}}",
@@ -241,6 +244,7 @@
 					}
 				});
 				$.when(ajax1, ajax2).done(function(data, data1) {
+					$('#loading').hide();
 				$('#updateKepala').modal('show');
 			});
 		
@@ -252,6 +256,12 @@
 					type : 'GET',
 					url: "{{route('master.ruta.get-hubungan')}}",
 					data:{uncheck:[1]},
+					beforeSend: function(){
+						$('#loading').show();
+					},
+					complete: function(){
+						$('#loading').hide();
+					},
 					success: function(msg){
 						$('#hubungan_edit').selectpicker('destroy');
 						$('#hubungan_edit').html(msg);

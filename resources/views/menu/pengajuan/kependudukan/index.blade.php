@@ -1,7 +1,7 @@
 
 @extends('layouts.app')
 @section('container')
-@if(auth()->user()->hasRole('warga')&&!is_null(\App\Models\AnggotaRuta::where('anggota_nik',auth()->user()->nik)->first()))
+@if(auth()->user()->hasRole('warga')&&!is_null(\App\Models\AnggotaRuta::where('anggota_nik',auth()->user()->nik)->where('hubungan','Kepala Keluarga')->first()))
 <div class="card">
 	<div class="card-body">
 		<div class="row row-cols-2 row-cols-lg-4 g-4">
@@ -36,7 +36,9 @@
 					<i class='bx bxs-truck bx-lg'></i>
 					<h5 class="card-title">Kepindahan</h5>
 					<p class="card-text">Ajukan kepindahan anda / anggota anda</p>
-					<a href="#" class="btn btn-sm btn-primary">Ajukan!</a>
+					<button type="button" class="btn btn-sm btn-primary"  data-bs-toggle="modal" data-bs-target="#addPindah">
+						Ajukan!
+					  </button>
 				  </div>
 				</div>
 			 </div>
@@ -44,8 +46,8 @@
 				<div class="card text-center  h-100">
 				  <div class="card-body">
 					<i class='bx bxs-user-detail bx-lg'></i>
-					<h5 class="card-title">Biodata</h5>
-					<p class="card-text">Ubah data kependudukan anda</p>
+					<h5 class="card-title">Rumah Tangga</h5>
+					<p class="card-text">Atur anggota rumah tangga anda</p>
 					<a href="#" class="btn btn-sm btn-primary">Ubah!</a>
 				  </div>
 				</div>
@@ -54,6 +56,7 @@
 
 		@include('menu.pengajuan.kependudukan.kelahiran')
 		@include('menu.pengajuan.kependudukan.kematian')
+		@include('menu.pengajuan.kependudukan.kepindahan')
 	</div>
 </div>
 @endif

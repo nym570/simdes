@@ -348,27 +348,9 @@
 	  </div>
 @endif	
 	@include('components.table')
+	@include('menu.dinamika._partials.show')
 	<!-- Modal -->
-<div class="modal fade" id="modalLihat" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	<div class="modal-dialog" role="document">
-	  <div class="modal-content">
-		<div class="modal-header">
-		  <h4 class="modal-title" >Detail Kelahiran</h4>
-		  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-			</button>
-		</div>
-		<div class="modal-body">
-		<div class="mb-3" id="biodata">
 
-		</div>
-
-		</div>
-		<div class="modal-footer">
-		  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-		</div>
-	  </div>
-	</div>
-  </div>
 	  <!--/ Create App Modal -->
 		</div>
 	</div>
@@ -573,9 +555,16 @@
 				$.ajax({
 					type : 'GET',
 					url: url,
+					beforeSend: function(){
+						$('#loading').show();
+					},
+					complete: function(){
+						$('#loading').hide();
+					},
 					success: function(msg){
 						
 						let data = JSON.parse(msg);
+						$('#title').html('Detail Kelahiran')
 						$('#biodata').append('<p><strong>Nama : </strong>'+data.dinamika.warga.nama+'</p>');
 						$('#biodata').append('<p><strong>NIK : </strong>'+data.dinamika.warga.nik+'</p>');
 						$('#biodata').append('<p><strong>Waktu Kelahiran : </strong>'+data.waktu+'</p>');
@@ -588,25 +577,17 @@
 							$('#biodata').append('<p><strong>Ayah : </strong>'+data.bapak_nik+' [warga luar]</p>');
 						}
 						if(data.ibu!=null){
-							$('#biodata').append('<p><strong>Ayah : </strong>'+data.ibu_nik+' ['+data.ibu+']</p>');
+							$('#biodata').append('<p><strong>Ibu : </strong>'+data.ibu_nik+' ['+data.ibu+']</p>');
 						}
 						else{
-							$('#biodata').append('<p><strong>Ayah : </strong>'+data.ibu_nik+' [warga luar]</p>');
-						}
-						if(data.ruta_id!=null){
-							$('#biodata').append('<p><strong>Kepala Rumah Tangga : </strong>'+data.kepala_nik+' ['+data.kepala_nama+']</p>');
-							$('#biodata').append('<p><strong>Hubungan pada Rumah Tangga : </strong>'+data.hubungan_ruta+'</p>');
+							$('#biodata').append('<p><strong>Ibu : </strong>'+data.ibu_nik+' [warga luar]</p>');
 						}
 						
-						$('#biodata').append('<p><strong>Keterangan : </strong></p><p>'+data.keterangan+'</p>');
+						if(data.keterangan!=null){
+							$('#biodata').append('<p><strong>Keterangan : </strong></p><p>'+data.keterangan+'</p>');
+						}
 						$('#biodata').append('<div class="mt-2"><h5 class=" text-center">Foto Bukti</h5><img class="w-75 mx-auto d-block" src="/storage/' + data.bukti + '"/></div>');
-						// $('#biodata').append('<p class="text-center"><strong>'+data.warga.nama+'</strong></p>');
-						
-						// $('#jabatan-pem').append(data.jabatan);
-						// $('#tugas-pem').append('<h5>Tugas</h5>');
-						// $('#tugas-pem').append(data.tugas);
-						// $('#wewenang-pem').append('<h5>Wewenang</h5>');
-						// $('#wewenang-pem').append(data.wewenang);
+	
 						$('#modalLihat').modal('show');
 						
 						

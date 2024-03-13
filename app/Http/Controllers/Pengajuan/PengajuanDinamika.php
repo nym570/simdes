@@ -9,6 +9,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use App\Models\Kelahiran;
+use App\Models\Kepindahan;
 use App\Models\Kematian;
 use App\Models\Desa;
 use App\Models\Dinamika;
@@ -141,5 +142,30 @@ class PengajuanDinamika extends Controller
 
         
         return back()->withSuccess('Data Kematian berhasil diajukan');
+    }
+    public function kepindahan(Request $request)
+    {
+       
+        $data = $request->all();
+        if($request->file('bukti_pindah')){
+            $extension = $request->file('bukti_pindah')->extension();
+            $data['bukti_pindah'] = Storage::disk('public')->putFileAs('dinamika', $request->file('bukti_pindah'),date('Ymd').'_kepindahan_'.$data['nikpindah'][0].'.'.$extension);
+        }
+        $valid = [
+            'nik' => $data['nikpindah'],
+            'alamat_pindah' => $data['alamat_pindah'],
+            'waktu' => $data['waktu_pindah'],
+            'penyebab' => $data['penyebab_pindah'],
+            'jenis' => $data['jenis'],
+            'kode_wilayah_pindah' => $data['kode_wilayah_pindah'],
+            'bukti' => $data['bukti_pindah'],
+            'keterangan' => $data['keterangan_pindah'],
+        ];
+        $kepindahan = Kepindahan::create($valid);
+       
+        foreach($valid['nik'] as $item){
+            $kepindahan->dinamika()->create([ 'nik' => $item ]);
+        }
+        return back()->withSuccess('Data Kepindahan berhasil ditambahkan');
     }
 }

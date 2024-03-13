@@ -25,7 +25,7 @@ class KematianDataTable extends DataTable
         return (new EloquentDataTable($query))
         ->addColumn('action', function($row){
             $btn = "";
-            $btn = '<button class="btn btn-sm btn-success mb-1 me-1 open_modal_lihat" value="'.route('kelahiran.get',$row).'"> Lihat</button>';
+            $btn = '<button class="btn btn-sm btn-success mb-1 me-1 open_modal_lihat" value="'.route('dinamika.kematian.get',$row).'"> Lihat</button>';
             if($row->verifikasi){
                 $btn = $btn.'<a class="btn btn-sm me-1 mb-1 btn-dark" href="'.route('warga.show',$row->dinamika->warga).'" >Warga</a>';
             }
@@ -43,10 +43,7 @@ class KematianDataTable extends DataTable
                 $btn = $btn.'</ul></div>';
                   
             }
-            
 
-
-            // $btn = $btn.'<button class="btn btn-sm btn-dark my-1 open_modal" value="'.$row->kepala_dusun.'"> Kepala Dusun</button>';
 
              return $btn;
              
@@ -105,7 +102,7 @@ class KematianDataTable extends DataTable
                             [ 'all', '10','25', '50'  ]
                     ],    
                         'dom'          => 'Blfrtip',
-                        'buttons'      => ['pdf','excel', 'print', 'reload'],
+                        'buttons'      => ['excel', 'print', 'reload'],
                     ]);
     }
 

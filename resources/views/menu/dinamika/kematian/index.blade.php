@@ -151,7 +151,8 @@
 
 	
 
-			@include('menu.dinamika._partials.table')
+			@include('components.table')
+			@include('menu.dinamika._partials.show')
 
 		</div>
 	</div>
@@ -195,6 +196,45 @@
 				let link= $(this).attr('data-link');
 				$('#formMessage').attr('action',link);
 				$('#messageModal').modal('show');
+				
+	}); 
+	$(document).on('click','.open_modal_lihat',function(){
+			$('#biodata').empty();
+				let url= $(this).val();
+				$.ajax({
+					type : 'GET',
+					url: url,
+					beforeSend: function(){
+						$('#loading').show();
+					},
+					complete: function(){
+						$('#loading').hide();
+					},
+					success: function(msg){
+						
+						let data = JSON.parse(msg);
+						$('#title').html('Detail Kematian')
+						$('#biodata').append('<p><strong>Nama : </strong>'+data.dinamika.warga.nama+'</p>');
+						$('#biodata').append('<p><strong>NIK : </strong>'+data.dinamika.warga.nik+'</p>');
+						$('#biodata').append('<p><strong>Waktu Kematian : </strong>'+data.waktu+'</p>');
+						$('#biodata').append('<p><strong>Usia : </strong>'+data.usia+'</p>');
+						$('#biodata').append('<p><strong>Penyebab : </strong>'+data.penyebab+'</p>');
+						$('#biodata').append('<p><strong>Saksi : </strong>'+data.saksi+'</p>');
+						if(data.keterangan!=null){
+							$('#biodata').append('<p><strong>Keterangan : </strong></p><p>'+data.keterangan+'</p>');
+						}
+						
+						$('#biodata').append('<div class="mt-2"><h5 class=" text-center">Foto Bukti</h5><img class="w-75 mx-auto d-block" src="/storage/' + data.bukti + '"/></div>');
+						$('#modalLihat').modal('show');
+						
+						
+					},
+					error: function (xhr) {
+						var err = JSON.parse(xhr.responseText);
+						alert(err.message);
+					}
+					
+				});
 				
 			}); 		
 		

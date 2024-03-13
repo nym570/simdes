@@ -71,13 +71,59 @@
 			.trix-button-group.trix-button-group--file-tools {
 				display:none;
 			}
+			.overlay_loading {
+				z-index: 10000000000000000;
+				position: fixed;
+				top: 0;
+				left: 0;
+				bottom: 0;
+				right: 0;
+				background: rgba(0,0,0,.7);
+			}
+			.overlay__wrapper_loading {
+				width: 100%;
+				height: 100%;
+				position: relative;
+			}
+			.overlay__spinner_loading {
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			transform: translate(-50%, -50%);
+			}
 		</style>
 </head>
 
 <body>
+	
 	<!-- Layout wrapper -->
 	<div class="layout-wrapper layout-content-navbar">
+		
+		
 		<div class="layout-container">
+			<div class="overlay_loading" id="loading" style="display:none">
+				<div class="overlay__wrapper_loading">
+					<div class="overlay__spinner_loading">
+							<div class="spinner-grow text-dark" role="status">
+								<span class="visually-hidden">Loading...</span>
+							  </div>
+							  <div class="spinner-grow text-primary" role="status">
+								<span class="visually-hidden">Loading...</span>
+							  </div>
+							  
+							  <div class="spinner-grow text-info" role="status">
+								<span class="visually-hidden">Loading...</span>
+							  </div>
+							  <div class="spinner-grow text-primary" role="status">
+								<span class="visually-hidden">Loading...</span>
+							  </div>
+							  <div class="spinner-grow text-dark" role="status">
+								<span class="visually-hidden">Loading...</span>
+							  </div>
+					</div>
+				</div>
+			</div>
+			
 			<!-- Menu -->
 			@include('layouts._partials.aside')
 			<!-- End Menu -->
@@ -94,6 +140,8 @@
 
 					<div class="container-xxl flex-grow-1 container-p-y">
 						<x-alert />
+						
+						
 						@yield('container')
 					</div>
 					<!-- / Content -->

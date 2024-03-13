@@ -12,6 +12,7 @@ use App\Models\Kematian;
 use App\Models\Kedatangan;
 use App\Models\Kepindahan;
 use App\Models\Dinamika;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
@@ -48,9 +49,9 @@ class DashboardController extends Controller
         $ruta = Ruta::count();
         $data = [
             'kelahiran' => $kelahiran->count(),
-            'kedatangan' => $kedatangan->count(),
+            'kedatangan' => Dinamika::whereHasMorph( 'dinamika', [Kedatangan::class])->count(),
             'kematian' => $kematian->count(),
-            'kepindahan' => $kepindahan->count(),
+            'kepindahan' => Dinamika::whereHasMorph( 'dinamika', [Kepindahan::class])->count(),
             'warga' => [
                 'status' => $warga,
                 'graph' => [
@@ -65,6 +66,68 @@ class DashboardController extends Controller
             $title = 'Sistem Manajemen Desa';
         }
         return view('home', ["title"=> $title,"data" => $data]);
+		
+	}
+
+    public function rwCount(Request $request){
+		if($request['id'] != 'all'){
+			$chart = DB::table('warga')
+		->join('rt', 'rt.id', '=', 'warga.rt_id')
+		->where('status', 'warga')
+		->where('rt.rw_id',$request['id'])
+		->selectRaw('rt.name,count(*) as count')
+		->groupBy('rt.name')
+		->get();
+		}
+		else{
+			$chart = DB::table('warga')
+		->join('rt', 'rt.id', '=', 'warga.rt_id')
+		->join('rw', 'rw.id', '=', 'rt.rw_id')
+		->where('rw.dusun_id',$request['dusun_id'])
+		->where('status', 'warga')
+		->selectRaw('rw.name,count(*) as count')
+		->groupBy('rw.name')
+		->get();
+		}
+		$name = $chart->map->name->toArray();
+		$count = $chart->map->count->toArray();
+		$grafik = [
+			'label' => $name,
+			'data' => $count
+		];
+		return json_encode($grafik);
+	
+		
+	}
+	public function dusunCount(Request $request){
+		if($request['id'] != 'all'){
+			$chart = DB::table('warga')
+		->join('rt', 'rt.id', '=', 'warga.rt_id')
+		->join('rw', 'rw.id', '=', 'rt.rw_id')
+		->where('status', 'warga')
+		->where('rw.dusun_id',$request['id'])
+		->selectRaw('rw.name,count(*) as count')
+		->groupBy('rw.name')
+		->get();
+		}
+		else{
+			$chart = DB::table('warga')
+		->join('rt', 'rt.id', '=', 'warga.rt_id')
+		->join('rw', 'rw.id', '=', 'rt.rw_id')
+		->join('dusun', 'dusun.id', '=', 'rw.dusun_id')
+		->where('status', 'warga')
+		->selectRaw('dusun.name,count(*) as count')
+		->groupBy('dusun.name')
+		->get();
+		}
+		$name = $chart->map->name->toArray();
+		$count = $chart->map->count->toArray();
+		$grafik = [
+			'label' => $name,
+			'data' => $count
+		];
+		return json_encode($grafik);
+	
 		
 	}
     

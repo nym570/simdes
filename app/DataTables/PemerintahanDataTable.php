@@ -68,7 +68,7 @@ class PemerintahanDataTable extends DataTable
                             [ 'all', '10','25', '50'  ]
                     ],    
                         'dom'          => 'Blfrtip',
-                        'buttons'      => ['pdf','excel', 'print', 'reload'],
+                        'buttons'      => ['excel', 'print', 'reload'],
                         'initComplete' => "function () {
                             this.api()
                                 .columns()

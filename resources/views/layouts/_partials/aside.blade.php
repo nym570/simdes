@@ -47,21 +47,30 @@
 						Kependudukan
 					  </div></a>
 					<ul class="menu-sub">
-						<li class="menu-item {{ menuIsActive('statistik.warga.*') }}">
-							<a href="{{ route('statistik.warga.agama') }}" class="menu-link">
+						<li class="menu-item {{ menuIsActive('statistik.warga.agama') }}">
+							<a href="{{ route('statistik.warga.agama.index') }}" class="menu-link">
 								
 								<div data-i18n="Agama">
 									{{ __('Berdasarkan Agama') }}
 								</div>
 							</a>
 						</li>
-						<li class="menu-item {{ menuIsActive('ruta.*') }}">
-							<a href="{{ route('ruta.index') }}" class="menu-link">
-								<div data-i18n="RumahTangga">
-									{{ __('Rumah Tangga') }}
+						<li class="menu-item {{ menuIsActive('statistik.warga.pendidikan') }}">
+							<a href="{{ route('statistik.warga.pendidikan.index') }}" class="menu-link">
+								
+								<div data-i18n="Pendidikan">
+									{{ __('Berdasarkan Pendidikan') }}
 								</div>
 							</a>
-						  </li>
+						</li>
+						<li class="menu-item {{ menuIsActive('statistik.warga.pekerjaan') }}">
+							<a href="{{ route('statistik.warga.pekerjaan.index') }}" class="menu-link">
+								
+								<div data-i18n="Pekerjaan">
+									{{ __('Berdasarkan Pekerjaan') }}
+								</div>
+							</a>
+						</li>
 					</ul>
 				</li>
 				
@@ -146,13 +155,13 @@
 			</ul>
 		</li>
 	@endif
-@if(auth()->user()->hasRole('warga')&&!is_null(\App\Models\AnggotaRuta::where('anggota_nik',auth()->user()->nik)->first()))
+@if(auth()->user()->hasRole('warga')&&!is_null(\App\Models\AnggotaRuta::where('anggota_nik',auth()->user()->nik)->where('hubungan','Kepala Keluarga')->first()))
 	<li class="menu-header small text-uppercase">
 		<span class="menu-header-text">
 			{{ __('Layanan Warga') }}
 		</span>
 	</li>
-	<li class="menu-item {{ menuIsActive('home') }}">
+	<li class="menu-item {{ menuIsActive('pengajuan.warga.kependudukan.*') }}">
 		<a href="{{ route('pengajuan.warga.kependudukan.index') }}" class="menu-link">
 			<i class="menu-icon tf-icons bx bx-home-circle"></i>
 			<div data-i18n="Analytics">

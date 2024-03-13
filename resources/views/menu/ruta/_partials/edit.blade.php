@@ -36,6 +36,12 @@
 				var ajax1= $.ajax({
 					type : 'GET',
 					url: $(this).attr('data-link'),
+					beforeSend: function(){
+						$('#loading').show();
+					},
+					complete: function(){
+						$('#loading').hide();
+					},
 					success: function(msg){
 						let data = JSON.parse(msg);
 						 $('#judulEdit').text('Edit Rumah Tangga');
@@ -59,26 +65,5 @@
 				$('#editRuta').modal('show');
 			});
 				}); 
-                $('#rw_edit').on('change',function(){
-				$('#rw_edit').selectpicker('render');
-				let id_rw = $('#rw_edit').val();
-
-				$.ajax({
-					type : 'GET',
-					url: "{{route('master-desa.get-rt')}}",
-					
-					data : {id:id_rw},
-
-					success: function(msg){
-						$('#rt_edit').selectpicker('destroy');
-						$('#rt_edit').html(msg);
-						$('#rt_edit').selectpicker('render');
-					},
-					error: function (xhr) {
-						var err = JSON.parse(xhr.responseText);
-						alert(err.message);
-					}
-					
-				})
-		});
+                
   </script>

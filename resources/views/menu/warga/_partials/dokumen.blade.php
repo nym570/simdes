@@ -96,15 +96,18 @@
 	$(document).on('click','.open_modal_dokumen',function(){
 				let nik= $(this).attr('data-dokumen');
 				let link= $(this).attr('data-link');
-				// $('#kk_view').empty();
-				// $('#ktp_view').empty();
-				// $('#foto_view').empty();
 				$('#formDokumen').attr('action',link);
 				$('#dokumenModal').modal('show');
 				$.ajax({
 					type : 'POST',
 					url: "{{route('warga.get-dokumen')}}",
 					data: {nik:nik},
+					beforeSend: function(){
+						$('#loading').show();
+					},
+					complete: function(){
+						$('#loading').hide();
+					},
 					success: function(msg){
 						console.log(msg);
 						let data = JSON.parse(msg);

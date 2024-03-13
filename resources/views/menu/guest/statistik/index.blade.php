@@ -1,20 +1,58 @@
 @extends('layouts.app')
 @section('container')
+<div class="card mb-4">
+	<div class="card-header">
+		<h4 class="text-center">{{$title}} Filter</h4>
+	</div>
+	<div class="card-body">
+		<div class="row g-4">
+			<div class="col mb-3">
+				<select id="dusun" class="selectpicker w-100" data-style="btn-default" data-live-search="false" name="dusun_id" required>
+					
+				</select>
+			</div>
+			<div class="col mb-3">
+				<select id="rw" class="selectpicker w-100" data-style="btn-default" data-live-search="true" title="RW" name="rw_id" required>
+					
+				</select>
+			</div>
+			<div class="col mb-3">
+				<select id="rt" class="selectpicker w-100" data-style="btn-default" data-live-search="true" title="RT" name="rt_id" required>
+					
+				</select>
+			</div>
+			<div class="col mb-3">
+				<div class="btn-group ">
+					<button class="btn  btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					  Download
+					</button>
+					<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+					  <li><a class="dropdown-item" download="warga-agama-barchart.jpg" href="" id="download-bar">Barchart</a></li>
+					  <li><a class="dropdown-item" download="warga-agama-doughnut.jpg" href="" id="download-dou">Doughnutchart</a></li>
+					  <li><a class="dropdown-item" id="download-tab">Tabel</a></li>
+					</ul>
+				  </div>
+			</div>
+
+		</div>
+		
+	</div>
+</div>
 <div class="row">
 	<!-- Delivery Performance -->
 	<div class="col-lg-6 col-xxl-4 mb-4 order-2 order-xxl-2">
 	  <div class="card h-100">
 		<div class="card-header d-flex align-items-center justify-content-between">
 		  <div class="card-title mb-0">
-			<h5 class="m-0 me-2">Tabel Agama Warga Berdasarkan Wilayah</h5>
+			<h5 class="m-0 me-2">Tabel {{$title}}</h5>
 		  </div>
 		</div>
 		<div class="card-body">
-			<div class="table-responsive">
+			<div class="table-responsive" id="tab1">
 				<table class="table table-striped table-bordered mb-4">
 					<thead>
 						<tr>
-							<th>{{ __('Agama') }}</th>
+							<th>{{ __($category) }}</th>
 							<th>{{ __('Jumlah') }}</th>
 							<th>{{ __('Persentase') }}</th>
 						</tr>
@@ -36,40 +74,9 @@
 	<!-- Shipment statistics-->
 	<div class="col-lg-6 col-xxl-6 mb-4 order-1 order-xxl-1">
 	  <div class="card h-100">
-		<div class="card-header d-flex align-items-center justify-content-between">
-		  <div class="card-title mb-0">
-			<h5 class="m-0 me-2 mb-2 d-inline ">Diagram Batang</h5>
-			<div class="d-inline  btn-group me-3">
-				<button class="btn btn-sm btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-				  Download
-				</button>
-				<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-				  <li><a class="dropdown-item" download="warga-agama-barchart.jpg" href="" id="download-bar">Barchart</a></li>
-				  <li><a class="dropdown-item" download="warga-agama-doughnut.jpg" href="" id="download-dou">Doughnutchart</a></li>
-				</ul>
-			  </div>
-		  </div>
-		 
-		</div>
-		<div class="card-body">
-			<div class="row g-3">
-				<div class="col mb-3">
-					<select id="dusun" class="selectpicker w-100" data-style="btn-default" data-live-search="false" name="dusun_id" required>
-						
-					</select>
-				</div>
-				<div class="col mb-3">
-					<select id="rw" class="selectpicker w-100" data-style="btn-default" data-live-search="true" title="RW" name="rw_id" required>
-						
-					</select>
-				</div>
-				<div class="col mb-3">
-					<select id="rt" class="selectpicker w-100" data-style="btn-default" data-live-search="true" title="RT" name="rt_id" required>
-						
-					</select>
-				</div>
 
-			</div>
+		<div class="card-body">
+			
 			<div class="nav-align-top">
 				<ul class="nav nav-pills mb-3" role="tablist">
 				  <li class="nav-item">
@@ -83,7 +90,7 @@
 				<div class="tab-content">
 				  <div class="tab-pane fade show active" id="navs-pills-top-home" role="tabpanel">
 					<div id="shipmentStatisticsChart">
-						<canvas id="barChart" class="chartjs" data-height="250"></canvas>
+						<canvas id="barChart" class="chartjs" data-height="300"></canvas>
 					  </div>
 				  </div>
 				  <div class="tab-pane fade" id="navs-pills-top-profile" role="tabpanel">
@@ -111,6 +118,8 @@
 
 @push('js')
 	<script src="{{ asset('assets/vendor/libs/chartjs/chartjs.js') }}"></script>
+	<script src="https://cdn.jsdelivr.net/gh/linways/table-to-excel@v1.0.4/dist/tableToExcel.js"></script>
+
 	
 <script>
 	
@@ -122,6 +131,16 @@
 				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 			}
 		});
+		let cat = "<?=$category?>";
+		let route = @json($route);
+		$("#download-tab").click(function(){
+        TableToExcel.convert(document.getElementById("tab1"), {
+            name: "Warga Berdasarkan "+ cat +".xlsx",
+            sheet: {
+            name: "Sheet1"
+            }
+          });
+        });
 		
 
 	
@@ -192,7 +211,7 @@ const doughnutChart = document.getElementById('doughnutChart');
         plugins: {
 			title: {
                 display: true,
-                text: 'Agama Warga Domisili Berdasarkan Wilayah'
+                text: cat+' Warga Domisili Berdasarkan Wilayah'
             },
           tooltip: {
             backgroundColor: cardColor,
@@ -248,7 +267,8 @@ const doughnutChart = document.getElementById('doughnutChart');
             },
             ticks: {
               color: labelColor
-            }
+            },
+			display: false,
           },
           y: {
             min: 0,
@@ -292,7 +312,7 @@ const doughnutChart = document.getElementById('doughnutChart');
 		
 		title: {
                 display: true,
-                text: 'Agama Warga Domisili Berdasarkan Wilayah'
+                text: cat+' Warga Domisili Berdasarkan Wilayah'
             },
 			
         legend: {
@@ -357,7 +377,7 @@ const doughnutChart = document.getElementById('doughnutChart');
 
 	$.ajax({
 					type : 'GET',
-					url: "{{route('statistik.warga.agama.dusun-count')}}",
+					url: route.dusun,
 					
 					data : {id:'all'},
 
@@ -445,7 +465,7 @@ const doughnutChart = document.getElementById('doughnutChart');
 				}
 				$.ajax({
 					type : 'GET',
-					url: "{{route('statistik.warga.agama.dusun-count')}}",
+					url: route.dusun,
 					
 					data : {id:id_dusun},
 
@@ -512,7 +532,7 @@ const doughnutChart = document.getElementById('doughnutChart');
 				}
 				$.ajax({
 					type : 'GET',
-					url: "{{route('statistik.warga.agama.rw-count')}}",
+					url: route.rw,
 					
 					data : {id:id_rw,dusun_id:id_dusun},
 
@@ -553,7 +573,7 @@ const doughnutChart = document.getElementById('doughnutChart');
 
 				$.ajax({
 					type : 'GET',
-					url: "{{route('statistik.warga.agama.rt-count')}}",
+					url: route.rt,
 					
 					data : {id:id_rt,rw_id:id_rw,dusun_id:id_dusun},
 

@@ -111,12 +111,6 @@
 			</span>
 		</li>
 
-		<li class="menu-header small text-uppercase">
-			<span class="menu-header-text">
-				{{ __('Log') }}
-			</span>
-		</li>
-
 		<li class="menu-item {{ menuIsActive('log') }}">
 			<a href="{{ route('log.index') }}" class="menu-link">
 				<i class="menu-icon tf-icons bx bx-calendar-exclamation"></i>

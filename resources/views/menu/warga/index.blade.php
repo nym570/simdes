@@ -239,9 +239,12 @@
 	@csrf
 	@method("PUT")
 </form>
+@if(auth()->user()->hasRole(['kependudukan','ketua rt']))
+	@include('menu.warga._partials.dokumen')
+@endif
 @if(auth()->user()->hasRole('kependudukan'))
 	@include('menu.warga._partials.domisili')
-	@include('menu.warga._partials.dokumen')
+	
 @endif
 
 <script>
