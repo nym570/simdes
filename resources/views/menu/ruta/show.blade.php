@@ -41,7 +41,7 @@
 
 			  </div>
 			  <div class="modal-footer">
-				<x-button type="submit" class="btn btn-primary d-grid w-100" :value="__('Tambah Rumah Tangga')"/>
+				<x-button type="submit" class="btn btn-primary d-grid w-100" :value="__('Edit Hubungan')"/>
 			  </div>
 		</form>
 	  </div>

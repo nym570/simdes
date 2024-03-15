@@ -8,34 +8,50 @@
 			<div class="mb-4">
 				<!-- Button trigger modal -->
     <a href="{{route('users.index')}}" class="btn btn-dark"> Kembali </a>
-	<button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#EditUser"> Edit </button>
 	<!-- Icon Dropdown -->
 <div class="btn-group">
-	<button type="button" class="btn btn-light btn-icon rounded-pill dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-	  <i class="bx bx-dots-vertical-rounded"></i>
-	</button>
+	<button class="btn btn-warning dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		Aksi
+	  </button>
 	<ul class="dropdown-menu">
+		<li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#EditUser">Edit</a></li>
 	  <li><a class="dropdown-item" href="{{route("users.status",$user)}}" onclick='change(this)'>{{$user->is_active?"Nonaktifkan":"Aktifkan"}}</a></li>
-	  {{-- <li><a class="dropdown-item" href="{{route('password.email')}}" onclick='send(this)'>Reset Password</a></li> --}}
-	  <li>
-		<hr class="dropdown-divider">
-	  </li>
+
 	  
 	</ul>
   </div>
 
   
-
-  <h3 class="card-title mt-5"> {{ $user->nama }} </h3>
-
-  <h5> Roles </h5>
-  <div>
-	@forelse ($user->roles as $item)
-		<a href="{{route('roles.show',Hashids::encode($item->id))}}"><span class="badge bg-primary">{{$item->name}}</span></a>
+  <div class="text-center mb-3">
+	<h4 >Pengguna {{auth()->user()->username}}</h4>
+	@forelse (auth()->user()->roles as $item)
+		<span class="badge bg-primary">{{$item->name}}</span>
 	@empty
 		<p>Pengguna belum memiliki role</p>
 	@endforelse
+</div>
+<div class="card">
+	<div class="card-header">
+		<h5>Keterangan Pengguna</h5>
+	</div>
+  <div class="card-body">
+	
+		<div class="mb-2">
+			<strong>Username : </strong>
+			<p>{{$user->username}}</p>
+		</div>
+		<div class="mb-2">
+			<strong>Email : </strong>
+			<p>{{$user->email}}</p>
+		</div>
+		<div class="mb-2">
+			<strong>Dibuat Sejak: </strong>
+			<p>{{$user->created_at}}</p>
+		</div>
+		
   </div>
+</div>
+
 
 	
   

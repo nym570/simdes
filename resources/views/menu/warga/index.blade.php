@@ -9,7 +9,7 @@
 
 			
 				<!-- Button trigger modal -->
-@if(in_array('ketua rt',auth()->user()->getRoleNames()->toArray()))
+@if(auth()->user()->hasRole('ketua rt'))
 <div class="mb-4">
 <button type="button" class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target="#addWarga">
 	Tambah Warga
@@ -247,6 +247,7 @@
 	
 @endif
 
+@if(auth()->user()->hasRole('ketua rt'))
 <script>
 		
 		$( document ).ready(function() {
@@ -319,6 +320,12 @@
 					type : 'GET',
 					url: "{{route('wilayah.get-kab')}}",
 					data : {'id_prov':id_prov},
+					beforeSend: function(){
+						$('#loading').show();
+					},
+					complete: function(){
+						$('#loading').hide();
+					},
 					success: function(msg){
 						$('#kabupaten-lahir').selectpicker('destroy');
 						$('#kabupaten-lahir').html(msg);
@@ -352,6 +359,12 @@
 					type : 'GET',
 					url: "{{route('wilayah.get-kab')}}",
 					data : {'id_prov':id_prov},
+					beforeSend: function(){
+						$('#loading').show();
+					},
+					complete: function(){
+						$('#loading').hide();
+					},
 					success: function(msg){
 						$('#kabupaten').selectpicker('destroy');
 						$('#kabupaten').html(msg);
@@ -374,6 +387,12 @@
 					url: "{{route('wilayah.get-kec')}}",
 					
 					data : {id_kab:id_kab},
+					beforeSend: function(){
+						$('#loading').show();
+					},
+					complete: function(){
+						$('#loading').hide();
+					},
 
 					success: function(msg){
 						$('#kecamatan').selectpicker('destroy');
@@ -395,7 +414,14 @@
 					type : 'GET',
 					url: "{{route('wilayah.get-des')}}",
 					
+					
 					data : {id_kec:id_kec},
+					beforeSend: function(){
+						$('#loading').show();
+					},
+					complete: function(){
+						$('#loading').hide();
+					},
 
 					success: function(msg){
 						$('#desa').selectpicker('destroy');
@@ -425,7 +451,7 @@
 		})
 	}
 	</script>
-
+@endif
 
 
 @endsection

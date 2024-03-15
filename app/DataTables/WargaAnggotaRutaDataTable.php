@@ -12,31 +12,27 @@ use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
 
-class AnggotaRutaDataTable extends DataTable
+class WargaAnggotaRutaDataTable extends DataTable
 {
-    /**
-     * Build the DataTable class.
-     *
-     * @param QueryBuilder $query Results from query() method.
-     */
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
             ->addColumn('action', function($row){
                 
-                $btn = ' <a href='.route("warga.show",$row->warga).' class="btn btn-sm btn-dark my-1"> Warga</a>';
-                if(auth()->user()->hasRole('ketua rt')){
-                    $btn = $btn.'<div class="btn-group me-3">
+                $btn = ' <a href='.route("pengajuan.warga.ruta.anggota.warga.show",$row->warga).' class="btn btn-sm btn-success my-1"> Lihat</a>';
+                    
+                    if($row->hubungan != 'Kepala Keluarga'){
+                        $btn = $btn.'<div class="btn-group me-3">
                     <button class="btn btn-sm btn-warning dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                       Aksi
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">';
-                    if($row->hubungan != 'Kepala Keluarga'){
-                        $btn = $btn.'<li><a class="dropdown-item open_modal_hubungan" data-link="'.route('ruta.anggota.update',$row).'">Update Hubungan</a></li>';
+                        $btn = $btn.'<li><a class="dropdown-item open_modal_hubungan" data-link="'.route('pengajuan.warga.ruta.anggota.update',$row).'">Update Hubungan</a></li>';
+                        $btn = $btn.'<li><a class="dropdown-item" href="'.route('pengajuan.warga.ruta.anggota.delete',$row).'" onclick="del(this)">Hapus</a></li>';
+                        $btn = $btn.'</ul></div>';
                     }
-                    $btn = $btn.'<li><a class="dropdown-item" href="'.route('ruta.anggota.delete',$row).'" onclick="del(this)">Hapus</a></li>';
-                    $btn = $btn.'</ul></div>';
-                }
+                    
+                
                 return $btn;
             })
             ->addIndexColumn() 

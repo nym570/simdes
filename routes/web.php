@@ -20,6 +20,7 @@ use App\Http\Controllers\Pengajuan\PengajuanDinamika;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MasterController;
 use App\Http\Controllers\StatistikWargaController;
+use App\Http\Controllers\Auth\ProfilController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,6 +38,8 @@ use App\Http\Controllers\StatistikWargaController;
 Route::get('/', [DashboardController::class,'index'])->name('home');
 Route::get('/dusun-count', [DashboardController::class,'dusunCount'])->name('warga-dusun-count');
 Route::get('/rw-count', [DashboardController::class,'rwCount'])->name('warga-rw-count');
+
+
 
 Route::controller(StatistikWargaController::class)->name('statistik.warga.')->group(function () {
 	Route::name('agama.')->group(function () {
@@ -147,6 +150,7 @@ Route::middleware(['admin.auth','admin.verified'])->group(function () {
 	});
 	Route::controller(UserController::class)->name('users.')->group(function () {
 		Route::get('/admin/users', 'index')->name('index');
+		Route::get('/admin/users/{user}/get', 'get')->name('get');
 		Route::post('/admin/users', 'store')->name('store');
 		Route::post('/admin/users/import', 'import')->name('import');
 		Route::post('/admin/users/{user}/reset-pass', 'reset-pass')->name('reset-pass');
@@ -179,7 +183,6 @@ Route::middleware(['auth','verified'])->group(function () {
 			Route::get('/ruta', 'index')->name('index');
 			Route::get('/ruta/{ruta}', 'show')->name('show');
 			Route::get('/ruta/{ruta}/edit', 'edit')->name('edit');
-			Route::post('/ruta/anggota', 'getAnggota')->name('anggota-get');
 		});
 		Route::controller(KelahiranController::class)->name('dinamika.kelahiran.')->group(function () {
 			Route::get('/dinamika/kelahiran', 'index')->name('index');
@@ -266,11 +269,60 @@ Route::middleware(['auth','verified'])->group(function () {
 			Route::post('/pengajuan/kepindahan', 'kepindahan')->name('kepindahan.store');
 			
 		});
+		Route::name('ruta.')->group(function () {
+			Route::controller(PengajuanDinamika::class)->group(function(){
+				Route::get('/pengajuan/kependudukan/{ruta}/ruta', 'ruta')->name('index');
+				
+				Route::get('/pengajuan/kependudukan/ruta/warga/{warga}', 'anggotaShow')->name('anggota.warga.show');
+			});
+			Route::controller(RutaController::class)->group(function(){
+				Route::put('/pengajuan/kependudukan/{ruta}/update', 'update')->name('update');
+			});
+			
+			
+			Route::name('anggota.')->group(function () {
+				Route::controller(WargaController::class)->name('warga.')->group(function () {
+					
+					Route::get('/pengajuan/kependudukan/ruta/warga/{warga}/get', 'get')->name('get');
+					Route::post('/pengajuan/kependudukan/ruta/warga/get-dokumen', 'getDokumen')->name('get-dokumen');
+					Route::put('/pengajuan/kependudukan/ruta/warga/{warga}/dokumen', 'dokumen')->name('dokumen');
+					Route::put('/pengajuan/kependudukan/ruta/warga/{warga}/update', 'update')->name('update');
+				});
+				Route::controller(RutaController::class)->group(function () {
+
+					Route::put('/ruta/anggota/{anggota_ruta}/update', 'anggotaUpdate')->name('update');
+					Route::delete('/ruta/anggota/{anggota_ruta}/delete', 'anggotaDestroy')->name('delete');
+				});
+			});
+		});
 		
 
 	});
 	
-	
+	Route::name('profil.')->group(function () {
+		Route::controller(ProfilController::class)->group(function () {
+			Route::get('/profil', 'index')->name('index');
+			
+		});
+		Route::controller(WargaController::class)->name('warga.')->group(function () {
+			Route::get('/profil/warga/{warga}/get', 'get')->name('get');
+			Route::post('/profil/warga/get-dokumen', 'getDokumen')->name('get-dokumen');
+			Route::put('/profil/warga/{warga}/dokumen', 'dokumen')->name('dokumen');
+			Route::put('/profil/warga/{warga}/update', 'update')->name('update');
+		});
+
+		Route::controller(UserController::class)->name('user.')->group(function () {
+			Route::get('/profil/user/{warga}/get', 'get')->name('get');
+			Route::put('/profil/user/{user}/update', 'update')->name('update');
+			Route::put('/profil/user/{user}/password', 'password')->name('password');
+		});
+		
+	});
+		
+	Route::controller(RutaController::class)->name('ruta.')->group(function () {
+		Route::post('/ruta/anggota', 'getAnggota')->name('anggota-get');
+	});
+
 
 });
 
@@ -312,12 +364,12 @@ Route::controller(MasterDesaController::class)->name('master-desa.')->group(func
 	Route::get('/desa/get-RW', 'getRW')->name('get-rw');
 	Route::get('/desa/get-RT', 'getRT')->name('get-rt');
 });
-Route::controller(MasterController::class)->name('master.')->group(function () {
-	Route::get('/master/get-pekerjaan', 'getPekerjaan')->name('identitas.get-pekerjaan');
-	Route::get('/master/get-pekerjaan', 'getPendidikan')->name('identitas.get-pendidikan');
-	Route::get('/master/get-hubungan', 'getHubungan')->name('ruta.get-hubungan');
-});
 
+Route::controller(MasterController::class)->name('master.')->group(function () {
+	Route::get('/master/get-hubungan', 'getHubungan')->name('ruta.get-hubungan');
+	Route::get('/master/get-pendidikan', 'getPendidikan')->name('identitas.get-pendidikan');
+	Route::get('/master/get-pekerjaan', 'getPekerjaan')->name('identitas.get-pekerjaan');
+});
 
 
 require 'auth.php';

@@ -34,7 +34,6 @@
 
 		<div class="col-sm-7 gy-1 text-nowrap d-flex flex-column justify-content-between ps-4 gap-2 pe-3">
 		 	<p class="text-muted text-wrap">Rumah Tangga adalah seseorang atau sekelompok orang yang mendiami suatu bangunan</p>
-			<small class="text-muted text-wrap">- Badan Pusat Statistik -</small>
 		</div>
 	  </div>
   </div>
@@ -381,6 +380,7 @@ const doughnutChart = document.getElementById('doughnutChart');
   // --------------------------------------------------------------------
   const barChart = document.getElementById('barChart');
   if (barChart&&doughnutChart) {
+	var nama ="<?=$desa->desa?>";
     const barChartVar = new Chart(barChart, {
       type: 'bar',
       data: {
@@ -409,7 +409,7 @@ const doughnutChart = document.getElementById('doughnutChart');
         plugins: {
 			title: {
                 display: true,
-                text: ' Warga Domisili Berdasarkan Wilayah'
+                text: 'Warga Domisili Desa '+nama+' Berdasarkan Wilayah'
             },
           tooltip: {
             backgroundColor: cardColor,
@@ -510,7 +510,7 @@ const doughnutChart = document.getElementById('doughnutChart');
 		
 		title: {
                 display: true,
-                text: ' Warga Domisili Berdasarkan Wilayah'
+                text: 'Warga Domisili Desa '+nama+' Berdasarkan Wilayah'
             },
 			
         legend: {
@@ -657,9 +657,7 @@ const doughnutChart = document.getElementById('doughnutChart');
 					$('#rw').selectpicker('destroy');
 					$('#rw').html('');
 					$('#rw').selectpicker('refresh');
-					$('#rt').selectpicker('destroy');
-					$('#rt').html('');
-					$('#rt').selectpicker('refresh');
+
 				}
 				$.ajax({
 					type : 'GET',
@@ -670,7 +668,9 @@ const doughnutChart = document.getElementById('doughnutChart');
 					success: function(msg){
 						let hasil = JSON.parse(msg);
 						barChartVar.data.labels = hasil['label'];
-						barChartVar.data.datasets[0].data = hasil['data']
+						barChartVar.data.datasets[0].data = hasil['data'];
+						barChartVar.options.plugins.title.text = 'Warga Domisili Desa '+nama+' '+ $("#dusun option:selected").text() +' Berdasarkan Wilayah';
+						doughnutChartVar.options.plugins.title.text = 'Warga Domisili Desa '+nama+' '+ $("#dusun option:selected").text() +' Berdasarkan Wilayah';
 						barChartVar.update();
 						doughnutChartVar.data.labels = hasil['label'];
 						doughnutChartVar.data.datasets[0].data = hasil['data'];
@@ -702,32 +702,6 @@ const doughnutChart = document.getElementById('doughnutChart');
 				let id_rw = $('#rw').val();
 				let id_dusun = $('#dusun').val();
 
-				if(id_rw != 'all'){
-					$.ajax({
-					type : 'GET',
-					url: "{{route('master-desa.get-rt')}}",
-					
-					data : {id:id_rw},
-
-					success: function(msg){
-						msg = "<option data-tokens='all' value='all'>All RT</option>" + msg
-						$('#rt').selectpicker('destroy');
-						$('#rt').html(msg);
-						$('#rt').selectpicker('render');
-					},
-					error: function (xhr) {
-						var err = JSON.parse(xhr.responseText);
-						alert(err.message);
-					}
-					
-				})
-				}
-				else{
-					$('#rt').selectpicker('destroy');
-					$('#rt').html('');
-					$('#rt').selectpicker('refresh');
-					
-				}
 				$.ajax({
 					type : 'GET',
 					url:  "{{route('warga-rw-count')}}",
@@ -737,7 +711,9 @@ const doughnutChart = document.getElementById('doughnutChart');
 					success: function(msg){
 						let hasil = JSON.parse(msg);
 						barChartVar.data.labels = hasil['label'];
-						barChartVar.data.datasets[0].data = hasil['data']
+						barChartVar.data.datasets[0].data = hasil['data'];
+						barChartVar.options.plugins.title.text = 'Warga Domisili Desa '+nama+' '+ $("#rw option:selected").text() +' Berdasarkan Wilayah';
+						doughnutChartVar.options.plugins.title.text = 'Warga Domisili Desa '+nama+' '+ $("#rw option:selected").text() +' Berdasarkan Wilayah';
 						barChartVar.update();
 						doughnutChartVar.data.labels = hasil['label'];
 						doughnutChartVar.data.datasets[0].data = hasil['data'];

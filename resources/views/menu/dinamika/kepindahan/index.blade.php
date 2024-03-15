@@ -6,7 +6,7 @@
 			<h5 class="card-title">
 				{{ __('Daftar Kepindahan Warga') }}
 			</h5>
-@if(in_array('ketua rt',auth()->user()->getRoleNames()->toArray()))
+@if(auth()->user()->hasRole('ketua rt'))
 			<div class="mb-4">
 				<!-- Button trigger modal -->
 <button type="button" class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target="#addPindah">
@@ -218,7 +218,7 @@
 		@method("PUT")
 	</form>
 
-
+	@if(auth()->user()->hasRole('ketua rt'))
 <script>
 		
 		$( document ).ready(function() {
@@ -267,6 +267,12 @@
 					$.ajax({
 						type : 'GET',
 						url: "{{route('warga.get-warga')}}",
+						beforeSend: function(){
+						$('#loading').show();
+					},
+					complete: function(){
+						$('#loading').hide();
+					},
 						success: function(msg){
 							$('#nik').selectpicker('destroy');
 							$('#nik').html(msg);
@@ -283,6 +289,12 @@
 					$.ajax({
 						type : 'GET',
 						url: "{{route('get-kepala-ruta')}}",
+						beforeSend: function(){
+						$('#loading').show();
+					},
+					complete: function(){
+						$('#loading').hide();
+					},
 						success: function(msg){
 							$('#kepala_nik').selectpicker('destroy');
 							$('#kepala_nik').html(msg);
@@ -312,6 +324,12 @@
 					type : 'POST',
 					url: "{{route('ruta.anggota-get')}}",
 					data : {'id':kepala},
+					beforeSend: function(){
+						$('#loading').show();
+					},
+					complete: function(){
+						$('#loading').hide();
+					},
 					success: function(msg){
 						$('#nik').selectpicker('destroy');
 						$('#nik').html(msg);
@@ -342,6 +360,12 @@
 					type : 'GET',
 					url: "{{route('wilayah.get-kab')}}",
 					data : {'id_prov':id_prov},
+					beforeSend: function(){
+						$('#loading').show();
+					},
+					complete: function(){
+						$('#loading').hide();
+					},
 					success: function(msg){
 						$('#kabupaten').selectpicker('destroy');
 						$('#kabupaten').html(msg);
@@ -365,7 +389,12 @@
 					url: "{{route('wilayah.get-kec')}}",
 					
 					data : {id_kab:id_kab},
-
+					beforeSend: function(){
+						$('#loading').show();
+					},
+					complete: function(){
+						$('#loading').hide();
+					},
 					success: function(msg){
 						$('#kecamatan').selectpicker('destroy');
 						$('#kecamatan').html(msg);
@@ -388,7 +417,12 @@
 					url: "{{route('wilayah.get-des')}}",
 					
 					data : {id_kec:id_kec},
-
+					beforeSend: function(){
+						$('#loading').show();
+					},
+					complete: function(){
+						$('#loading').hide();
+					},
 					success: function(msg){
 						$('#desa').selectpicker('destroy');
 						$('#desa').html(msg);
@@ -410,12 +444,7 @@
 				$('#kode_wilayah').val(id_desa);
 			});
 		});
-			
-		
-	</script>
-
-<script>
-	function verif(element) {
+		function verif(element) {
 		event.preventDefault()
 		let form = document.getElementById('verif-form');
 		form.setAttribute('action', element.getAttribute('href'))
@@ -423,6 +452,11 @@
 			form.submit()
 		})
 	}
+		
+	</script>
+@endif
+<script>
+	
 	$(document).on('click','.open_modal_lihat',function(){
 		
 			$('#biodata').empty();

@@ -108,11 +108,7 @@
 <script>
 		
 		$( document ).ready(function() {
-			$.ajaxSetup({
-			headers: {
-				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-			}
-		});
+			
 		var now = new Date(),
 			date = now.toISOString().split('T');
 			today = date[0];
@@ -122,7 +118,13 @@
 				$.ajax({
 					type : 'POST',
 					url: "{{route('ruta.anggota-get')}}",
-					data : {id:<?=$ruta?>,all:1},
+					data : {id:<?=$ruta->id?>,all:1},
+					beforeSend: function(){
+						$('#loading').show();
+					},
+					complete: function(){
+						$('#loading').hide();
+					},
 					success: function(msg){
 						$('#nik_anggota').selectpicker('destroy');
 						$('#nik_anggota').html(msg);

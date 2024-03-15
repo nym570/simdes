@@ -100,7 +100,7 @@
 				$('#dokumenModal').modal('show');
 				$.ajax({
 					type : 'POST',
-					url: "{{route('warga.get-dokumen')}}",
+					url: "{{route('profil.warga.get-dokumen')}}",
 					data: {nik:nik},
 					beforeSend: function(){
 						$('#loading').show();

@@ -79,6 +79,51 @@
 	  </div>
 	</div>
   </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="EditUser" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+	  <div class="modal-content">
+		<div class="modal-header">
+		  <h5 class="modal-title" id="exampleModalLabel1">Ubah data Pengguna</h5>
+		  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		</div>
+		<form id="UpdateUser" class="mb-3"  data-remote="true" method="POST">
+            @method("PUT")
+			@csrf
+			<div class="modal-body">
+				<div class="row">
+					<div class="col mb-3">
+						<x-label for="nik" :value="__('NIK')" />
+						<x-input type="text" name="nik" id="nik_edit" :placeholder="__('NIK 16 digit')"  readonly/>
+						<x-invalid error="nik" />
+					  </div>
+				  </div>
+				<div class="row">
+				  <div class="col mb-3">
+					<x-label for="username" :value="__('Username')" />
+					<x-input type="text" name="username" id="username_edit" :placeholder="__('Username disarankan menggunakan nik')"  />
+					<x-invalid error="username" />
+				  </div>
+				</div>
+				
+				
+				<div class="row">
+				  <div class="col mb-3">
+					<x-label for="email" :value="__('Email')" />
+					<x-input type="email" name="email" id="email_edit" :placeholder="__('Email valid untuk pemberitahuan')"  />
+					<x-invalid error="email" />
+				  </div>
+				</div>
+			  </div>
+			  <div class="modal-footer">
+				<x-button type="submit" class="btn btn-primary d-grid w-100" :value="__('Edit Pengguna')"/>
+			  </div>
+		</form>
+	  </div>
+	</div>
+  </div>
+
   @include('admin.components.import')
 			</div>
 
@@ -140,7 +185,27 @@
 			form.submit()
 		})
 	}
-	
+	$(document).on('click','.open_modal_edit',function(){
+		let linkData= $(this).attr('data-user');
+		let link= $(this).attr('data-link');
+		$.ajax({
+					type : 'GET',
+					url: linkData,
+					success: function(msg){
+						let data = JSON.parse(msg);
+						$('#nik_edit').val(data.nama);
+						$('#username_edit').val(data.username);
+						$('#email_edit').val(data.email);
+						$('#UpdateUser').attr('action',link);
+						$('#EditUser').modal('show');	
+					},
+					error: function (xhr) {
+						var err = JSON.parse(xhr.responseText);
+						alert(err.message);
+					}
+				});
+
+	}); 
 </script>
 @if (count($errors) > 0 && !$errors->has('import'))
     <script type="text/javascript">

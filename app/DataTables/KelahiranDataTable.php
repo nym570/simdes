@@ -29,20 +29,21 @@ class KelahiranDataTable extends DataTable
             if($row->verifikasi){
                 $btn = $btn.'<a class="btn btn-sm me-1 mb-1 btn-dark" href="'.route('warga.show',$row->dinamika->warga).'" >Warga</a>';
             }
-            $btn = $btn.'<div class="btn-group me-3">
+          
+                
+            if(!$row->verifikasi&&in_array('ketua rt',auth()->user()->getRoleNames()->toArray())){
+                $btn = $btn.'<div class="btn-group me-3">
                 <button class="btn btn-sm btn-warning dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   Aksi
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">';
                 
-            if(!$row->verifikasi&&in_array('ketua rt',auth()->user()->getRoleNames()->toArray())){
-                
-                
                 $btn = $btn.'<li><a class="dropdown-item" href="'.route('dinamika.kelahiran.verifikasi',$row).'" onclick="verif(this)">Verif</a></li>';
                 $btn = $btn.'<li><a class="dropdown-item open_modal_tolak" data-link="'.route('dinamika.kelahiran.tolak',$row).'">Tolak</a></li>';
                   
+                $btn = $btn.'</ul></div>';
             }
-            $btn = $btn.'</ul></div>';
+            
 
              return $btn;
              

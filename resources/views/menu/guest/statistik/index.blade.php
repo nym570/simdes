@@ -132,6 +132,7 @@
 			}
 		});
 		let cat = "<?=$category?>";
+		
 		let route = @json($route);
 		$("#download-tab").click(function(){
         TableToExcel.convert(document.getElementById("tab1"), {
@@ -142,7 +143,7 @@
           });
         });
 		
-
+		
 	
   // Color Variables
   const purpleColor = '#836AF9',
@@ -183,6 +184,7 @@ const doughnutChart = document.getElementById('doughnutChart');
   // --------------------------------------------------------------------
   const barChart = document.getElementById('barChart');
   if (barChart&&doughnutChart) {
+	var nama ="<?=$desa->desa?>";
     const barChartVar = new Chart(barChart, {
       type: 'bar',
       data: {
@@ -211,7 +213,7 @@ const doughnutChart = document.getElementById('doughnutChart');
         plugins: {
 			title: {
                 display: true,
-                text: cat+' Warga Domisili Berdasarkan Wilayah'
+                text: 'Warga Domisili Desa '+nama+ ' Berdasarkan '+cat
             },
           tooltip: {
             backgroundColor: cardColor,
@@ -312,7 +314,7 @@ const doughnutChart = document.getElementById('doughnutChart');
 		
 		title: {
                 display: true,
-                text: cat+' Warga Domisili Berdasarkan Wilayah'
+                text: 'Warga Domisili Desa '+nama+ ' Berdasarkan '+cat
             },
 			
         legend: {
@@ -473,6 +475,8 @@ const doughnutChart = document.getElementById('doughnutChart');
 						let hasil = JSON.parse(msg);
 						barChartVar.data.labels = hasil['label'];
 						barChartVar.data.datasets[0].data = hasil['data']
+						barChartVar.options.plugins.title.text = 'Warga Domisili Desa '+nama+' '+ $("#dusun option:selected").text() +' Berdasarkan '+cat;
+						doughnutChartVar.options.plugins.title.text = 'Warga Domisili Desa '+nama+' '+ $("#dusun option:selected").text() +' Berdasarkan '+cat;
 						barChartVar.update();
 						doughnutChartVar.data.labels = hasil['label'];
 						doughnutChartVar.data.datasets[0].data = hasil['data'];
@@ -539,7 +543,9 @@ const doughnutChart = document.getElementById('doughnutChart');
 					success: function(msg){
 						let hasil = JSON.parse(msg);
 						barChartVar.data.labels = hasil['label'];
-						barChartVar.data.datasets[0].data = hasil['data']
+						barChartVar.data.datasets[0].data = hasil['data'];
+						barChartVar.options.plugins.title.text = 'Warga Domisili Desa '+nama+' '+ $("#rw option:selected").text() +' Berdasarkan '+cat;
+						doughnutChartVar.options.plugins.title.text = 'Warga Domisili Desa '+nama+' '+ $("#rw option:selected").text() +' Berdasarkan '+cat;
 						barChartVar.update();
 						doughnutChartVar.data.labels = hasil['label'];
 						doughnutChartVar.data.datasets[0].data = hasil['data'];
@@ -570,7 +576,6 @@ const doughnutChart = document.getElementById('doughnutChart');
 				let id_rt = $('#rt').val();
 				let id_rw = $('#rw').val();
 				let id_dusun = $('#dusun').val();
-
 				$.ajax({
 					type : 'GET',
 					url: route.rt,
@@ -580,7 +585,9 @@ const doughnutChart = document.getElementById('doughnutChart');
 					success: function(msg){
 						let hasil = JSON.parse(msg);
 						barChartVar.data.labels = hasil['label'];
-						barChartVar.data.datasets[0].data = hasil['data']
+						barChartVar.data.datasets[0].data = hasil['data'];
+						barChartVar.options.plugins.title.text = 'Warga Domisili Desa '+nama+' '+ $("#rt option:selected").text() +' Berdasarkan '+cat;
+						doughnutChartVar.options.plugins.title.text = 'Warga Domisili Desa '+nama+' '+ $("#rt option:selected").text() +' Berdasarkan '+cat;
 						barChartVar.update();
 						doughnutChartVar.data.labels = hasil['label'];
 						doughnutChartVar.data.datasets[0].data = hasil['data'];

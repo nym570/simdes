@@ -31,7 +31,8 @@ class UsersDataTable extends DataTable
             <button class="btn btn-sm btn-warning dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Aksi
             </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">';              
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">';        
+            $btn = $btn.' <li><a class="dropdown-item open_modal_edit" data-user="'.route('users.get',$row).'"data-link="'.route('users.update',$row).'">Update</a></li>';
         $btn = $btn.'<li><a class="dropdown-item" data-email="'.$row->email.'" data-username="'.$row->username.'" href="'.route('password.email',$row).'" onclick="send(this)">Kirim Reset Password</a></li>';
         $btn = $btn.'<li><a class="dropdown-item" onclick="change(this)" href="'.route("users.status",$row).'">'.($row->is_active?"Nonaktifkan":"Aktifkan").'</a></li>';
             $btn = $btn.'</ul></div>';

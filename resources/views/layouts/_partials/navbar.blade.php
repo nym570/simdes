@@ -46,7 +46,7 @@
 				</a>
 				<ul class="dropdown-menu dropdown-menu-end">
 					<li>
-						<a class="dropdown-item" href="#">
+						<a class="dropdown-item" href="{{route('profil.index')}}">
 							<div class="d-flex">
 								<div class="flex-shrink-0 me-3">
 									<div class="avatar avatar-online">
@@ -71,9 +71,9 @@
 						<div class="dropdown-divider"></div>
 					</li>
 					<li>
-						<a class="dropdown-item" href="#">
-							<i class="bx bx-cog me-2"></i>
-							<span class="align-middle">Settings</span>
+						<a class="dropdown-item" href="{{route('profil.index')}}">
+							<i class="bx bx-user me-2"></i>
+							<span class="align-middle">Saya</span>
 						</a>
 					</li>
 					<li>

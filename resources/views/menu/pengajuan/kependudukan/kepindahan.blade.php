@@ -156,11 +156,7 @@
 		
 	$( document ).ready(function() {
 		
-		$.ajaxSetup({
-		headers: {
-			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-		}
-	});
+		
 	$('#ruta_pindah').hide();
 	$('#warga_pindah').addClass('d-none');
 	$('#warga_pindah').prop('required',false);
@@ -201,7 +197,13 @@ $(function(){
 				$.ajax({
 					type : 'POST',
 					url: "{{route('ruta.anggota-get')}}",
-					data : {id:<?=$ruta?>},
+					data : {id:<?=$ruta->id?>},
+					beforeSend: function(){
+						$('#loading').show();
+					},
+					complete: function(){
+						$('#loading').hide();
+					},
 					success: function(msg){
 						$('#nik_pindah').selectpicker('destroy');
 						$('#nik_pindah').html(msg);
@@ -230,6 +232,12 @@ $(function(){
 				type : 'GET',
 				url: "{{route('wilayah.get-kab')}}",
 				data : {'id_prov':id_prov},
+				beforeSend: function(){
+						$('#loading').show();
+					},
+					complete: function(){
+						$('#loading').hide();
+					},
 				success: function(msg){
 					$('#kabupaten_pindah').selectpicker('destroy');
 					$('#kabupaten_pindah').html(msg);
@@ -251,7 +259,12 @@ $(function(){
 				url: "{{route('wilayah.get-kec')}}",
 				
 				data : {id_kab:id_kab},
-
+				beforeSend: function(){
+						$('#loading').show();
+					},
+					complete: function(){
+						$('#loading').hide();
+					},
 				success: function(msg){
 					$('#kecamatan_pindah').selectpicker('destroy');
 					$('#kecamatan_pindah').html(msg);
@@ -272,7 +285,12 @@ $(function(){
 				url: "{{route('wilayah.get-des')}}",
 				
 				data : {id_kec:id_kec},
-
+				beforeSend: function(){
+						$('#loading').show();
+					},
+					complete: function(){
+						$('#loading').hide();
+					},
 				success: function(msg){
 					$('#desa_pindah').selectpicker('destroy');
 					$('#desa_pindah').html(msg);

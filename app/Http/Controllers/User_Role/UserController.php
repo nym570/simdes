@@ -12,6 +12,7 @@ use App\Http\Requests\UserRequest;
 use Spatie\Permission\Models\Role;
 use App\Rules\ValidateKK;
 use App\Rules\NIKExist;
+use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
 use App\Imports\UserImport;
@@ -195,7 +196,6 @@ class UserController extends Controller
 	public function update(Request $request, User $user)
 	{
 		$data = $request->validate([
-			'nama' => ['required','string'],
 			'email' => ['required','string','email','unique:users,email,'. $user->id],
 			'username' => ['required', 'string','unique:users,username,'. $user->id],
             
@@ -210,7 +210,24 @@ class UserController extends Controller
 			$user->update(['email_verified_at' => NULL]);
 		}
 
-		return to_route('users.show',$user)->withSuccess('Data berhasil diperbarui');
+		return back()->withSuccess('Data berhasil diperbarui');
+	}
+
+	public function get(User $user)
+    {
+		return json_encode($user);
+    }
+	public function password(Request $request, User $user)
+	{
+		$data = $request->validate([
+			'password' => ['required', 'string','confirmed',Password::min(8)->letters()->numbers()],
+            
+		]);
+		$data['password'] = Hash::make($data['password']);
+		$user->update($data);
+		Notification::send($user, new PasswordSend($request['password'],route('login')));
+
+		return back()->withSuccess('Password berhasil diperbarui');
 	}
 
 	public function status(Request $request, User $user)

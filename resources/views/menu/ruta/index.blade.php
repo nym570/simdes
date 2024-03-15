@@ -10,7 +10,7 @@
 			<div class="mb-4">
 				<!-- Button trigger modal -->
 
-@if(in_array('ketua rt',auth()->user()->getRoleNames()->toArray()))
+@if(auth()->user()->hasRole('ketua rt'))
 <button type="button" class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target="#addRuta">
 	Tambah Rumah Tangga
   </button>
@@ -96,6 +96,7 @@
 				$.ajax({
 					type : 'GET',
 					url: "{{route('get-warga-nonruta')}}",
+					
 					success: function(msg){
 						$('#kepala_ruta').selectpicker('destroy');
 						$('#kepala_ruta').html(msg);

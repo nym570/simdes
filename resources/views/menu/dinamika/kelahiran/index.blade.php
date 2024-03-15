@@ -9,7 +9,7 @@
 
 			
 				<!-- Button trigger modal -->
-@if(in_array('ketua rt',auth()->user()->getRoleNames()->toArray()))
+@if(auth()->user()->hasRole('ketua rt'))
 <div class="mb-4">
 <button type="button" class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target="#addLahir">
 	Tambah Data Kelahiran
@@ -351,8 +351,7 @@
 	@include('menu.dinamika._partials.show')
 	<!-- Modal -->
 
-	  <!--/ Create App Modal -->
-		</div>
+		
 	</div>
 </div>
 
@@ -425,131 +424,7 @@
 			time = 'T'+date[1].split('.')[0];
 			$('#waktu').prop('max', today+time);
 	});
-	
-	</script>
-@if(in_array('ketua rt',auth()->user()->getRoleNames()->toArray()))
-<script>
-	function verif(element) {
-		event.preventDefault()
-		let form = document.getElementById('verif-form');
-		form.setAttribute('action', element.getAttribute('href'))
-		swalConfirm('Yakin ingin verifikasi data kelahiran ?', `Setelah verifikasi, warga akan diubah status dan rutanya`, 'Ya! verif', () => {
-			form.submit()
-		})
-	}
-	
-	$(function(){
-		$(document).on('click','.open_modal_tolak',function(){
-				let link= $(this).attr('data-link');
-				$('#formMessage').attr('action',link);
-				$('#messageModal').modal('show');
-				
-			}); 
-			$('#provinsi-lahir').on('change',function(){
-				$('#provinsi-lahir').selectpicker('render');
-				let id_prov = $('#provinsi-lahir').val();
-
-				$.ajax({
-					type : 'GET',
-					url: "{{route('wilayah.get-kab')}}",
-					data : {'id_prov':id_prov},
-					success: function(msg){
-						$('#kabupaten-lahir').selectpicker('destroy');
-						$('#kabupaten-lahir').html(msg);
-						$('#kabupaten-lahir').selectpicker('render');
-					},
-					error: function (xhr) {
-						var err = JSON.parse(xhr.responseText);
-						alert(err.message);
-					}
-					
-				})
-			});
-			$('#kabupaten-lahir').on('change',function(){
-				$('#kabupaten-lahir').selectpicker('render');
-				let id_kab = $('#kabupaten-lahir').val();
-				let el = $("#kabupaten-lahir option:selected").text();
-				$('#tempat_lahir').val(el);
-
-				
-			});
-		});
-		$(function(){
-			$('#provinsi').on('change',function(){
-				$('#provinsi').selectpicker('render');
-				let id_prov = $('#provinsi').val();
-
-				
-				$.ajax({
-					type : 'GET',
-					url: "{{route('wilayah.get-kab')}}",
-					data : {'id_prov':id_prov},
-					success: function(msg){
-						$('#kabupaten').selectpicker('destroy');
-						$('#kabupaten').html(msg);
-						$('#kabupaten').selectpicker('render');
-					},
-					error: function (xhr) {
-						var err = JSON.parse(xhr.responseText);
-						alert(err.message);
-					}
-					
-				})
-			});
-			$('#kabupaten').on('change',function(){
-				$('#kabupaten').selectpicker('render');
-				let id_kab = $('#kabupaten').val();
-
-
-				$.ajax({
-					type : 'GET',
-					url: "{{route('wilayah.get-kec')}}",
-					
-					data : {id_kab:id_kab},
-
-					success: function(msg){
-						$('#kecamatan').selectpicker('destroy');
-						$('#kecamatan').html(msg);
-						$('#kecamatan').selectpicker('render');
-					},
-					error: function (xhr) {
-						var err = JSON.parse(xhr.responseText);
-						alert(err.message);
-					}
-					
-				})
-			});
-			$('#kecamatan').on('change',function(){
-				$('#kecamatan').selectpicker('render');
-				let id_kec = $('#kecamatan').val();
-
-				$.ajax({
-					type : 'GET',
-					url: "{{route('wilayah.get-des')}}",
-					
-					data : {id_kec:id_kec},
-
-					success: function(msg){
-						$('#desa').selectpicker('destroy');
-						$('#desa').html(msg);
-						$('#desa').selectpicker('render');
-						
-					},
-					error: function (xhr) {
-						var err = JSON.parse(xhr.responseText);
-						alert(err.message);
-					}
-					
-				})
-			});
-			$('#desa').on('change',function(){
-				$('#desa').selectpicker('render');
-				let id_desa = $('#desa').val();
-
-				$('#kode_wilayah').val(id_desa);
-			});
-		});
-		$(document).on('click','.open_modal_lihat',function(){
+	$(document).on('click','.open_modal_lihat',function(){
 			$('#biodata').empty();
 				let url= $(this).val();
 				$.ajax({
@@ -600,8 +475,155 @@
 				});
 				
 			}); 
+	</script>
+@if(in_array('ketua rt',auth()->user()->getRoleNames()->toArray()))
+<script>
+	function verif(element) {
+		event.preventDefault()
+		let form = document.getElementById('verif-form');
+		form.setAttribute('action', element.getAttribute('href'))
+		swalConfirm('Yakin ingin verifikasi data kelahiran ?', `Setelah verifikasi, warga akan diubah status dan rutanya`, 'Ya! verif', () => {
+			form.submit()
+		})
+	}
+	
+	$(function(){
+		$(document).on('click','.open_modal_tolak',function(){
+				let link= $(this).attr('data-link');
+				$('#formMessage').attr('action',link);
+				$('#messageModal').modal('show');
+				
+			}); 
+			$('#provinsi-lahir').on('change',function(){
+				$('#provinsi-lahir').selectpicker('render');
+				let id_prov = $('#provinsi-lahir').val();
+
+				$.ajax({
+					type : 'GET',
+					url: "{{route('wilayah.get-kab')}}",
+					data : {'id_prov':id_prov},
+					beforeSend: function(){
+						$('#loading').show();
+					},
+					complete: function(){
+						$('#loading').hide();
+					},
+					success: function(msg){
+						$('#kabupaten-lahir').selectpicker('destroy');
+						$('#kabupaten-lahir').html(msg);
+						$('#kabupaten-lahir').selectpicker('render');
+					},
+					error: function (xhr) {
+						var err = JSON.parse(xhr.responseText);
+						alert(err.message);
+					}
+					
+				})
+			});
+			$('#kabupaten-lahir').on('change',function(){
+				$('#kabupaten-lahir').selectpicker('render');
+				let id_kab = $('#kabupaten-lahir').val();
+				let el = $("#kabupaten-lahir option:selected").text();
+				$('#tempat_lahir').val(el);
+
+				
+			});
+		});
+		$(function(){
+			$('#provinsi').on('change',function(){
+				$('#provinsi').selectpicker('render');
+				let id_prov = $('#provinsi').val();
+
+				
+				$.ajax({
+					type : 'GET',
+					url: "{{route('wilayah.get-kab')}}",
+					data : {'id_prov':id_prov},
+					beforeSend: function(){
+						$('#loading').show();
+					},
+					complete: function(){
+						$('#loading').hide();
+					},
+					success: function(msg){
+						$('#kabupaten').selectpicker('destroy');
+						$('#kabupaten').html(msg);
+						$('#kabupaten').selectpicker('render');
+					},
+					error: function (xhr) {
+						var err = JSON.parse(xhr.responseText);
+						alert(err.message);
+					}
+					
+				})
+			});
+			$('#kabupaten').on('change',function(){
+				$('#kabupaten').selectpicker('render');
+				let id_kab = $('#kabupaten').val();
+
+
+				$.ajax({
+					type : 'GET',
+					url: "{{route('wilayah.get-kec')}}",
+					
+					data : {id_kab:id_kab},
+					beforeSend: function(){
+						$('#loading').show();
+					},
+					complete: function(){
+						$('#loading').hide();
+					},
+
+					success: function(msg){
+						$('#kecamatan').selectpicker('destroy');
+						$('#kecamatan').html(msg);
+						$('#kecamatan').selectpicker('render');
+					},
+					error: function (xhr) {
+						var err = JSON.parse(xhr.responseText);
+						alert(err.message);
+					}
+					
+				})
+			});
+			$('#kecamatan').on('change',function(){
+				$('#kecamatan').selectpicker('render');
+				let id_kec = $('#kecamatan').val();
+
+				$.ajax({
+					type : 'GET',
+					url: "{{route('wilayah.get-des')}}",
+					
+					data : {id_kec:id_kec},
+
+					beforeSend: function(){
+						$('#loading').show();
+					},
+					complete: function(){
+						$('#loading').hide();
+					},
+					success: function(msg){
+						$('#desa').selectpicker('destroy');
+						$('#desa').html(msg);
+						$('#desa').selectpicker('render');
+						
+					},
+					error: function (xhr) {
+						var err = JSON.parse(xhr.responseText);
+						alert(err.message);
+					}
+					
+				})
+			});
+			$('#desa').on('change',function(){
+				$('#desa').selectpicker('render');
+				let id_desa = $('#desa').val();
+
+				$('#kode_wilayah').val(id_desa);
+			});
+		});
+		
 </script>
-@endif
 <script>
 	/**
  *  Modal Example Wizard
@@ -655,6 +677,8 @@ $(function () {
 });
 
 </script>
+@endif
+
 
 
 

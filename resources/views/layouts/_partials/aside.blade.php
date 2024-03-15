@@ -112,7 +112,8 @@
 		</li>
 		
 @auth
-	@if(!empty(array_intersect(['ketua rt','ketua rw','kependudukan','kepala desa','kepala dusun'],auth()->user()->getRoleNames()->toArray())))
+@if(auth()->user()->hasRole(['ketua rt','ketua rw','kependudukan','kepala desa','kepala dusun']))
+
 		<li class="menu-header small text-uppercase">
 			<span class="menu-header-text">
 				{{ __('Manajemen Warga') }}

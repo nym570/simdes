@@ -18,6 +18,7 @@ use App\Models\User;
 use App\Models\Ruta;
 use App\Models\AnggotaRuta;
 use Jenssegers\Date\Date;
+use App\DataTables\WargaAnggotaRutaDataTable;
 
 class PengajuanDinamika extends Controller
 {
@@ -25,9 +26,9 @@ class PengajuanDinamika extends Controller
     {
 
         $title = 'Layanan Kependudukan Warga';
-        $ruta = Ruta::whereHas("anggota_ruta", function(Builder $builder)  {
+        $ruta = Ruta::with('anggota_ruta')->whereHas("anggota_ruta", function(Builder $builder)  {
             $builder->where('anggota_nik', '=', auth()->user()->warga->nik);
-        })->first()->id;
+        })->first();
 		return view('menu.pengajuan.kependudukan.index',compact(['title','ruta']));
     }
     public function kelahiran(Request $request){
@@ -168,4 +169,19 @@ class PengajuanDinamika extends Controller
         }
         return back()->withSuccess('Data Kepindahan berhasil ditambahkan');
     }
+    public function ruta(Ruta $ruta,WargaAnggotaRutaDataTable $dataTable)
+    {
+
+        $title = 'Rumah Tangga';
+        return $dataTable->with('ruta_id', $ruta->id)->render('menu.pengajuan.kependudukan.ruta',compact('title','ruta'));
+    }
+    public function anggotaShow(Warga $warga,WargaAnggotaRutaDataTable $dataTable)
+    {
+        $ruta = Ruta::with('anggota_ruta')->whereHas("anggota_ruta", function(Builder $builder) use($warga)  {
+            $builder->where('anggota_nik', '=', $warga->nik);
+        })->first();
+        $title = $warga->nama;
+        return view('menu.pengajuan.kependudukan.anggota_ruta.index',compact(['title','warga','ruta']));
+    }
+    
 }

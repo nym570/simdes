@@ -6,7 +6,7 @@
 			<h5 class="card-title">
 				{{ __('Daftar Kedatangan') }}
 			</h5>
-@if(in_array('ketua rt',auth()->user()->getRoleNames()->toArray()))
+@if(auth()->user()->hasRole('ketua rt'))
 			<div class="mb-4">
 				<!-- Button trigger modal -->
 <a class="btn btn-primary mb-4" href="{{route('dinamika.kedatangan.create')}}">
@@ -31,7 +31,7 @@
 
 
 		
-		
+	@if(auth()->user()->hasRole('ketua rt'))	
 <script>
 	function verif(element) {
 		event.preventDefault()
@@ -41,7 +41,12 @@
 			form.submit()
 		})
 	}
-	$(document).on('click','.open_modal_lihat',function(){
+			
+</script>
+
+@endif
+<script>
+$(document).on('click','.open_modal_lihat',function(){
 			$('#biodata').empty();
 				let url= $(this).val();
 				$.ajax({
@@ -86,10 +91,8 @@
 					
 				});
 				
-			}); 		
+			}); 
 </script>
-
-
 
 
 @endsection

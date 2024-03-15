@@ -264,7 +264,6 @@
 					url: linkData,
 					success: function(msg){
 						let data = JSON.parse(msg);
-						console.log(data);
 						$('#nama_edit').val(data.nama);
 						$('#username_edit').val(data.username);
 						$('#email_edit').val(data.email);

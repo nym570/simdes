@@ -6,7 +6,7 @@
 			<h5 class="card-title">
 				{{ __('Daftar Kematian') }}
 			</h5>
-@if(in_array('ketua rt',auth()->user()->getRoleNames()->toArray()))
+@if(auth()->user()->hasRole('ketua rt'))
 			<div class="mb-4">
 				<!-- Button trigger modal -->
 <button type="button" class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target="#addMati">
@@ -161,7 +161,7 @@
 		@method("PUT")
 	</form>
 
-
+	@if(auth()->user()->hasRole('ketua rt'))
 <script>
 		
 		$( document ).ready(function() {
@@ -198,6 +198,20 @@
 				$('#messageModal').modal('show');
 				
 	}); 
+	function verif(element) {
+		event.preventDefault()
+		
+		let form = document.getElementById('verif-form');
+		form.setAttribute('action', element.getAttribute('href'))
+		swalConfirm('Yakin ingin verifikasi data kematian ?', `Setelah verifikasi, warga akan diubah status dan rutanya`, 'Ya! verif', () => {
+			form.submit()
+		})
+	}
+	
+		
+	</script>
+@endif
+<script>
 	$(document).on('click','.open_modal_lihat',function(){
 			$('#biodata').empty();
 				let url= $(this).val();
@@ -237,18 +251,6 @@
 				});
 				
 			}); 		
-		
-	</script>
-<script>
-	function verif(element) {
-		event.preventDefault()
-		
-		let form = document.getElementById('verif-form');
-		form.setAttribute('action', element.getAttribute('href'))
-		swalConfirm('Yakin ingin verifikasi data kematian ?', `Setelah verifikasi, warga akan diubah status dan rutanya`, 'Ya! verif', () => {
-			form.submit()
-		})
-	}
 </script>
 
 

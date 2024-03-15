@@ -48,17 +48,26 @@
 					<i class='bx bxs-user-detail bx-lg'></i>
 					<h5 class="card-title">Rumah Tangga</h5>
 					<p class="card-text">Atur anggota rumah tangga anda</p>
-					<a href="#" class="btn btn-sm btn-primary">Ubah!</a>
+					<a href="{{route('pengajuan.warga.ruta.index',$ruta)}}" class="btn btn-sm btn-primary">Ubah!</a>
 				  </div>
 				</div>
 			 </div>
 		</div>
-
+		<script>
+			$( document ).ready(function() {
+					$.ajaxSetup({
+					headers: {
+						'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+					}
+				});
+			});
+		</script>
 		@include('menu.pengajuan.kependudukan.kelahiran')
 		@include('menu.pengajuan.kependudukan.kematian')
 		@include('menu.pengajuan.kependudukan.kepindahan')
 	</div>
 </div>
+
 @endif
 @endsection
 

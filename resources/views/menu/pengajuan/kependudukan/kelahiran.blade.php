@@ -305,11 +305,7 @@
 <script>
 		
 		$( document ).ready(function() {
-			$.ajaxSetup({
-			headers: {
-				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-			}
-		});
+			
 		$.ajax({
 					type : 'GET',
 					url: "{{route('wilayah.get-prov')}}",
@@ -379,6 +375,12 @@
 					type : 'GET',
 					url: "{{route('wilayah.get-kab')}}",
 					data : {'id_prov':id_prov},
+					beforeSend: function(){
+						$('#loading').show();
+					},
+					complete: function(){
+						$('#loading').hide();
+					},
 					success: function(msg){
 						$('#kabupaten-lahir').selectpicker('destroy');
 						$('#kabupaten-lahir').html(msg);
@@ -410,6 +412,12 @@
 					type : 'GET',
 					url: "{{route('wilayah.get-kab')}}",
 					data : {'id_prov':id_prov},
+					beforeSend: function(){
+						$('#loading').show();
+					},
+					complete: function(){
+						$('#loading').hide();
+					},
 					success: function(msg){
 						$('#kabupaten').selectpicker('destroy');
 						$('#kabupaten').html(msg);
@@ -430,7 +438,12 @@
 				$.ajax({
 					type : 'GET',
 					url: "{{route('wilayah.get-kec')}}",
-					
+					beforeSend: function(){
+						$('#loading').show();
+					},
+					complete: function(){
+						$('#loading').hide();
+					},
 					data : {id_kab:id_kab},
 
 					success: function(msg){
@@ -454,7 +467,12 @@
 					url: "{{route('wilayah.get-des')}}",
 					
 					data : {id_kec:id_kec},
-
+					beforeSend: function(){
+						$('#loading').show();
+					},
+					complete: function(){
+						$('#loading').hide();
+					},
 					success: function(msg){
 						$('#desa').selectpicker('destroy');
 						$('#desa').html(msg);

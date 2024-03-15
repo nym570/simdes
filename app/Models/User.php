@@ -13,6 +13,7 @@ use App\Http\Traits\Hashidable;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Models\Activity;
+use Illuminate\Support\Carbon;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -43,7 +44,9 @@ class User extends Authenticatable implements MustVerifyEmail
 	 */
 	protected $casts = [
 		'email_verified_at' => 'datetime',
+        
 	];
+
 
 	public function getActivitylogOptions(): LogOptions
     {
