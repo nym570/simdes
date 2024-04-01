@@ -16,6 +16,8 @@ use App\Models\Kelahiran;
 use App\Models\Kematian;
 use App\Models\Kedatangan;
 use App\Models\Kepindahan;
+use App\Models\Aspirasi;
+use App\Models\BalasAspirasi;
 
 return [
 
@@ -113,6 +115,14 @@ return [
         Kedatangan::class => [
             'salt' => Kedatangan::class.'dinamika-kedatangan',
             'length' => 10,
+        ],
+        Aspirasi::class => [
+            'salt' => Aspirasi::class.'aspirasi',
+            'length' => 7,
+        ],
+        BalasAspirasi::class => [
+            'salt' => BalasAspirasi::class.'balas-aspirasi',
+            'length' => 7,
         ],
 
         // 'alternative' => [

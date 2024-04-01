@@ -186,7 +186,7 @@ return [
         Vinkla\Hashids\HashidsServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Jenssegers\Date\DateServiceProvider::class,
-        
+        Davcpas1234\LaravelPdfViewer\LaravelPdfViewerServiceProvider::class,
         
 
     ],

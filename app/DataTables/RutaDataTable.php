@@ -38,7 +38,7 @@ class RutaDataTable extends DataTable
                 
                 return $btn;
             })
-            ->addColumn('kepala keluarga', function($row){
+            ->addColumn('kepala ruta', function($row){
                 $kepala = $row->anggota_ruta->where('hubungan','Kepala Keluarga')->first()->warga;
                 return $kepala->nama.' ['.$kepala->nik.']';
             })
@@ -112,7 +112,7 @@ class RutaDataTable extends DataTable
                 ->addClass('text-center'),
             Column::make('rt.name')->title('RT')->data('rt.name'),
             Column::make('alamat_domisili')->title('Alamat Domisili'),
-            Column::computed('kepala keluarga'),
+            Column::computed('kepala ruta'),
             Column::make('jumlah_art')->title('Jumlah Anggota'),
             
         ];

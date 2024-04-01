@@ -61,7 +61,9 @@
 										{{ user()->warga->nik }}
 									</small>
 									<small class="text-muted">
-										User
+										@foreach (user()->getRoleNames() as $item)
+											<span class="badge bg-primary">{{$item}}</span>
+										@endforeach
 									</small>
 								</div>
 							</div>

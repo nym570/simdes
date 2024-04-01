@@ -76,9 +76,13 @@
 					  		{{$item->subject->nik}}
 						@else
 							@if ($item->log_name== 'Admin' || $item->log_name == 'User'|| $item->log_name == 'Role')
-								{{$item->subject->username}}
+								{{$item->subject ? $item->subject->username : ''}}
 							@else
+							@isset($item->subject->name)
 							{{$item->subject->name}}
+							@endisset
+							
+							
 						@endif
 					  @endif
 					</small>

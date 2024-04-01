@@ -107,7 +107,7 @@
 
 		<li class="menu-header small text-uppercase">
 			<span class="menu-header-text">
-				{{ __('Data Master') }}
+				{{ __('log') }}
 			</span>
 		</li>
 

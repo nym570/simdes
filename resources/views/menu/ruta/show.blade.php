@@ -93,7 +93,7 @@
   @if(is_null($kepala)||$ruta->jumlah_art>1)
 
   <button type="button" class="btn btn-warning" id="buttonKepala">
-	Ganti Kepala Keluarga
+	Ganti Kepala Rumah Tangga
   </button>
   <!-- Modal -->
   <div class="modal fade" id="updateKepala" tabindex="-1" aria-hidden="true">

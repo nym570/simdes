@@ -45,7 +45,6 @@ return new class extends Migration
             $table->boolean('verifikasi')->default(false);
             $table->string('bukti');
             $table->string('keterangan')->nullable();
-            $table->string('pelapor_nik');
             $table->timestamps();
         });
         Schema::create('kedatangan', function (Blueprint $table) {
@@ -54,11 +53,9 @@ return new class extends Migration
             $table->boolean('verifikasi')->default(false);
             $table->string('bukti');
             $table->string('keterangan')->nullable();
-            $table->string('kepala_nik');
+            $table->string('kepala');
             $table->boolean('is_new');
             $table->string('alamat_domisili')->nullable();
-            $table->unsignedBigInteger('rt_id')->nullable();
-            $table->foreign('rt_id')->references('id')->on('rt')->constrained();
             $table->timestamps();
         });
         Schema::create('kepindahan', function (Blueprint $table) {

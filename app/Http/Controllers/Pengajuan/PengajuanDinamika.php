@@ -48,7 +48,7 @@ class PengajuanDinamika extends Controller
             'kode_wilayah_ktp' => ['required', 'string','regex:/[0-9]{2}.[0-9]{2}.[0-9]{4}/u'],
             'alamat_ktp' => ['required', 'string'],
             'tempat' => ['required','string'],
-            'keterangan' => ['string'],
+            'keterangan' => [],
             'waktu' => ['required','date','before_or_equal:today'],
             'bukti' => ['required','mimes:jpg,png,pdf','max:1024']
             
@@ -123,8 +123,8 @@ class PengajuanDinamika extends Controller
             'waktu' => ['required','date','before_or_equal:today'],
             'penyebab' => ['required','string'],
             'saksi' => ['required','string'],
-            'pelapor_nik' => ['required','string','size:16'],
-            'bukti' => ['required','mimes:jpg,png,pdf','max:1024']
+            'bukti' => ['required','mimes:jpg,png,pdf','max:1024'],
+            'keterangan' => []
             
 		]);
         

@@ -166,8 +166,11 @@ class WargaDataTable extends DataTable
                                     .unique()
                                     .sort()
                                     .each(function (d, j) {
-                                        select.add(new Option(d));
+                                       select.add(new Option(d));
                                     });
+
+                                    
+
                                 });
                         }",
                         

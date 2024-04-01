@@ -49,24 +49,22 @@ class KedatanganController extends Controller
         $desa = Desa::get()->first();
         if($request->file('bukti')){
             $extension = $request->file('bukti')->extension();
-            $data['bukti'] = Storage::disk('public')->putFileAs('dinamika', $request->file('bukti'),date('Ymd').'_kedatangan_'.$data['kepala_nik'].'.'.$extension);
+            $data['bukti'] = Storage::disk('public')->putFileAs('dinamika', $request->file('bukti'),date('Ymd').'_kedatangan_'.$data['kepala'].'.'.$extension);
         }
         $pendatang = json_decode($data['pendatang']);
         $datang =[
             'waktu' => $data['waktu'],
             'bukti' => $data['bukti'],
             'keterangan' => $data['keterangan'],
-            'is_new' => $data['is_new_ruta'],
-            'kepala_nik' => $data['kepala_nik'],
+            'kepala' => $data['kepala'],
         ];
         if($data['is_new_ruta']==true){
             $datang['is_new'] = 1;
-            $datang['rt_id'] = auth()->user()->warga->rt_id;
             $datang['alamat_domisili'] = $data['alamat_domisili'];
             $datang['jumlah_art'] = count($pendatang);
         }
         else{
-            $datang['is_new_ruta'] = 0;
+            $datang['is_new'] = 0;
         }
         
         $kedatangan = Kedatangan::create($datang);
@@ -111,53 +109,68 @@ class KedatanganController extends Controller
         if($kedatangan->is_new){
             $validated= [
                 'alamat_domisili' => $kedatangan->alamat_domisili,
-                'rt_id' => $kedatangan->rt_id,
+                'rt_id' => auth()->user()->warga->rt_id,
                 'jumlah_art' => 0,
             ];
             
             $ruta = Ruta::create($validated);
-            
+            foreach($kedatangan->dinamika as $item){
+                $warga = Warga::where('nik',$item->nik)->first();
+                $count['jumlah_art']++;
+                
+                $warga->update(['status'=>'warga']);
+                if($warga->nik == $kedatangan['kepala']){
+                    $art= [
+                        'anggota_nik' => $warga->nik,
+                        'hubungan' => 'Kepala Keluarga',
+                        'ruta_id' => $ruta->id,
+                    ];
+                    $anggota_ruta = AnggotaRuta::create($art);
+                }
+                else{
+                    $art= [
+                        'anggota_nik' => $warga->nik,
+                        'hubungan' => 'Lainnya',
+                        'ruta_id' => $ruta->id,
+                    ];
+                    $anggota_ruta = AnggotaRuta::create($art);
+                }
+                
+                
+                
+            }
+            $ruta->update($count);
+            $kedatangan->update(['verifikasi'=>true,'kepala'=>$ruta->id]);
         }
         else{
-            $ruta = Ruta::where('id',$kedatangan->kepala_nik)->first();
+            $ruta = Ruta::where('id',$kedatangan->kepala)->first();
             $count['jumlah_art'] = $ruta['jumlah_art'];
+            foreach($kedatangan->dinamika as $item){
+                $warga = Warga::where('nik',$item->nik)->first();
+                $count['jumlah_art']++;
+                
+                $warga->update(['status'=>'warga']);
+                
+                    $art= [
+                        'anggota_nik' => $warga->nik,
+                        'hubungan' => 'Lainnya',
+                        'ruta_id' => $ruta->id,
+                    ];
+                    $anggota_ruta = AnggotaRuta::create($art);
+            }
+            $ruta->update($count);
+            $kedatangan->update(['verifikasi'=>true]);
         }
 
-        foreach($kedatangan->dinamika as $item){
-            $warga = Warga::where('nik',$item->nik)->first();
-            $count['jumlah_art']++;
-            
-            $warga->update(['status'=>'warga']);
-            if($warga->nik == $kedatangan['kepala_nik']){
-                $art= [
-                    'anggota_nik' => $warga->nik,
-                    'hubungan' => 'Kepala Keluarga',
-                    'ruta_id' => $ruta->id,
-                ];
-                $anggota_ruta = AnggotaRuta::create($art);
-            }
-            else{
-                $art= [
-                    'anggota_nik' => $warga->nik,
-                    'hubungan' => 'Lainnya',
-                    'ruta_id' => $ruta->id,
-                ];
-                $anggota_ruta = AnggotaRuta::create($art);
-            }
-            
-            
-            
-        }
-        $ruta->update($count);
-        $kedatangan->update(['verifikasi'=>true]);
+       
         $hal ='Data Kedatangan diverifikasi';
-        $kepala_ruta = User::whereHas("warga.anggota_ruta", function(Builder $builder) use($ruta) {
-            $builder->where('ruta_id', '=', $ruta->id)->where('hubungan','Kepala Keluarga');
-        })->first();
-        if($kepala_ruta){
-            $message = 'Data kedatangan untuk '.$count['jumlah_art'].' berhasil ditambahkan dan terdaftar sebagai warga anggota rumah tangga anda.';
-            Notification::send($kepala_ruta, new Message('ketua RT',$hal,$message,route('login')));
-        }
+        // $kepala_ruta = User::whereHas("warga.anggota_ruta", function(Builder $builder) use($ruta) {
+        //     $builder->where('ruta_id', '=', $ruta->id)->where('hubungan','Kepala Keluarga');
+        // })->first();
+        // if($kepala_ruta){
+        //     $message = 'Data kedatangan untuk '.$count['jumlah_art'].' berhasil ditambahkan dan terdaftar sebagai warga anggota rumah tangga anda.';
+        //     Notification::send($kepala_ruta, new Message('ketua RT',$hal,$message,route('login')));
+        // }
         return redirect()->route('ruta.show',$ruta)->withSuccess('Verifikasi kedatangan berhasil, Silahkan ubah silsilah rumah tangga');
     }
 
@@ -183,13 +196,13 @@ class KedatanganController extends Controller
     public function get(Kedatangan $kedatangan)
     {
         if($kedatangan->is_new){
-            $kepala = Warga::where('nik',$kedatangan->kepala_nik)->first();
+            $kepala = Warga::where('nik',$kedatangan->kepala)->first();
             $kedatangan['kepala_nik'] = $kepala->nik;
             $kedatangan['kepala_nama'] = $kepala->nama;
         }
         else{
             $kepala = Warga::whereHas("anggota_ruta", function(Builder $builder) use($kedatangan) {
-                $builder->where('ruta_id', '=', $kedatangan->kepala_nik)->where('hubungan','Kepala Keluarga');
+                $builder->where('ruta_id', '=', $kedatangan->kepala)->where('hubungan','Kepala Keluarga');
             })->first();
             $kedatangan['kepala_nik'] = $kepala->nik;
             $kedatangan['kepala_nama'] = $kepala->nama;

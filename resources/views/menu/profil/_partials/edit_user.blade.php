@@ -20,7 +20,7 @@
 				<div class="row">
 				  <div class="col mb-3">
 					<x-label for="username" :value="__('Username')" />
-					<x-input type="text" name="username" id="username" :placeholder="__('Username disarankan menggunakan nik')" value="{{old('username')? old('username') : auth()->user()->username}}" />
+					<x-input type="text" name="username" id="username" :placeholder="__('Username disarankan menggunakan nik')" value="{{old('username')? old('username') : auth()->user()->username}}" readonly />
 					<x-invalid error="username" />
 				  </div>
 				</div>

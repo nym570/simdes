@@ -61,7 +61,7 @@ class KelahiranController extends Controller
                 'kode_wilayah_ktp' => ['required', 'string','regex:/[0-9]{2}.[0-9]{2}.[0-9]{4}/u'],
                 'alamat_ktp' => ['required', 'string'],
                 'tempat' => ['required','string'],
-                'keterangan' => ['string'],
+                'keterangan' => [],
                 'waktu' => ['required','date','before_or_equal:today'],
                 'bukti' => ['required','mimes:jpg,png,pdf','max:1024']
                 
@@ -185,14 +185,14 @@ class KelahiranController extends Controller
             ];
         $anggota_ruta = AnggotaRuta::create($anggota);
         $ruta->update($temp);
-        $hal ='Data Kelahiran disetujui';
-        $kepala_ruta = User::whereHas("warga.anggota_ruta", function(Builder $builder) use($kelahiran) {
-            $builder->where('ruta_id', '=', $kelahiran->ruta_id)->where('hubungan','Kepala Keluarga');
-        })->first();
-        if($kepala_ruta){
-            $message = 'Data kelahiran untuk '.$warga->nama.'['.$warga->nik.'] berhasil ditambahkan dan terdaftar sebagai warga anggota rumah tangga anda.';
-            Notification::send($kepala_ruta, new Message('ketua RT',$hal,$message,route('login')));
-        }
+        // $hal ='Data Kelahiran disetujui';
+        // $kepala_ruta = User::whereHas("warga.anggota_ruta", function(Builder $builder) use($kelahiran) {
+        //     $builder->where('ruta_id', '=', $kelahiran->ruta_id)->where('hubungan','Kepala Keluarga');
+        // })->first();
+        // if($kepala_ruta){
+        //     $message = 'Data kelahiran untuk '.$warga->nama.'['.$warga->nik.'] berhasil ditambahkan dan terdaftar sebagai warga anggota rumah tangga anda.';
+        //     Notification::send($kepala_ruta, new Message('ketua RT',$hal,$message,route('login')));
+        // }
             
         
         

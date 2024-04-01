@@ -149,10 +149,10 @@ class DatabaseSeeder extends Seeder
 		$hubungan = [
             ['name'=>'Kepala Keluarga'],
 			['name'=>'Suami/Istri'],
+			['name'=>'Orang Tua'],
 			['name'=>'Anak'],
 			['name'=>'Menantu'],
 			['name'=>'Cucu'],
-			['name'=>'Orang Tua'],
 			['name'=>'Mertua'],
 			['name'=>'Famili Lain'],
 			['name'=>'Pembantu'],

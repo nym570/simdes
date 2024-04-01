@@ -17,6 +17,9 @@ use App\Http\Controllers\Warga\Dinamika\KematianController;
 use App\Http\Controllers\Warga\Dinamika\KepindahanController;
 use App\Http\Controllers\Warga\Dinamika\KedatanganController;
 use App\Http\Controllers\Pengajuan\PengajuanDinamika;
+use App\Http\Controllers\Pengajuan\PengajuanAspirasi;
+use App\Http\Controllers\Layanan\AspirasiController;
+use App\Http\Controllers\Layanan\BalasAspirasiController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MasterController;
 use App\Http\Controllers\StatistikWargaController;
@@ -167,6 +170,14 @@ Route::middleware(['admin.auth','admin.verified'])->group(function () {
 });
 
 Route::middleware(['auth','verified'])->group(function () {
+	Route::middleware(['role:ketua rt|ketua rw|bpd|kepala dusun|kepala desa'])->group(function () {
+		Route::controller(AspirasiController::class)->name('aspirasi.')->group(function () {
+			Route::get('/aspirasi', 'index')->name('index');
+			Route::get('/aspirasi/{aspirasi}/show', 'show')->name('show');
+			
+		});
+	});
+
 	Route::middleware(['role:ketua rt|ketua rw|kependudukan|kepala dusun|kepala desa'])->group(function () {
 		
 		Route::controller(WargaController::class)->name('warga.')->group(function () {
@@ -228,9 +239,9 @@ Route::middleware(['auth','verified'])->group(function () {
 			Route::post('/ruta', 'store')->name('store');
 			Route::get('/ruta/{ruta}/edit', 'edit')->name('edit');
 			Route::put('/ruta/{ruta}/update', 'update')->name('update');
-			Route::put('/ruta/anggota/{anggota_ruta}/update', 'anggotaUpdate')->name('anggota.update');
+			Route::put('/ruta/anggota-ruta/{anggota_ruta}/update', 'anggotaUpdate')->name('anggota.update');
 			Route::delete('/ruta/{ruta}/delete', 'destroy')->name('delete');
-			Route::delete('/ruta/anggota/{anggota_ruta}/delete', 'anggotaDestroy')->name('anggota.delete');
+			Route::delete('/ruta/anggota-ruta/{anggota_ruta}/delete', 'anggotaDestroy')->name('anggota.delete');
 			Route::post('/ruta/{ruta}/anggota', 'storeAnggota')->name('anggota.store');
 			Route::post('/ruta/{ruta}/kepala', 'updateKepala')->name('anggota.update-kepala');
 			Route::post('/ruta/import', 'import')->name('import');
@@ -262,6 +273,12 @@ Route::middleware(['auth','verified'])->group(function () {
 	});
 
 	Route::middleware(['role:warga'])->name('pengajuan.warga.')->group(function () {
+		Route::controller(PengajuanAspirasi::class)->name('aspirasi.')->group(function () {
+			Route::get('/pengajuan/aspirasi', 'index')->name('index');
+			Route::post('/pengajuan/aspirasi', 'store')->name('store');
+			Route::get('/pengajuan/aspirasi/{aspirasi}/show', 'show')->name('show');
+			
+		});
 		Route::controller(PengajuanDinamika::class)->name('kependudukan.')->group(function () {
 			Route::get('/pengajuan/kependudukan', 'index')->name('index');
 			Route::post('/pengajuan/kelahiran', 'kelahiran')->name('kelahiran.store');
@@ -323,7 +340,11 @@ Route::middleware(['auth','verified'])->group(function () {
 		Route::post('/ruta/anggota', 'getAnggota')->name('anggota-get');
 	});
 
-
+	Route::controller(BalasAspirasiController::class)->name('balas_aspirasi.')->group(function () {
+		Route::post('/balas', 'store')->name('store');
+	
+		
+	});
 });
 
 
@@ -369,6 +390,7 @@ Route::controller(MasterController::class)->name('master.')->group(function () {
 	Route::get('/master/get-hubungan', 'getHubungan')->name('ruta.get-hubungan');
 	Route::get('/master/get-pendidikan', 'getPendidikan')->name('identitas.get-pendidikan');
 	Route::get('/master/get-pekerjaan', 'getPekerjaan')->name('identitas.get-pekerjaan');
+	Route::get('/master/get-kategori', 'getKategori')->name('aspirasi.get-kategori');
 });
 
 

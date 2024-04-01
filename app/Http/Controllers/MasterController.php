@@ -46,4 +46,13 @@ class MasterController extends Controller
             }
         }
     }
+    public function getKategori()
+    {
+        $data = DB::table('master_category')->get();
+        if($data){
+            foreach($data as $item){
+                echo "<option data-tokens='".$item->name."' value='".$item->name."'>".$item->name."</option>";
+            }
+        }
+    }
 }

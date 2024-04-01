@@ -123,6 +123,65 @@
 
 		
 		
+		<li class="menu-item {{ menuIsActive('aspirasi.*') }}">
+			<a href="{{ route('aspirasi.index') }}" class="menu-link">
+				<i class="menu-icon tf-icons bx bx-chat"></i>
+				<div data-i18n="Aspirasi">
+					{{ __('Aspirasi') }}
+				</div>
+			</a>
+		</li>
+
+		<li class="menu-item">
+			<a class="menu-link menu-toggle" href="javascript:void(0)"><i class="menu-icon tf-icons bx bx-landmark"></i>
+			<div>
+			  Dinamika Penduduk
+			</div></a>
+			<ul class="menu-sub">
+				<li class="menu-item {{ menuIsActive('dinamika.kelahiran.*') }}">
+					<a href="{{ route('dinamika.kelahiran.index') }}" class="menu-link">
+						<div data-i18n="Analytics">
+							{{ __('Kelahiran') }}
+						</div>
+					</a>
+				</li>
+				<li class="menu-item {{ menuIsActive('dinamika.kematian.*') }}">
+					<a href="{{ route('dinamika.kematian.index') }}" class="menu-link">
+						<div data-i18n="Mati">
+							{{ __('Kematian') }}
+						</div>
+					</a>
+				  </li>
+				<li class="menu-item {{ menuIsActive('dinamika.kedatangan.*') }}">
+					<a href="{{ route('dinamika.kedatangan.index') }}" class="menu-link">
+						<div data-i18n="Datang">
+							{{ __('Kedatangan') }}
+						</div>
+					</a>
+				</li>
+				<li class="menu-item {{ menuIsActive('dinamika.kepindahan.*') }}">
+					<a href="{{ route('dinamika.kepindahan.index') }}" class="menu-link">
+						<div data-i18n="Pindah">
+							{{ __('Kepindahan') }}
+						</div>
+					</a>
+				  </li>
+				  
+			  
+			</ul>
+		</li>
+@endif
+@if(auth()->user()->hasRole(['layanan','bpd','ppid','ketua rt','ketua rw','kepala desa','kepala dusun']))
+
+		<li class="menu-header small text-uppercase">
+			<span class="menu-header-text">
+				{{ __('Manajemen Layanan') }}
+			</span>
+		</li>
+		
+
+		
+		@if(auth()->user()->hasRole(['bpd','ketua rt','ketua rw','kepala desa','kepala dusun']))
 		<li class="menu-item">
 			<a class="menu-link menu-toggle" href="javascript:void(0)"><i class="menu-icon tf-icons bx bx-user"></i>
 			<div>
@@ -148,7 +207,7 @@
 			  
 			</ul>
 		</li>
-
+		@endif
 		<li class="menu-item">
 			<a class="menu-link menu-toggle" href="javascript:void(0)"><i class="menu-icon tf-icons bx bxs-landmark"></i>
 			<div>
@@ -187,18 +246,28 @@
 			  
 			</ul>
 		</li>
-	@endif
-@if(auth()->user()->hasRole('warga')&&!is_null(\App\Models\AnggotaRuta::where('anggota_nik',auth()->user()->nik)->where('hubungan','Kepala Keluarga')->first()))
+@endif
+@if(auth()->user()->hasRole('warga'))
 	<li class="menu-header small text-uppercase">
 		<span class="menu-header-text">
 			{{ __('Layanan Warga') }}
 		</span>
 	</li>
+	@if(!is_null(\App\Models\AnggotaRuta::where('anggota_nik',auth()->user()->nik)->where('hubungan','Kepala Keluarga')->first()))
 	<li class="menu-item {{ menuIsActive('pengajuan.warga.kependudukan.*') }}">
 		<a href="{{ route('pengajuan.warga.kependudukan.index') }}" class="menu-link">
 			<i class="menu-icon tf-icons bx bx-home-circle"></i>
 			<div data-i18n="Analytics">
 				{{ __('Kependudukan') }}
+			</div>
+		</a>
+	</li>
+	@endif
+	<li class="menu-item {{ menuIsActive('pengajuan.warga.aspirasi.*') }}">
+		<a href="{{ route('pengajuan.warga.aspirasi.index') }}" class="menu-link">
+			<i class="menu-icon tf-icons bx bx-chat"></i>
+			<div data-i18n="Aspirasi">
+				{{ __('Aspirasi & Pengaduan') }}
 			</div>
 		</a>
 	</li>

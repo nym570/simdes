@@ -300,10 +300,10 @@
 							</div>
 							<div class="col">
 								<label for="kepala_nik" class="form-label">Kepala Rumah Tangga*</label>
-							<select id="kepala_nik" class="selectpicker w-100" data-style="btn-default" data-live-search="true" title="Pilih Kepala Rumah Tangga" name="kepala_nik" required>
+							<select id="kepala_nik" class="selectpicker w-100" data-style="btn-default" data-live-search="true" title="Pilih Kepala Rumah Tangga" name="kepala" required>
 								
 							</select>
-								<x-invalid error="kepala_nik" />
+								<x-invalid error="kepala" />
 							  </div>
 						</div>
 						<div class="new_ruta" id="new_ruta">

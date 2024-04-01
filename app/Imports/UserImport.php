@@ -60,7 +60,7 @@ class UserImport implements ToModel , WithUpserts, WithHeadingRow, WithBatchInse
            'email'    => $row['email'], 
            'password' => Hash::make($row['password']),
         ])->assignRole('warga');
-        Notification::send($user, new PasswordSend($row['password'],route('login')));
+        // Notification::send($user, new PasswordSend($row['password'],route('login')));
         return $user;
     }
     public function batchSize(): int

@@ -69,13 +69,7 @@
 						<x-invalid error="saksi" />
 					</div>
 				</div>
-				<div class="row ">
-					<div class="col mb-3">
-					  <x-label for="pelapor" :value="__('NIK Pelapor*')" />
-					  <x-input type="text" name="pelapor_nik" id="pelapor" :placeholder="__('Pelapor')" :value="old('pelapor')" required/>
-					  <x-invalid error="pelapor" />
-					</div>
-				  </div>
+				
 				  <div class="row">
 					<div class="col mb-3">
 						<x-label for="bukti" :value="__('Bukti* (.pdf/.jpg/.png)')"/>

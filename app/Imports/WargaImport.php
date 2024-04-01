@@ -81,7 +81,7 @@ class WargaImport implements ToModel, WithUpserts, WithHeadingRow, WithBatchInse
             'kode_wilayah_ktp' => ['required','regex:/[0-9]{2}.[0-9]{2}.[0-9]{4}/u'],
             'alamat_ktp' => ['required'],
             'status' => ['required'],
-             'no_telp' => ['required','regex:/62[0-9]+$/u'],
+             'no_telp' => ['regex:/62[0-9]+$/u'],
         ];
     }
 }

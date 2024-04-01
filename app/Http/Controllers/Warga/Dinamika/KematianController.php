@@ -47,8 +47,8 @@ class KematianController extends Controller
             'waktu' => ['required','date','before_or_equal:today'],
             'penyebab' => ['required','string'],
             'saksi' => ['required','string'],
-            'pelapor_nik' => ['required','string','size:16'],
-            'bukti' => ['required','mimes:jpg,png,pdf','max:1024']
+            'bukti' => ['required','mimes:jpg,png,pdf','max:1024'],
+            'keterangan' => []
             
 		]);
         
@@ -97,13 +97,13 @@ class KematianController extends Controller
                     $lain->update(['hubungan'=>'Kepala Keluarga']);
                 }
                 $hal ='Data Kematian diverifikasi';
-                $kepala_ruta = User::whereHas("warga.anggota_ruta", function(Builder $builder) use($warga) {
-                    $builder->where('ruta_id', '=', $warga->anggota_ruta->ruta_id)->where('hubungan','Kepala Keluarga');
-                })->first();
-                if($kepala_ruta){
-                    $message = 'Data kematian diverifikasi untuk anggota rumah tangga anda '.$warga->nama.'['.$warga->nik.']. Warga dihapus dari rumah tangga anda';
-                    Notification::send($kepala_ruta, new Message('ketua RT',$hal,$message,route('login')));
-                }
+                // $kepala_ruta = User::whereHas("warga.anggota_ruta", function(Builder $builder) use($warga) {
+                //     $builder->where('ruta_id', '=', $warga->anggota_ruta->ruta_id)->where('hubungan','Kepala Keluarga');
+                // })->first();
+                // if($kepala_ruta){
+                //     $message = 'Data kematian diverifikasi untuk anggota rumah tangga anda '.$warga->nama.'['.$warga->nik.']. Warga dihapus dari rumah tangga anda';
+                //     Notification::send($kepala_ruta, new Message('ketua RT',$hal,$message,route('login')));
+                // }
             }
             $warga->anggota_ruta->delete();
             return redirect()->route('ruta.show',$ruta)->withSuccess('Verifikasi berhasil, Silahkan ubah silsilah rumah tangga');

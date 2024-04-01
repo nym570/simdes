@@ -35,7 +35,7 @@
 										{{  auth()->guard('admin')->user()->nama }}
 									</span>
 									<small class="text-muted">
-										User
+										Admin
 									</small>
 								</div>
 							</div>

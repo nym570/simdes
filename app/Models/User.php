@@ -119,4 +119,12 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasOne(User::class);
     }
+    public function aspirasi()
+    {
+        return $this->hasMany(Aspirasi::class,'user_id', 'id');
+    }
+    public function balas_aspirasi()
+    {
+        return $this->hasMany(BalasAspirasi::class,'user_id', 'id');
+    }
 }

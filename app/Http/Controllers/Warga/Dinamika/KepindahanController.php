@@ -50,7 +50,7 @@ class KepindahanController extends Controller
             'jenis' => ['required','string'],
             'kode_wilayah_pindah' => ['required','string','size:13'],
             'bukti' => ['mimes:jpg,png,pdf','max:1024'],
-            'keterangan' =>['string']
+            'keterangan' =>[]
 		]);
         
         if($request->file('bukti')){
@@ -62,6 +62,7 @@ class KepindahanController extends Controller
         foreach($data['nik'] as $item){
             $kepindahan->dinamika()->create([ 'nik' => $item ]);
         }
+        $this->verifikasi($kepindahan);
         return back()->withSuccess('Data Kepindahan berhasil ditambahkan');
     }
     public function get(Kepindahan $kepindahan)
@@ -75,29 +76,22 @@ class KepindahanController extends Controller
     public function verifikasi(Kepindahan $kepindahan){
         foreach($kepindahan->dinamika as $item){
             $warga = Warga::where('nik',$item->nik)->with('anggota_ruta.ruta')->first();
-            
+            $ruta = $warga->anggota_ruta->ruta;
             $warga->update(['status'=>'pindah']);
             $user = User::where('nik',$warga->nik)->first();
             if($user){
                 $user->update(['is_active'=>0]);
             }
             
-            if(!is_null($warga->anggota_ruta)){
             
-            $temp['jumlah_art'] = $warga->anggota_ruta->ruta->jumlah_art - 1;
-            $warga->anggota_ruta->delete();
-            if($temp['jumlah_art'] == 0){
-                $warga->anggota_ruta->ruta->delete();
-            }
-            else{
-                $warga->anggota_ruta->ruta->update($temp);
-            }
+
 
             if($warga->has('anggota_ruta')){
                 $temp['jumlah_art'] = $warga->anggota_ruta->ruta->jumlah_art - 1;
+                $warga->anggota_ruta->delete();
                 
                 if($temp['jumlah_art'] == 0){
-                    $warga->anggota_ruta->ruta->delete();
+                    $ruta->delete();
                 }
                 else{
                     $warga->anggota_ruta->ruta->update($temp);
@@ -105,17 +99,16 @@ class KepindahanController extends Controller
                         $lain = AnggotaRuta::where('ruta_id',$warga->anggota_ruta->ruta->id)->where('anggota_nik','!=',$warga->nik)->orderBy('hubungan')->first();
                         $lain->update(['hubungan'=>'Kepala Keluarga']);
                     }
-                    $hal ='Data Kepindahan diverifikasi';
-                    $kepala_ruta = User::whereHas("warga.anggota_ruta", function(Builder $builder) use($warga) {
-                        $builder->where('ruta_id', '=', $warga->anggota_ruta->ruta_id)->where('hubungan','Kepala Keluarga');
-                    })->first();
-                    if($kepala_ruta){
-                        $message = 'Data kepindahan diverifikasi untuk anggota rumah tangga anda '.$warga->nama.'['.$warga->nik.']. Warga dihapus dari rumah tangga anda';
-                        Notification::send($kepala_ruta, new Message('ketua RT',$hal,$message,route('login')));
-                    }
+                    // $hal ='Data Kepindahan diverifikasi';
+                    // $kepala_ruta = User::whereHas("warga.anggota_ruta", function(Builder $builder) use($warga) {
+                    //     $builder->where('ruta_id', '=', $warga->anggota_ruta->ruta_id)->where('hubungan','Kepala Keluarga');
+                    // })->first();
+                    // if($kepala_ruta){
+                    //     $message = 'Data kepindahan diverifikasi untuk anggota rumah tangga anda '.$warga->nama.'['.$warga->nik.']. Warga dihapus dari rumah tangga anda';
+                    //     Notification::send($kepala_ruta, new Message('ketua RT',$hal,$message,route('login')));
+                    // }
                 }
-                $warga->anggota_ruta->delete();
-            }
+            
 
         }
         }

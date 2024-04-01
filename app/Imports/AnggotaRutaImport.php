@@ -5,6 +5,7 @@ namespace App\Imports;
 use App\Models\Ruta;
 use App\Models\AnggotaRuta;
 use App\Models\Warga;
+use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\WithUpserts;
@@ -61,7 +62,7 @@ class AnggotaRutaImport implements ToModel, WithUpserts, WithHeadingRow, WithBat
     {
         return [
             'anggota_nik' => ['required','unique:anggota_ruta,anggota_nik','exists:warga,nik',new WargaRT],
-            'hubungan' => ['required','string'],
+            'hubungan' => ['required','string',Rule::notIn(['Kepala Keluarga'])],
             'kepala_ruta' => ['required','exists:anggota_ruta,anggota_nik',new KepalaRuta],
         ];
     }

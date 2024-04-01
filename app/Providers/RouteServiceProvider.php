@@ -23,6 +23,8 @@ use App\Models\Kelahiran;
 use App\Models\Kematian;
 use App\Models\Kedatangan;
 use App\Models\Kepindahan;
+use App\Models\Aspirasi;
+use App\Models\BalasAspirasi;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -101,7 +103,12 @@ class RouteServiceProvider extends ServiceProvider
         Route::bind('mati', function ($value, $route) {
             return $this->getModel(Kematian::class, $value);
         });
-        
+        Route::bind('aspirasi', function ($value, $route) {
+            return $this->getModel(Aspirasi::class, $value);
+        });
+        Route::bind('balas_aspirasi', function ($value, $route) {
+            return $this->getModel(BalasAspirasi::class, $value);
+        });
     }
 
     /**
