@@ -44,6 +44,16 @@ class AspirasiController extends Controller
         return view('menu.aspirasi.show',compact(['title','aspirasi']));
     }
 
+    public function status(Aspirasi $aspirasi)
+    {
+        $data['is_open'] = false;
+		if(!$aspirasi->is_open){
+			$data['is_open'] = true;
+		}
+		$aspirasi->update($data);
+
+		return back()->withSuccess('Status aspirasi berhasil diubah');
+    }
     /**
      * Show the form for editing the specified resource.
      */

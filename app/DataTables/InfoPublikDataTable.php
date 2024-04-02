@@ -2,7 +2,7 @@
 
 namespace App\DataTables;
 
-use App\Models\Aspirasi;
+use App\Models\InfoPublik;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Services\DataTable;
@@ -11,11 +11,8 @@ use Yajra\DataTables\Html\Editor\Editor;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Carbon;
-use Jenssegers\Date\Date;
 
-class AspirasiDataTable extends DataTable
+class InfoPublikDataTable extends DataTable
 {
     /**
      * Build the DataTable class.
@@ -26,52 +23,36 @@ class AspirasiDataTable extends DataTable
     {
         return (new EloquentDataTable($query))
         ->addColumn('action', function($row){
-            $btn = '<a href='.route("aspirasi.show",$row).' class="btn btn-sm btn-success my-1 mx-1"> Lihat</a>';
-            $btn = $btn.'<a class="btn btn-sm '.($row->is_open?"btn-dark":"btn-secondary").' my-1" onclick="change(this)" href="'.route("aspirasi.status",$row).'">'.($row->is_open?"Tutup":"Buka").'</a>';
-            return $btn;
+   
+            $btn = '<button class="btn btn-sm btn-success my-1 mx-1 open_modal_info" value="'.route('info-publik.get',$row).'" data-pdf="'.asset('/laraview/#../storage/'.$row->lampiran).'"> Lihat</button>';
+            $btn = $btn.'<div class="btn-group me-3">
+                <button class="btn btn-sm btn-warning dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Aksi
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <li><a class="dropdown-item" onclick="change(this)" href="'.route("info-publik.status",$row).'">'.($row->is_show?"Sembunyikan":"Tampilkan").'</a></li>
+                  <li><a class="dropdown-item" href="'.route('info-publik.delete',$row).'" onclick="del(this)">Hapus</a></li>
+                  
+                </ul>
+              </div>';
+
+             return $btn;
+             
         })
-            ->addColumn('updated', function($row){
-                return   $row->updated_at->diffForHumans();
-            })
             ->addColumn('status', function($row){
-                return   $row->is_open?'open':'closed';
+                return   $row->is_show?'ditampilkan':'disembunyikan';
             })
             ->addIndexColumn() 
-            ->rawColumns(['action','updated'])    
+            ->rawColumns(['action'])    
             ->setRowId('id');
     }
 
     /**
      * Get the query source of dataTable.
      */
-    public function query(Aspirasi $model): QueryBuilder
+    public function query(InfoPublik $model): QueryBuilder
     {
-        $cakupan = auth()->user()->getRoleNames()->toArray(); 
-        if(in_array('bpd',$cakupan)){
-            return $model->newQuery()->with('user');
-        }
-        if(in_array('kepala desa',$cakupan)){
-            return $model->newQuery()->with('user')->where('tingkat','desa');
-        }
-            else if(in_array('kepala dusun',$cakupan)){
-                   return $model->newQuery()->where('tingkat','dusun')->with('user')->whereHas("user.warga.rt.rw.dusun", function(Builder $builder) {
-                     $builder->where('pemimpin', '=', auth()->user()->id);
-                 });
-                
-            }
-            else if(in_array('ketua rw',$cakupan)){
-                return $model->newQuery()->with('user')->where('tingkat','rw')->whereHas("user.warga.rt.rw", function(Builder $builder) {
-                    $builder->where('pemimpin', '=', auth()->user()->id);
-                });
-                
-            }
-            else if(in_array('ketua rt',$cakupan)){
-                return $model->newQuery()->with('user')->where('tingkat','rt')->whereHas("user.warga.rt", function(Builder $builder) {
-                    $builder->where('pemimpin', '=', auth()->user()->id);
-                });
-                
-            }
-        
+        return $model->newQuery();
     }
 
     /**
@@ -80,10 +61,11 @@ class AspirasiDataTable extends DataTable
     public function html(): HtmlBuilder
     {
         return $this->builder()
-                    ->setTableId('aspirasi-table')
+                    ->setTableId('infopublik-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
-                    ->orderBy(2)
+                    //->dom('Bfrtip')
+                    ->orderBy(1)
                     ->selectStyleSingle()
                     ->paging(true)
                     ->parameters([
@@ -143,13 +125,9 @@ class AspirasiDataTable extends DataTable
                   ->exportable(false)
                   ->printable(false)
                   ->addClass('text-center'),
-            Column::computed('updated')
-                ->exportable(false)
-                  ->printable(false),
-            Column::make('user.username')->title('pengaju'),
             Column::make('judul'),
             Column::make('kategori'),
-            Column::make('tingkat'),
+            Column::make('tahun'),
             Column::computed('status'),
         ];
     }
@@ -159,6 +137,6 @@ class AspirasiDataTable extends DataTable
      */
     protected function filename(): string
     {
-        return 'Aspirasi_' . date('YmdHis');
+        return 'InfoPublik_' . date('YmdHis');
     }
 }

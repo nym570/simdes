@@ -18,6 +18,8 @@ use App\Models\Kedatangan;
 use App\Models\Kepindahan;
 use App\Models\Aspirasi;
 use App\Models\BalasAspirasi;
+use App\Models\InfoPublik;
+use App\Models\PengajuanInfoPublik;
 
 return [
 
@@ -122,6 +124,14 @@ return [
         ],
         BalasAspirasi::class => [
             'salt' => BalasAspirasi::class.'balas-aspirasi',
+            'length' => 7,
+        ],
+        InfoPublik::class => [
+            'salt' => InfoPublik::class.'info-publik',
+            'length' => 5,
+        ],
+        PengajuanInfoPublik::class => [
+            'salt' => PengajuanInfoPublik::class.'mohon-info',
             'length' => 7,
         ],
 

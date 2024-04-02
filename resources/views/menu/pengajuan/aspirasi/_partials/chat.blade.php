@@ -67,7 +67,7 @@
 	</div>
   
   </div>
-
+  @if($aspirasi->is_open)
   <!-- Email View : Reply mail-->
   <h5 class="mt-5">Balas Aspirasi</h5>
   <div class="email-reply card mt-1 border">
@@ -101,6 +101,6 @@
 	  
 	</div>
   </div>
-
+@endif
 
 

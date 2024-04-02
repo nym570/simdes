@@ -10,4 +10,18 @@
 
 		</div>
 	</div>
+	<form method="POST" class="d-none" id="status-form">
+		@csrf
+		@method("PUT")
+	</form>
+	<script>
+		function change(element) {
+		event.preventDefault()
+		let form = document.getElementById('status-form');
+		form.setAttribute('action', element.getAttribute('href'))
+		swalConfirm('Ubah Status Aspirasi ?', `Status aspirasi akan diubah`, 'Ubah', () => {
+			form.submit()
+		})
+	}
+	</script>
 @endsection

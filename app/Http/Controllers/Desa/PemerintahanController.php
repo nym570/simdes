@@ -114,6 +114,9 @@ class PemerintahanController extends Controller
      */
     public function delete(Pemerintahan $pemerintahan)
     {
+        if($pemerintahan->foto){
+            Storage::disk('public')->delete($pemerintahan->foto);
+        }
         $pemerintahan->delete();
 		return back()->withSuccess('Perangkat Desa Berhasil dihapus');
     }

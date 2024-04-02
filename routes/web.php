@@ -20,6 +20,8 @@ use App\Http\Controllers\Pengajuan\PengajuanDinamika;
 use App\Http\Controllers\Pengajuan\PengajuanAspirasi;
 use App\Http\Controllers\Layanan\AspirasiController;
 use App\Http\Controllers\Layanan\BalasAspirasiController;
+use App\Http\Controllers\Layanan\InfoPublikController;
+use App\Http\Controllers\Layanan\PengajuanInfoPublikController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MasterController;
 use App\Http\Controllers\StatistikWargaController;
@@ -170,11 +172,20 @@ Route::middleware(['admin.auth','admin.verified'])->group(function () {
 });
 
 Route::middleware(['auth','verified'])->group(function () {
+	Route::middleware(['role:ppid|kepala desa'])->group(function () {
+		Route::controller(InfoPublikController::class)->name('info-publik.')->group(function () {
+			Route::get('/info-publik', 'index')->name('index');
+			Route::get('/info-publik/{info}/get', 'get')->name('get');
+			Route::put('/info-publik/{info}/status', 'status')->name('status');
+			Route::delete('/info-publik/{info}/delete', 'delete')->name('delete');
+			Route::post('/info-publik', 'store')->name('store');
+		});
+	});
 	Route::middleware(['role:ketua rt|ketua rw|bpd|kepala dusun|kepala desa'])->group(function () {
 		Route::controller(AspirasiController::class)->name('aspirasi.')->group(function () {
 			Route::get('/aspirasi', 'index')->name('index');
 			Route::get('/aspirasi/{aspirasi}/show', 'show')->name('show');
-			
+			Route::put('/aspirasi/{aspirasi}/status', 'status')->name('status');
 		});
 	});
 
@@ -368,6 +379,14 @@ Route::controller(PemerintahanController::class)->name('pemerintahan.')->group(f
 	
 });
 
+Route::controller(InfoPublikController::class)->name('info.')->group(function () {
+	Route::get('/info', 'show')->name('show');
+	Route::get('/info/{info}/get', 'get')->name('get');
+});
+Route::controller(PengajuanInfoPublikController::class)->name('pengajuan-info.')->group(function () {
+	Route::get('/pengajuan-info', 'index')->name('index');
+});
+
 Route::bind('role', function ($id, $route) {
     return Hashids::decode($id)[0];
 });
@@ -391,6 +410,7 @@ Route::controller(MasterController::class)->name('master.')->group(function () {
 	Route::get('/master/get-pendidikan', 'getPendidikan')->name('identitas.get-pendidikan');
 	Route::get('/master/get-pekerjaan', 'getPekerjaan')->name('identitas.get-pekerjaan');
 	Route::get('/master/get-kategori', 'getKategori')->name('aspirasi.get-kategori');
+	Route::get('/master/get-kategori-info', 'getInfo')->name('info-publik.get-kategori');
 });
 
 

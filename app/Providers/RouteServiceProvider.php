@@ -25,6 +25,8 @@ use App\Models\Kedatangan;
 use App\Models\Kepindahan;
 use App\Models\Aspirasi;
 use App\Models\BalasAspirasi;
+use App\Models\InfoPublik;
+use App\Models\PengajuanInfoPublik;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -108,6 +110,12 @@ class RouteServiceProvider extends ServiceProvider
         });
         Route::bind('balas_aspirasi', function ($value, $route) {
             return $this->getModel(BalasAspirasi::class, $value);
+        });
+        Route::bind('info', function ($value, $route) {
+            return $this->getModel(InfoPublik::class, $value);
+        });
+        Route::bind('mohon_info', function ($value, $route) {
+            return $this->getModel(PengajuanInfoPublik::class, $value);
         });
     }
 
