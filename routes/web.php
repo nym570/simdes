@@ -180,6 +180,9 @@ Route::middleware(['auth','verified'])->group(function () {
 			Route::delete('/info-publik/{info}/delete', 'delete')->name('delete');
 			Route::post('/info-publik', 'store')->name('store');
 		});
+		Route::controller(PengajuanInfoPublikController::class)->name('pengajuan-info-manajemen.')->group(function () {
+			Route::get('/pengajuan-info-manajemen', 'list')->name('index');
+		});
 	});
 	Route::middleware(['role:ketua rt|ketua rw|bpd|kepala dusun|kepala desa'])->group(function () {
 		Route::controller(AspirasiController::class)->name('aspirasi.')->group(function () {
@@ -385,6 +388,9 @@ Route::controller(InfoPublikController::class)->name('info.')->group(function ()
 });
 Route::controller(PengajuanInfoPublikController::class)->name('pengajuan-info.')->group(function () {
 	Route::get('/pengajuan-info', 'index')->name('index');
+	Route::post('/pengajuan-info/store', 'store')->name('buat');
+	Route::post('/pengajuan-info/cek', 'cek')->name('cek');
+	Route::get('/pengajuan-info/{mohon_info}/show', 'show')->name('info');
 });
 
 Route::bind('role', function ($id, $route) {

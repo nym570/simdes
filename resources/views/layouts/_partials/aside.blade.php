@@ -252,9 +252,9 @@
 						</div>
 					</a>
 				</li>
-				<li class="menu-item {{ menuIsActive('ruta.*') }}">
-					<a href="{{ route('ruta.index') }}" class="menu-link">
-						<div data-i18n="RumahTangga">
+				<li class="menu-item {{ menuIsActive('pengajuan-info-manajemen.*') }}">
+					<a href="{{ route('pengajuan-info-manajemen.index') }}" class="menu-link">
+						<div data-i18n="mohon">
 							{{ __('Permohonan') }}
 						</div>
 					</a>

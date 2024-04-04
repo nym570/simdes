@@ -3,61 +3,26 @@
 	<div class="card">
 		<div class="card-body">
 			<h5 class="card-title">
-				{{ __('Permohonan Informasi Publik') }}
+				{{ __('Manajemen Permohonan Informasi Publik') }}
 			</h5>
-			<span>Sudah melakukan permohonan? cek disini <button type="button" class="ms-2 btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#cekModal">
-				Cek Permohonan!
-			  </button></span>
+
+			<button type="button" class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target="#addInfo">
+				Tambah Permohonan Informasi
+			  </button>
+
+			  <!-- Modal -->
+  <div class="modal fade" id="addInfo" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog modal-lg" role="document">
+	  <div class="modal-content">
+		<div class="modal-header">
+		  <h5 class="modal-title" id="judulModal">Permohonan Informasi Publik</h5>
+		  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 		</div>
-	</div>
-	<div class="modal fade" id="cekModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-		<div class="modal-dialog" role="document">
-		  <div class="modal-content">
-			<div class="modal-header">
-			  <h5 class="modal-title" id="exampleModalLabel">Cek Permohonan Informasi</h5>
-			  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-				</button>
-			</div>
-			<form id="formAuthentication" class="mb-3" action=" {{route('pengajuan-info.cek')}}" method="POST" enctype="multipart/form-data">
-				@csrf
+		<form id="formPermohonan" class="mb-3" action="{{ route('pengajuan-info.buat') }}" data-remote="true" method="POST" enctype="multipart/form-data">
+			@csrf
+			
 			<div class="modal-body">
-				<div class="row">
-					<div class="col">
-						<x-label for="nik" :value="__('NIK')" />
-						<x-input type="text" name="nik" id="nik" :placeholder="__('3515xxxxxxxxx')" :value="old('nik')" required/>
-						<x-invalid error="nik" />
-					</div>
-				</div>
-				<div class="row ">
-					<div class="col mb-3">
-					  <x-label for="email_cek" :value="__('Email')" />
-					  <x-input type="email_cek" name="email_cek" id="email_cek" :placeholder="__('Email')" :value="old('email_cek')" required/>
-					  <x-invalid error="email_cek" />
-					</div>
-				  </div>
-				  <div class="row ">
-					<div class="col mb-3">
-					  <x-label for="no_pendaftaran" :value="__('Nomor Pendaftaran')" />
-					  <x-input type="text" name="no_pendaftaran" id="no_pedaftaran" :placeholder="__('Nomor Pendaftaran')" :value="old('no_pendaftaran')" required/>
-					  <x-invalid error="no_pendaftaran" />
-					</div>
-				  </div>
-			</div>
-			<div class="modal-footer">
-				<x-button type="submit" class="btn btn-primary d-grid w-100" :value="__('Cek Permohonan')"/>
-			</div>
-		</form>
-		  </div>
-		</div>
-	  </div>
-	<div class="card mt-3">
-		<div class="card-body">
-			<h5 class="card-title">
-				{{ __('Formulir Permohonan') }}
-			</h5>
-			<form id="formPermohonan" class="mb-3" action="{{ route('pengajuan-info.buat') }}" data-remote="true" method="POST" enctype="multipart/form-data">
-				@csrf
-				<div class="mt-2">
+				
 					<div class="divider">
 						<div class="divider-text">Data Pengaju</div>
 					  </div>
@@ -100,8 +65,8 @@
 							<x-invalid error="no_telp" />
 						  </div>
 					</div>
-				</div>
-				<div class="mt-4">
+				
+				
 					<div class="divider">
 						<div class="divider-text">Keterangan Informasi</div>
 					  </div>
@@ -157,21 +122,33 @@
 							<x-invalid error="lampiran" />
 						</div>
 					</div>
-				</div>
-				<div class="my-4">
-					<x-button type="submit" class="btn btn-primary d-grid w-100" :value="__('Submit')"/>
-				</div>
-			</form>
+
+				
+			  </div>
+			  <div class="modal-footer">
+				<x-button type="submit" class="btn btn-primary d-grid w-100" :value="__('Submit')"/>
+			  </div>
+		</form>
+	  </div>
+	</div>
+  </div>
+
+		
+  
+			  @include('components.table')
 		</div>
 	</div>
 
 	<script>
+		
 		$( document ).ready(function() {
 			$.ajaxSetup({
 			headers: {
 				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 			}
 		});
+
+		
 		$.ajax({
 					type : 'GET',
 					url: "{{route('master.identitas.get-pekerjaan')}}",
@@ -184,8 +161,9 @@
 						alert(err.message);
 					}
 				});
-	});
 		
+	});
+	
 	
 		
 	</script>
