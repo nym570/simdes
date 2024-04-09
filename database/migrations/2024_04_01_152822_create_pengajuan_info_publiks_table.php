@@ -30,8 +30,8 @@ return new class extends Migration
             $table->string('status')->default('diajukan');
             $table->boolean('is_verified')->nullable();
             $table->unsignedInteger('biaya')->nullable();
-            $table->unsignedInteger('cara_bayar')->nullable();
-            $table->string('penolakan')->nullable();
+            $table->string('cara_bayar')->nullable();
+            $table->text('penolakan')->nullable();
             $table->string('kuasa')->nullable();
             $table->text('keterangan')->nullable();
             $table->datetime('waktu')->nullable();

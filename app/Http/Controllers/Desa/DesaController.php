@@ -318,7 +318,7 @@ class DesaController extends Controller
                 'kode_wilayah' => $request['kode_wilayah'],
                 'desa' => $request['desa'],
                 'kecamatan' => $request['kecamatan'],
-                'kabupaten' => $request['kabupaten'],
+                'kabupaten' => Str::replace('Kab.', 'Kabupaten', $request['kabupaten']),
                 'provinsi' => $request['provinsi'],
             ]);
             return redirect(route('admin.home'))->withSuccess('Konfigurasi berhasil diperbarui');

@@ -136,6 +136,7 @@
 		
   
 			  @include('components.table')
+			  @include('menu.info_publik.permohonan.tindakan')
 		</div>
 	</div>
 
@@ -167,6 +168,6 @@
 	
 		
 	</script>
-
+	
 
 @endsection

@@ -22,7 +22,27 @@ class PengajuanInfoPublikDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
-            ->addColumn('action', 'pengajuaninfopublik.action')
+        ->addColumn('action', function($row){
+   
+            $btn = '<button class="btn btn-sm btn-success my-1 mx-1 open_modal_info" value="'.route('info-publik.get',$row).'" data-pdf="'.asset('/laraview/#../storage/'.$row->lampiran).'"> Lihat</button>';
+            $btn = $btn.'<div class="btn-group me-3">
+                <button class="btn btn-sm btn-warning dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Aksi
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">';
+            if($row->is_verified===null){
+                $btn = $btn.'<li><a class="dropdown-item open_modal_tolak" data-link="'.route('pengajuan-info.tolak',$row).'">Tolak</a></li>';
+                $btn = $btn.'<li><a class="dropdown-item open_modal_setuju" data-link="'.route('pengajuan-info.setuju',$row).'">Terima & Proses</a></li>';
+            }
+            if($row->is_verified==true){
+                $btn = $btn.'<li><a class="dropdown-item open_modal_selesai" data-link="'.route('pengajuan-info.selesai',$row).'">Selesai</a></li>';
+            }
+                  
+             $btn = $btn.'</ul></div>';
+
+             return $btn;
+             
+        })
             ->addColumn('identitas', function($row){
                 return   $row->nama.'<br>('.$row->nik_pengaju.')';
             })
@@ -135,8 +155,10 @@ class PengajuanInfoPublikDataTable extends DataTable
             Column::make('cara_perolehan')->title('Cara Perolehan'),
             Column::make('media_perolehan')->title('Bentuk Salinan'),
             Column::make('kuasa')->title('Penguasaan'),
+            Column::make('penolakan')->title('Landasan Penolakan'),
+            Column::make('biaya'),
+            Column::make('cara_bayar')->title('Cara Pembayaran'),
             Column::make('keterangan'),
-            Column::computed('pembiayaan'),
             Column::make('waktu')->title('waktu keputusan'),
         ];
     }

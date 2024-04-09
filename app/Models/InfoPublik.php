@@ -16,6 +16,10 @@ class InfoPublik extends Model
     use HasFactory,Notifiable,LogsActivity,Hashidable;
     protected $table = 'info_publik';
     protected $guarded = [];
+    public function getWaktuAttribute($date)
+    {
+            return Carbon::parse($date)->translatedFormat('d F Y H:i');
+    }
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()

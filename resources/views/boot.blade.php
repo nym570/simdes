@@ -60,9 +60,18 @@
 										<input class="d-none" type="text" name="kecamatan" id="nama_kec"/>
 									</div>
 								</div>
+								
 
-								<div class="row">
-									<div class="col mb-3">
+								<div class="row g-2 mb-3">
+									<div class="col">
+										<label for="sebutan" class="form-label">Sebutan</label>
+										<select id="sebutan" class="selectpicker w-100" data-style="btn-default" data-live-search="false" title="Pilih Penyebutan" name="sebutan">
+											<option value="Desa">Desa</option>
+											<option value="Kelurahan">Kelurahan</option>
+											<option value="Nagari">Nagari</option>
+										</select>
+									</div>
+									<div class="col">
 										<label for="desa" class="form-label">Desa</label>
 										<select id="desa" class="selectpicker w-100" data-style="btn-default" data-live-search="true" title="Pilih desa/kelurahan" name="kode_desa">
 											

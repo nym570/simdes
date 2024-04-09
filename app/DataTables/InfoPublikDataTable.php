@@ -128,6 +128,10 @@ class InfoPublikDataTable extends DataTable
             Column::make('judul'),
             Column::make('kategori'),
             Column::make('tahun'),
+            Column::make('penguasaan')->title('perjabat penguasa'),
+            Column::make('penanggung_jawab')->title('penanggung jawab'),
+            Column::make('retensi'),
+            Column::make('waktu')->title('waktu pembuatan'),
             Column::computed('status'),
         ];
     }

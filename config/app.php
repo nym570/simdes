@@ -168,6 +168,7 @@ return [
         Yajra\DataTables\ButtonsServiceProvider::class,
         Yajra\DataTables\HtmlServiceProvider::class,
         Barryvdh\Snappy\ServiceProvider::class,
+        Barryvdh\DomPDF\ServiceProvider::class,
         // Intervention\Image\ImageServiceProvider::class,
 
         /*
@@ -206,6 +207,7 @@ return [
         // ...
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
         'PDF' => Barryvdh\Snappy\Facades\SnappyPdf::class,
+        'DOMPDF' => Barryvdh\DomPDF\Facade::class,
         'Hashids' => Vinkla\Hashids\Facades\Hashids::class,
         'Image' => Intervention\Image\Facades\Image::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,

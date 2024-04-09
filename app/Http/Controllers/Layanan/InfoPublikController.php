@@ -37,6 +37,11 @@ class InfoPublikController extends Controller
 			'judul' => 'required|string',
 			'kategori' => 'required',
             'tahun' => 'required',
+            'waktu' => 'required',
+            'penguasaan' => 'required',
+            'penanggung_jawab' => 'required',
+            'bentuk' => 'required',
+            'retensi' => 'required',
             'lampiran' => 'mimes:pdf',
             'keterangan' => [],
 		]);
@@ -45,7 +50,7 @@ class InfoPublikController extends Controller
             $extension = $request->file('lampiran')->extension();
             $validateData['lampiran'] = Storage::disk('public')->putFileAs('info-publik', $request->file('lampiran'), $validateData['judul'].$validateData['tahun'].'_'.date('Ymd').'.'.$extension);
         }
-        
+        $validateData['bentuk'] = implode(',', $validateData['bentuk']);
 
 		InfoPublik::create($validateData);
         return back()->withSuccess('Informasi Publik berhasil ditambahkan');

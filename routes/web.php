@@ -391,6 +391,9 @@ Route::controller(PengajuanInfoPublikController::class)->name('pengajuan-info.')
 	Route::post('/pengajuan-info/store', 'store')->name('buat');
 	Route::post('/pengajuan-info/cek', 'cek')->name('cek');
 	Route::get('/pengajuan-info/{mohon_info}/show', 'show')->name('info');
+	Route::post('/pengajuan-info/{mohon_info}/tolak', 'tolak')->name('tolak');
+	Route::post('/pengajuan-info/{mohon_info}/setuju', 'setuju')->name('setuju');
+	Route::post('/pengajuan-info/{mohon_info}/selesai', 'selesai')->name('selesai');
 });
 
 Route::bind('role', function ($id, $route) {

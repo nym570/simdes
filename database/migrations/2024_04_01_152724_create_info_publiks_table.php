@@ -20,6 +20,11 @@ return new class extends Migration
             $table->string('kategori');
             $table->year('tahun');
             $table->string('judul');
+            $table->string('penguasaan');
+            $table->string('penanggung_jawab');
+            $table->string('bentuk');
+            $table->integer('retensi');
+            $table->dateTime('waktu');
             $table->text('keterangan')->nullable();
             $table->string('lampiran')->nullable();
             $table->boolean('is_show')->default(true);

@@ -11,12 +11,16 @@ use Romans\Filter\IntToRoman;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Barryvdh\DomPDF\Facade\Pdf;
+
 
 class PengajuanInfoPublikController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
+
+
     public function index()
     {
         $title = 'Permohonan Informasi Publik';
@@ -34,6 +38,47 @@ class PengajuanInfoPublikController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+    public function tolak(Request $request,PengajuanInfoPublik $pengajuanInfoPublik)
+    {
+        $validateData = $request->validate([
+			'kuasa' => ['required','string'],
+			'penolakan' => ['required'],
+            'keterangan' => ['required', 'string'],
+		]);
+        $validateData['penolakan'] = implode(', ', $validateData['penolakan']);
+        $validateData['status'] = 'ditolak';
+        $validateData['is_verified'] = false;
+        $validateData['waktu'] = now();
+        $pengajuanInfoPublik->update($validateData);
+        $pdf = Pdf::loadView('surat.penolakan', ['permohonan' => $pengajuanInfoPublik]);
+        $content = $pdf->download()->getOriginalContent();
+        Storage::disk('public')->put('surat/pengajuan-info-publik/tolak/'.str_replace(array("/"), "-", $pengajuanInfoPublik->no_pendaftaran).'_'.$pengajuanInfoPublik->nik_pengaju.'_'.date('Ymd').'.pdf',$content);
+        return back()->withSuccess('Permohonan Informasi berhasil ditolak');
+    }
+    public function setuju(Request $request,PengajuanInfoPublik $pengajuanInfoPublik)
+    {
+        $validateData = $request->validate([
+			'kuasa' => ['required','string'],
+			'biaya' => ['required'],
+            'keterangan' => [],
+		]);
+        $validateData['status'] = 'diproses';
+        $validateData['is_verified'] = true;
+        $validateData['waktu'] = now();
+        $pengajuanInfoPublik->update($validateData);
+        return back()->withSuccess('Permohonan Informasi berhasil disetujui');
+    }
+    public function selesai(Request $request,PengajuanInfoPublik $pengajuanInfoPublik)
+    {
+        $validateData = $request->validate([
+			'cara_bayar' => ['required'],
+		]);
+        $validateData['status'] = 'selesai';
+        $validateData['is_verified'] = true;
+        $validateData['waktu'] = now();
+        $pengajuanInfoPublik->update($validateData);
+        return back()->withSuccess('Permohonan Informasi berhasil diselesaikan');
+    }
     public function store(Request $request)
     {
         $filter = new IntToRoman();
@@ -57,16 +102,22 @@ class PengajuanInfoPublikController extends Controller
         else{
             $validateData['no_urut'] = 1;
         }
-        $validateData['bukti'] = 'hai';
+        
         $kode_wil = Desa::first()->kode_wilayah;
         $validateData['no_pendaftaran'] = sprintf("%03d",$validateData['no_urut'] ).'/PPID/'.$kode_wil.'/PIP/'.$filter->filter(date('m')).'/'.date('Y');
 		if($request->file('lampiran')){
             $extension = $request->file('lampiran')->extension();
-            $validateData['lampiran'] = Storage::disk('public')->putFileAs('pengajuan-info-publik', $request->file('lampiran'), $validateData['no_pendaftaran'].'_'.$validateData['nik_pengaju'].'_'.date('Ymd').'.'.$extension);
+            $validateData['lampiran'] = Storage::disk('public')->putFileAs('pengajuan-info-publik', $request->file('lampiran'), str_replace(array("/"), "-", $validateData['no_pendaftaran']).'_'.$validateData['nik_pengaju'].'_'.date('Ymd').'.'.$extension);
         }
         $validateData['cara_perolehan'] = implode(',', $validateData['cara_perolehan']);
         $validateData['media_perolehan'] = implode(',', $validateData['media_perolehan']);
-        PengajuanInfoPublik::create($validateData);
+        $validateData['bukti'] = '';
+        $permohonan = PengajuanInfoPublik::create($validateData);
+        $pdf = Pdf::loadView('surat.permohonan', ['permohonan' => $permohonan]);
+        $content = $pdf->download()->getOriginalContent();
+        Storage::disk('public')->put('surat/pengajuan-info-publik/bukti/'.str_replace(array("/"), "-", $permohonan->no_pendaftaran).'_'.$permohonan->nik_pengaju.'_'.date('Ymd').'.pdf',$content);
+        $updateData['bukti'] = 'surat/pengajuan-info-publik/bukti/'.str_replace(array("/"), "-", $permohonan->no_pendaftaran).'_'.$permohonan->nik_pengaju.'_'.date('Ymd').'.pdf';
+        $permohonan->update($updateData);
         return back()->withSuccess('Permohonan Informasi berhasil diajukan');
         
     }

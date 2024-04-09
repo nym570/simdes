@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('desa', function (Blueprint $table) {
             $table->id();
             $table->string('kode_wilayah')->nullable();
+            $table->string('sebutan')->nullable();
             $table->string('desa')->nullable();
             $table->string('kecamatan')->nullable();
             $table->string('kabupaten')->nullable();

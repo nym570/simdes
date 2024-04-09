@@ -18,7 +18,11 @@ class PengajuanInfoPublik extends Model
 
     public function getCreatedAtAttribute($date)
     {
-            return Carbon::parse($date)->translatedFormat('d F Y H:i');
+            return Carbon::parse($date)->translatedFormat('d F Y');
+    }
+    public function getWaktuAttribute($date)
+    {
+            return Carbon::parse($date)->translatedFormat('d F Y');
     }
     public function getActivitylogOptions(): LogOptions
     {

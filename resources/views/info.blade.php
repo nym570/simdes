@@ -16,9 +16,13 @@
 						</button>
 					</div>
 					<div class="modal-body" id="isi">
+						<div class="mb-5" id="ketIsi">
+			
+						</div>
 					<div class="mb-3" id="textIsi">
 			
 					</div>
+					
 					  <div class="mb-3" id="pdfIsi">
 					  </div>
 					</div>
@@ -59,11 +63,14 @@
 						
 						let data = JSON.parse(msg);
 						$('#judulModal').text(data.judul);
+						$('#ketIsi').append('<p><strong>Waktu Pembuatan : </strong>'+data.waktu+'</p>');
+						$('#ketIsi').append('<p><strong>Bentuk Tersedia : </strong>'+data.bentuk+'</p>');
 						if(data.lampiran){
 							$("#pdfIsi").append('<iframe id="pdfIsi" src="'+pdf+'" width="100%" height="1000px"></iframe>');
 							
 						}
 						if(data.keterangan){
+							$('#textIsi').append('<h5>Ringkasan</h5>')
 							$('#textIsi').append(data.keterangan);
 						}
 						$('#modalInfo').modal('show');

@@ -141,10 +141,8 @@
 								<label for="media_perolehan" class="form-label">Cara Mendapatkan Salinan</label>
 								<select id="media_perolehan" class="selectpicker w-100" data-style="btn-default" multiple data-icon-base="bx" title="Cara Mendapatkan" data-tick-icon="bx-check text-primary" name="media_perolehan[]" data-live-search="true" required>
 								  <option value="langsung">Mengambil Langsung</option>
-								  <option value="kurir">Kurir</option>
-								  <option value="pos">Pos</option>
-								  <option value="email">Email</option>
-								  <option value="faksmili">Faksmili</option>
+								  <option value="kurir/pos">Kurir / Pos</option>
+								  <option value="email/wa">Email / Whatsapp</option>
 								  <option value="lainnya">Lainnya</option>
 								</select>
 						</div>
