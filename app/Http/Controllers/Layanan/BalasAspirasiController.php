@@ -4,11 +4,14 @@ namespace App\Http\Controllers\Layanan;
 
 use App\Models\BalasAspirasi;
 use App\Models\Aspirasi;
+use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use App\Notifications\BalasanAspirasi;
+use Illuminate\Support\Facades\Notification;
 
 class BalasAspirasiController extends Controller
 {
@@ -44,8 +47,12 @@ class BalasAspirasiController extends Controller
         }
         
         $validateData['user_id'] = auth()->user()->id;
-        $aspirasi = Aspirasi::where('id',$validateData['aspirasi_id'])->touch();
-		BalasAspirasi::create($validateData);
+        $aspirasi = Aspirasi::where('id',$validateData['aspirasi_id'])->first();
+		$balasan = BalasAspirasi::create($validateData);
+        if($validateData['user_id'] != $aspirasi->user_id){
+            Notification::send(User::where('id',$aspirasi->user_id)->first(), new BalasanAspirasi($aspirasi->judul,auth()->user()->email,$validateData['isi'],route('pengajuan.warga.aspirasi.show',$aspirasi)));
+        }
+        $aspirasi->touch();
 
 		return back()->withSuccess('Balasan berhasil ditambahkan');
     }

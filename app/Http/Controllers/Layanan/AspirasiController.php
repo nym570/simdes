@@ -6,6 +6,9 @@ use App\Models\Aspirasi;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\DataTables\AspirasiDataTable;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Builder;
+
 
 class AspirasiController extends Controller
 {
@@ -15,7 +18,33 @@ class AspirasiController extends Controller
     public function index(AspirasiDataTable $dataTable)
     {
         $title = 'Manajemen Aspirasi';
-        return $dataTable->render('menu.aspirasi.index',compact('title'));
+        $cakupan = auth()->user()->getRoleNames()->toArray(); 
+        if(in_array('bpd',$cakupan)){
+            $data = Aspirasi::select('is_open', DB::raw('count(*) as total'))->whereYear('created_at', date('Y'))->groupBy('is_open')->pluck('total','is_open')->all();
+        }
+        if(in_array('kepala desa',$cakupan)){
+            $data = Aspirasi::select('is_open', DB::raw('count(*) as total'))->where('tingkat','desa')->whereYear('created_at', date('Y'))->groupBy('is_open')->pluck('total','is_open')->all();
+        }
+            else if(in_array('kepala dusun',$cakupan)){
+                $data = Aspirasi::select('is_open', DB::raw('count(*) as total'))->whereYear('created_at', date('Y'))->where('tingkat','dusun')->whereHas("user.warga.rt.rw.dusun", function(Builder $builder) {
+                     $builder->where('pemimpin', '=', auth()->user()->id);
+                 })->groupBy('is_open')->pluck('total','is_open')->all();
+                
+            }
+            else if(in_array('ketua rw',$cakupan)){
+                $data = Aspirasi::select('is_open', DB::raw('count(*) as total'))->whereYear('created_at', date('Y'))->where('tingkat','rw')->whereHas("user.warga.rt.rw", function(Builder $builder) {
+                    $builder->where('pemimpin', '=', auth()->user()->id);
+                })->groupBy('is_open')->pluck('total','is_open')->all();
+                
+            }
+            else if(in_array('ketua rt',$cakupan)){
+                $data = Aspirasi::select('is_open', DB::raw('count(*) as total'))->whereYear('created_at', date('Y'))->where('tingkat','rt')->whereHas("user.warga.rt", function(Builder $builder) {
+                    $builder->where('pemimpin', '=', auth()->user()->id);
+                })->groupBy('is_open')->pluck('total','is_open')->all();
+                
+            }
+        
+        return $dataTable->render('menu.aspirasi.index',compact(['title','data']));
     }
 
    

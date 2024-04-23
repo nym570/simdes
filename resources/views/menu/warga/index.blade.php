@@ -1,6 +1,84 @@
 
 @extends('layouts.app')
 @section('container')
+<div class="row g-4 mb-4">
+	<div class="col-sm-6 col-xl-3">
+	  <div class="card">
+		<div class="card-body">
+		  <div class="d-flex align-items-start justify-content-between">
+			<div class="content-left">
+			  <span>Warga</span>
+			  <div class="d-flex align-items-end mt-2">
+				<h4 class="mb-0 me-2">{{array_key_exists('warga', $data)?$data['warga']:0}}</h4>
+			  </div>
+			</div>
+			<div class="avatar">
+			  <span class="avatar-initial rounded bg-label-primary">
+				<i class="bx bx-user bx-sm"></i>
+			  </span>
+			</div>
+		  </div>
+		</div>
+	  </div>
+	</div>
+	<div class="col-sm-6 col-xl-3">
+	  <div class="card">
+		<div class="card-body">
+		  <div class="d-flex align-items-start justify-content-between">
+			<div class="content-left">
+			  <span>Meninggal</span>
+			  <div class="d-flex align-items-end mt-2">
+				<h4 class="mb-0 me-2">{{array_key_exists('meninggal', $data)?$data['meninggal']:0}}</h4>
+			  </div>
+			</div>
+			<div class="avatar">
+			  <span class="avatar-initial rounded bg-label-danger">
+				<i class="bx bx-user-check bx-sm"></i>
+			  </span>
+			</div>
+		  </div>
+		</div>
+	  </div>
+	</div>
+	<div class="col-sm-6 col-xl-3">
+	  <div class="card">
+		<div class="card-body">
+		  <div class="d-flex align-items-start justify-content-between">
+			<div class="content-left">
+			  <span>Pindah</span>
+			  <div class="d-flex align-items-end mt-2">
+				<h4 class="mb-0 me-2">{{array_key_exists('pindah', $data)?$data['pindah']:0}}</h4>
+			  </div>
+			</div>
+			<div class="avatar">
+			  <span class="avatar-initial rounded bg-label-success">
+				<i class="bx bx-group bx-sm"></i>
+			  </span>
+			</div>
+		  </div>
+		</div>
+	  </div>
+	</div>
+	<div class="col-sm-6 col-xl-3">
+	  <div class="card">
+		<div class="card-body">
+		  <div class="d-flex align-items-start justify-content-between">
+			<div class="content-left">
+			  <span>Sementara Pergi</span>
+			  <div class="d-flex align-items-end mt-2">
+				<h4 class="mb-0 me-2">{{array_key_exists("sementara tidak berdomisili", $data)?$data['sementara tidak berdomisili']:0}}</h4>
+			  </div>
+			</div>
+			<div class="avatar">
+			  <span class="avatar-initial rounded bg-label-warning">
+				<i class="bx bx-user-voice bx-sm"></i>
+			  </span>
+			</div>
+		  </div>
+		</div>
+	  </div>
+	</div>
+  </div>
 	<div class="card">
 		<div class="card-body">
 			<h5 class="card-title">

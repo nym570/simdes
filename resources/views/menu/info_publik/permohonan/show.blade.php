@@ -2,6 +2,33 @@
 @section('container')
 	<div class="card">
 		<div class="card-body">
+			<div class="mb-4">
+                <a href="{{ route('pengajuan-info-manajemen.index') }}" class="btn btn-dark mx-1">
+                    {{ __('Kembali') }}
+                </a>
+				@if($pengajuanInfoPublik->status!='ditolak'&&$pengajuanInfoPublik->status!='selesai')
+				<div class="btn-group me-3">
+					<button class="btn btn-warning dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					  Aksi
+					</button>
+					<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+						@if($pengajuanInfoPublik->is_verified===null)
+							<li><a class="dropdown-item open_modal_tolak" data-link="{{route('pengajuan-info.tolak',$pengajuanInfoPublik)}}">Tolak</a></li>
+							<li><a class="dropdown-item open_modal_setuju" data-link="{{route('pengajuan-info.setuju',$pengajuanInfoPublik)}}">Terima & Proses</a></li>
+						@endif
+						@if($pengajuanInfoPublik->is_verified==1)
+							@if($pengajuanInfoPublik->status=='diproses' && $pengajuanInfoPublik->biaya > 0)
+								<li><a class="dropdown-item open_modal_bayar" data-link="{{route('pengajuan-info.bayar',$pengajuanInfoPublik)}}">Pembayaran</a></li>
+							
+							@else
+								<li><a class="dropdown-item open_modal_verif_selesai" data-link="{{route('pengajuan-info.selesai',$pengajuanInfoPublik)}}">Selesai</a></li>
+							@endif
+						   
+						@endif
+					</ul>
+				</div>
+				@endif
+            </div>
 			<div class="row row-cols-1 row-cols-lg-2 g-2">
 				<div class="col">
 					<div class="mt-2">
@@ -56,51 +83,12 @@
 						<p>{{$pengajuanInfoPublik->biaya}}</p>
 					</div>
 					@endif
-					
 				</div>
 			</div>
 			
 		</div>
 	</div>
-	@if($pengajuanInfoPublik->status!='selesai'&&$pengajuanInfoPublik->biaya > 0)
-	<div class="card mt-4">
-		<div class="card-header">
-			<h5>Upload Bukti Pembayaran</h5>
-		</div>
-		<div class="card-body">
-			<form id="formSelesai" class="mb-3" data-remote="true" action="{{route('pengajuan-info.bayar',$pengajuanInfoPublik)}}" method="POST" enctype="multipart/form-data">
-				@csrf
-
-				<div class="row mb-3">
-					
-				<div class="col">
-						<label for="cara_bayar" class="form-label">Cara Pembayaran</label>
-						<select id="cara_bayar" class="selectpicker w-100" data-style="btn-default" title="Cara Pembayaran" name="cara_bayar" required>
-						  <option value=1>Tunai</option>
-						  <option value=2>Transfer</option>
-						</select>
-				</div>
-					
-				</div>
-				<div class="row ">
-					<div class="col mb-3">
-						<x-label for="bukti pembayaran" :value="__('Bukti Pembayaran (.jpg)')" />
-						<input type="file" class="form-control" id="pembayaran" name="pembayaran" required>
-						<x-invalid error="pembayaran" />
-					</div>
-				  </div>
-				
-			
-		  </div>
-		  <div class="modal-footer">
-			<x-button type="submit" class="btn btn-primary d-grid w-100" :value="__('Upload Bukti Pembayaran')"/>
-		  </div>
-		</form>
-	</form>
-			
-		</div>
-	</div>
-	@endif
+	
 	<div class="card mt-4">
 		<div class="card-header">
 			<h5>Lampiran</h5>
@@ -174,7 +162,6 @@
 			
 		</div>
 	</div>
-	
 
 	<div class="modal fade" id="lampiranModal" tabindex="-1" aria-hidden="true">
 		<div class="modal-dialog modal-lg" role="document">
@@ -205,7 +192,5 @@
 		  </div>
 		</div>
 	  </div>
-
-
-
+	  @include('menu.info_publik.permohonan.tindakan')
 @endsection

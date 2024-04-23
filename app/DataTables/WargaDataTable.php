@@ -77,18 +77,24 @@ class WargaDataTable extends DataTable
             }
             
         })
-        ->addColumn('domisili', function($row){
+        ->editColumn('domisili', function($row){
             return is_null($row->rt) ? '' : $row->rt->name;
         })
-            ->addColumn('ktp', function($row){
+            ->editColumn('ktp', function($row){
                 return $row->ktp_desa == 1 ? 'desa' : 'luar desa';
             })
-            ->addColumn('ttl', function($row){
-                
-                return $row->tempat_lahir.', '.$row->tanggal_lahir;
+            ->filterColumn('ktp', function($query, $keyword) {
+                if($keyword=='desa'){
+                    $k = 1;
+                }
+                else{
+                    $k=0;
+                }
+                $sql = "warga.ktp_desa  like ?";
+                $query->whereRaw($sql, ["%{$k}%"]);
             })
             ->addIndexColumn() 
-            ->rawColumns(['action','updated'])    
+            ->rawColumns(['action','ttl','domisili','updated'])
             ->setRowId('id');
     }
 
@@ -137,15 +143,17 @@ class WargaDataTable extends DataTable
                     ->parameters([
                         'lengthMenu' => [
                             [ -1, 10, 25, 50 ],
-                            [ 'all', '10','25', '50'  ]
+                            ['all', '10','25', '50'  ]
                     ],    
                         'dom'          => 'Blfrtip',
                         'buttons'      => ['excel', 'print', 'reload'],
                         'initComplete' => "function () {
+                            var r = $('#warga-table tfoot tr');
+                             $('#warga-table thead').append(r);
                             this.api()
                                 .columns()
                                 .every(function (index) {
-                                    if (index <= 3) return;
+                                    if (index <= 3||index==10||index==13) return;
                                     let column = this;
                      
                                     // Create select element
@@ -156,7 +164,7 @@ class WargaDataTable extends DataTable
                                     // Apply listener for user change in value
                                     select.addEventListener('change', function () {
                                         column
-                                            .search(select.value, {exact: true})
+                                            .search(select.value, false, false, true)
                                             .draw();
                                     });
                      
@@ -197,13 +205,16 @@ class WargaDataTable extends DataTable
             Column::make('nik'),
             Column::make('no_kk')->title('No KK'),
             Column::make('nama'),
-            Column::computed('domisili'),
+            Column::computed('domisili')
+            ->searchable(true),
             Column::make('status'),
-            Column::computed('ktp'),
+            Column::computed('ktp')
+            ->searchable(true),
             Column::make('alamat_ktp')->title('alamat ktp'),
             Column::make('no_telp')->title('no hp'),
             Column::make('jenis_kelamin')->title('jenis kelamin'),
-            Column::computed('ttl'),
+            Column::make('tempat_lahir'),
+            Column::make('tanggal_lahir'),
             Column::make('agama'),
             Column::make('gol_darah'),
             Column::make('pendidikan'),

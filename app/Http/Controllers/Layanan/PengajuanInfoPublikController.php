@@ -12,6 +12,12 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\DB;
+use App\Notifications\SetujuPermohonanInfo;
+use App\Notifications\BuktiPermohonanInfo;
+use App\Notifications\TolakPermohonanInfo;
+use App\Notifications\SelesaiPermohonanInfo;
+use Illuminate\Support\Facades\Notification;
 
 
 class PengajuanInfoPublikController extends Controller
@@ -24,7 +30,8 @@ class PengajuanInfoPublikController extends Controller
     public function index()
     {
         $title = 'Permohonan Informasi Publik';
-        return view('menu.pengajuan.info.index',compact('title'));
+        $data = PengajuanInfoPublik::select('is_verified', DB::raw('count(*) as total'))->whereYear('created_at', date('Y'))->groupBy('is_verified')->pluck('total','is_verified')->all();
+        return view('menu.pengajuan.info.index',compact(['title','data']));
     }
 
     /**
@@ -53,6 +60,8 @@ class PengajuanInfoPublikController extends Controller
         $pdf = Pdf::loadView('surat.penolakan', ['permohonan' => $pengajuanInfoPublik]);
         $content = $pdf->download()->getOriginalContent();
         Storage::disk('public')->put('surat/pengajuan-info-publik/tolak/'.str_replace(array("/"), "-", $pengajuanInfoPublik->no_pendaftaran).'_'.$pengajuanInfoPublik->nik_pengaju.'_'.date('Ymd').'.pdf',$content);
+        Notification::route('mail', $pengajuanInfoPublik['email'])
+                ->notify(new TolakPermohonanInfo($pengajuanInfoPublik->no_pendaftaran,$content));
         return back()->withSuccess('Permohonan Informasi berhasil ditolak');
     }
     public function setuju(Request $request,PengajuanInfoPublik $pengajuanInfoPublik)
@@ -66,18 +75,42 @@ class PengajuanInfoPublikController extends Controller
         $validateData['is_verified'] = true;
         $validateData['waktu'] = now();
         $pengajuanInfoPublik->update($validateData);
+        Notification::route('mail', $pengajuanInfoPublik['email'])
+                ->notify(new SetujuPermohonanInfo($pengajuanInfoPublik->no_pendaftaran,$validateData['biaya'],$validateData['keterangan']));
         return back()->withSuccess('Permohonan Informasi berhasil disetujui');
     }
     public function selesai(Request $request,PengajuanInfoPublik $pengajuanInfoPublik)
     {
-        $validateData = $request->validate([
-			'cara_bayar' => ['required'],
-		]);
-        $validateData['status'] = 'selesai';
+
+            $validateData = $request->validate([
+                'keterangan' => [],
+            ]);
         $validateData['is_verified'] = true;
         $validateData['waktu'] = now();
+        $validateData['status'] = 'selesai';
         $pengajuanInfoPublik->update($validateData);
+        Notification::route('mail', $pengajuanInfoPublik['email'])
+        ->notify(new SelesaiPermohonanInfo($pengajuanInfoPublik->no_pendaftaran,$validateData['keterangan']));
         return back()->withSuccess('Permohonan Informasi berhasil diselesaikan');
+    }
+    public function bayar(Request $request,PengajuanInfoPublik $pengajuanInfoPublik)
+    {
+        $validateData = $request->validate([
+			'cara_bayar' => ['required'],
+            'pembayaran' => ['mimes:jpg'],
+		]);
+        $data['status'] = 'dibayar';
+        $data['cara_bayar'] = $validateData['cara_bayar'];
+        $data['waktu'] = now();
+        if($pengajuanInfoPublik->status == 'dibayar'){
+            Storage::disk('public')->delete('pengajuan-info-publik/bayar/'.str_replace(array("/"), "-", $pengajuanInfoPublik['no_pendaftaran']).'_'.$pengajuanInfoPublik['nik_pengaju'].'.jpg');
+        }
+        if($request->file('pembayaran')){
+            $extension = $request->file('pembayaran')->extension();
+            Storage::disk('public')->putFileAs('pengajuan-info-publik/bayar', $request->file('pembayaran'), str_replace(array("/"), "-", $pengajuanInfoPublik['no_pendaftaran']).'_'.$pengajuanInfoPublik['nik_pengaju'].'.'.$extension);
+        }
+        $pengajuanInfoPublik->update($data);
+        return back()->withSuccess('Upload Bukti Pembayaran Berhasil, Menunggu Verifikasi');
     }
     public function store(Request $request)
     {
@@ -118,6 +151,9 @@ class PengajuanInfoPublikController extends Controller
         Storage::disk('public')->put('surat/pengajuan-info-publik/bukti/'.str_replace(array("/"), "-", $permohonan->no_pendaftaran).'_'.$permohonan->nik_pengaju.'_'.date('Ymd').'.pdf',$content);
         $updateData['bukti'] = 'surat/pengajuan-info-publik/bukti/'.str_replace(array("/"), "-", $permohonan->no_pendaftaran).'_'.$permohonan->nik_pengaju.'_'.date('Ymd').'.pdf';
         $permohonan->update($updateData);
+        Notification::route('mail', $validateData['email'])
+                ->notify(new BuktiPermohonanInfo($permohonan->no_pendaftaran,$content));
+
         return back()->withSuccess('Permohonan Informasi berhasil diajukan');
         
     }
@@ -143,16 +179,23 @@ class PengajuanInfoPublikController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(PengajuanInfoPublik $pengajuanInfoPublik)
+    public function info(PengajuanInfoPublik $pengajuanInfoPublik)
     {
         $title = 'Permohonan : '.$pengajuanInfoPublik->no_pendaftaran;
         return view('menu.pengajuan.info.show',compact(['title','pengajuanInfoPublik']));
     }
 
+    public function show(PengajuanInfoPublik $pengajuanInfoPublik)
+    {
+        $title = 'Permohonan : '.$pengajuanInfoPublik->no_pendaftaran;
+        return view('menu.info_publik.permohonan.show',compact(['title','pengajuanInfoPublik']));
+    }
+
     public function list(PengajuanInfoPublikDataTable $dataTable)
     {
         $title = 'Manajemen Permohonan Informasi Publik';
-        return $dataTable->render('menu.info_publik.permohonan.index',compact('title'));
+        $data = PengajuanInfoPublik::select('status', DB::raw('count(*) as total'))->whereYear('created_at', date('Y'))->groupBy('status')->pluck('total','status')->all();
+        return $dataTable->render('menu.info_publik.permohonan.index',compact(['title','data']));
     }
     /**
      * Show the form for editing the specified resource.

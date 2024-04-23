@@ -9,7 +9,7 @@
 		  <div class="app-email-view-header p-3 py-md-3 py-2 rounded-0 overflow-auto" style="max-height: 700px">
 			@forelse($aspirasi->balas_aspirasi as $item)
 				<!-- Email View : Previous mails-->
-			<div class="card email-card-prev mx-sm-4 mx-3 border mt-2" style= {{$item->user->id===auth()->user()->id ? "background-color:aliceblue" : ""}}>
+			<div class="card email-card-prev mx-sm-4 mx-3 border mt-2" style= {{$item->user->id===$aspirasi->user_id ? "" : "background-color:aliceblue"}}>
 				<div class="card-header d-flex justify-content-between align-items-center flex-wrap">
 				  <div class="d-flex align-items-center mb-sm-0 mb-3">
 					<div class="flex-grow-1 ms-1">

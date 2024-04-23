@@ -63,10 +63,12 @@ class InfoDataTable extends DataTable
                         'dom'          => 'Blfrtip',
                         'buttons'      => [],
                         'initComplete' => "function () {
+                            var r = $('#infopublik-table tfoot tr');
+                             $('#infopublik-table thead').append(r);
                             this.api()
                                 .columns()
                                 .every(function (index) {
-                                    if (index < 3) return;
+                                    if (index < 2) return;
                                     let column = this;
                      
                                     // Create select element

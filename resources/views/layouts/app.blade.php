@@ -72,6 +72,7 @@
 			.trix-button-group.trix-button-group--file-tools {
 				display:none;
 			}
+			
 			.overlay_loading {
 				z-index: 10000000000000000;
 				position: fixed;
@@ -92,6 +93,7 @@
 			top: 50%;
 			transform: translate(-50%, -50%);
 			}
+			
 		</style>
 </head>
 

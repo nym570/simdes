@@ -32,8 +32,18 @@ class AspirasiWargaDataTable extends DataTable
             ->addColumn('updated', function($row){
                 return   $row->updated_at->diffForHumans();
             })
-            ->addColumn('status', function($row){
+            ->editColumn('status', function($row){
                 return   $row->is_open?'open':'closed';
+            })
+            ->filterColumn('status', function($query, $keyword) {
+                if($keyword=='open'){
+                    $k = 1;
+                }
+                else{
+                    $k=0;
+                }
+                $sql = "aspirasi.is_open  like ?";
+                $query->whereRaw($sql, ["%{$k}%"]);
             })
             
             ->addIndexColumn() 
@@ -70,6 +80,8 @@ class AspirasiWargaDataTable extends DataTable
                         'dom'          => 'Blfrtip',
                         'buttons'      => ['excel', 'print', 'reload'],
                         'initComplete' => "function () {
+                            var r = $('#aspirasi-table tfoot tr');
+                            $('#aspirasi-table thead').append(r);
                             this.api()
                                 .columns()
                                 .every(function (index) {
@@ -125,7 +137,8 @@ class AspirasiWargaDataTable extends DataTable
             Column::make('judul'),
             Column::make('kategori'),
             Column::make('tingkat'),
-            Column::computed('status'),
+            Column::computed('status')
+            ->searchable(true),
         ];
     }
 

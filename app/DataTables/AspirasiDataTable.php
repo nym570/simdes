@@ -36,6 +36,16 @@ class AspirasiDataTable extends DataTable
             ->addColumn('status', function($row){
                 return   $row->is_open?'open':'closed';
             })
+            ->filterColumn('status', function($query, $keyword) {
+                if($keyword=='open'){
+                    $k = 1;
+                }
+                else{
+                    $k=0;
+                }
+                $sql = "aspirasi.is_open  like ?";
+                $query->whereRaw($sql, ["%{$k}%"]);
+            })
             ->addIndexColumn() 
             ->rawColumns(['action','updated'])    
             ->setRowId('id');
@@ -94,6 +104,8 @@ class AspirasiDataTable extends DataTable
                         'dom'          => 'Blfrtip',
                         'buttons'      => ['excel', 'print', 'reload'],
                         'initComplete' => "function () {
+                            var r = $('#aspirasi-table tfoot tr');
+                            $('#aspirasi-table thead').append(r);
                             this.api()
                                 .columns()
                                 .every(function (index) {

@@ -182,6 +182,7 @@ Route::middleware(['auth','verified'])->group(function () {
 		});
 		Route::controller(PengajuanInfoPublikController::class)->name('pengajuan-info-manajemen.')->group(function () {
 			Route::get('/pengajuan-info-manajemen', 'list')->name('index');
+			Route::get('/pengajuan-info-manajemen/{mohon_info}/show', 'show')->name('show');
 		});
 	});
 	Route::middleware(['role:ketua rt|ketua rw|bpd|kepala dusun|kepala desa'])->group(function () {
@@ -390,9 +391,10 @@ Route::controller(PengajuanInfoPublikController::class)->name('pengajuan-info.')
 	Route::get('/pengajuan-info', 'index')->name('index');
 	Route::post('/pengajuan-info/store', 'store')->name('buat');
 	Route::post('/pengajuan-info/cek', 'cek')->name('cek');
-	Route::get('/pengajuan-info/{mohon_info}/show', 'show')->name('info');
+	Route::get('/pengajuan-info/{mohon_info}/rinci', 'info')->name('info');
 	Route::post('/pengajuan-info/{mohon_info}/tolak', 'tolak')->name('tolak');
 	Route::post('/pengajuan-info/{mohon_info}/setuju', 'setuju')->name('setuju');
+	Route::post('/pengajuan-info/{mohon_info}/bayar', 'bayar')->name('bayar');
 	Route::post('/pengajuan-info/{mohon_info}/selesai', 'selesai')->name('selesai');
 });
 

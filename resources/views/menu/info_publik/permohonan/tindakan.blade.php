@@ -84,18 +84,11 @@
 							<x-label for="biaya" :value="__('Biaya')" />
 						<div class="input-group">
 							<span class="input-group-text">Rp</span>
-							<x-input type="number" name="biaya" id="biaya" :value="old('biaya')" min="500" step="500" required/>
+							<x-input type="number" name="biaya" id="biaya" :value="old('biaya')" min="0" step="1000" required/>
 						</div>
 						
 						<x-invalid error="biaya" />
 					</div>
-					{{-- <div class="col">
-							<label for="cara_bayar" class="form-label">Cara Pembayaran</label>
-							<select id="cara_bayar" class="selectpicker w-100" data-style="btn-default" title="Cara Pembayaran" name="cara_bayar" required>
-							  <option value="tunai">Tunai</option>
-							  <option value="transfer">Transfer</option>
-							</select>
-					</div> --}}
 						
 					</div>
 					<div class="row ">
@@ -118,7 +111,7 @@
   </div>
 
   <!-- Modal -->
-<div class="modal  fade" id="selesaiModal" tabindex="-1" aria-hidden="true">
+<div class="modal  fade" id="bayarModal" tabindex="-1" aria-hidden="true">
 	<div class="modal-dialog" role="document">
 	  <div class="modal-content">
 		<div class="modal-header">
@@ -127,7 +120,7 @@
 		</div>
 		
 			<div class="modal-body">
-				<form id="formSelesai" class="mb-3" data-remote="true" method="POST" enctype="multipart/form-data">
+				<form id="formBayar" class="mb-3" data-remote="true" method="POST" enctype="multipart/form-data">
 					@csrf
 
 					<div class="row mb-3">
@@ -135,16 +128,53 @@
 					<div class="col">
 							<label for="cara_bayar" class="form-label">Cara Pembayaran</label>
 							<select id="cara_bayar" class="selectpicker w-100" data-style="btn-default" title="Cara Pembayaran" name="cara_bayar" required>
-							  <option value="tunai">Tunai</option>
-							  <option value="transfer">Transfer</option>
+							  <option value="1">Tunai</option>
+							  <option value="0">Transfer</option>
 							</select>
 					</div>
 						
 					</div>
 					<div class="row ">
 						<div class="col mb-3">
+							<x-label for="bukti pembayaran" :value="__('Bukti Pembayaran (.jpg)')" />
+							<input type="file" class="form-control" id="pembayaran" name="pembayaran" required>
+							<x-invalid error="pembayaran" />
+						</div>
+					  </div>
+					
+					
+				
+			  </div>
+			  <div class="modal-footer">
+				<x-button type="submit" class="btn btn-primary d-grid w-100" :value="__('Selesaikan Permohonan')"/>
+			  </div>
+			</form>
+		</form>
+	  </div>
+	</div>
+  </div>
+
+  <!-- Modal -->
+<div class="modal  fade" id="verifSelesaiModal" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+	  <div class="modal-content">
+		<div class="modal-header">
+		  <h5 class="modal-title" id="exampleModalLabel1">Form Rincian</h5>
+		  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		</div>
+		
+			<div class="modal-body">
+				<form id="formVerifSelesai" class="mb-3" data-remote="true" method="POST" enctype="multipart/form-data">
+					@csrf
+
+					<div class="row mb-3">
+						
+						
+					</div>
+					<div class="row ">
+						<div class="col mb-3">
 						  <x-label for="keterangan_selesai" :value="__('Keterangan tambahan')" />
-						  <textarea name="keterangan" id="keterangan_selesai" placeholder='Keterangan lainnya'  class="form-control" rows="2" required>{{Request::old('keterangan')}}</textarea>
+						  <textarea name="keterangan" id="keterangan_selesai_verif" placeholder='Keterangan lainnya'  class="form-control" rows="2" required>{{Request::old('keterangan')}}</textarea>
 						  <x-invalid error="keterangan" />
 						</div>
 					  </div>
@@ -175,10 +205,16 @@
 				$('#setujuModal').modal('show');
 				
 			}); 
-			$(document).on('click','.open_modal_selesai',function(){
+			$(document).on('click','.open_modal_bayar',function(){
 				let link= $(this).attr('data-link');
-				$('#formSelesai').attr('action',link);
-				$('#selesaiModal').modal('show');
+				$('#formBayar').attr('action',link);
+				$('#bayarModal').modal('show');
+				
+			}); 
+			$(document).on('click','.open_modal_verif_selesai',function(){
+				let link= $(this).attr('data-link');
+				$('#formVerifSelesai').attr('action',link);
+				$('#verifSelesaiModal').modal('show');
 				
 			}); 
 </script>

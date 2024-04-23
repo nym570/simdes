@@ -65,10 +65,44 @@ class AnggotaRutaDataTable extends DataTable
                     ->parameters([
                         'lengthMenu' => [
                             [ -1, 10, 25, 50 ],
-                            [ 'all', '10','25', '50'  ]
+                            ['all', '10','25', '50'  ]
                     ],    
                         'dom'          => 'Blfrtip',
                         'buttons'      => ['excel', 'print', 'reload'],
+                        'initComplete' => "function () {
+                            var r = $('#anggotaruta-table tfoot tr');
+                             $('#anggotaruta-table thead').append(r);
+                            this.api()
+                                .columns()
+                                .every(function (index) {
+                                    if (index < 1) return;
+                                    let column = this;
+                     
+                                    // Create select element
+                                    let select = document.createElement('select');
+                                    select.add(new Option(''));
+                                    column.footer().replaceChildren(select);
+                     
+                                    // Apply listener for user change in value
+                                    select.addEventListener('change', function () {
+                                        column
+                                            .search(select.value, false, false, true)
+                                            .draw();
+                                    });
+                     
+                                    // Add list of options
+                                    column
+                                    .data()
+                                    .unique()
+                                    .sort()
+                                    .each(function (d, j) {
+                                       select.add(new Option(d));
+                                    });
+
+                                    
+
+                                });
+                        }",
                     ]);
     }
 

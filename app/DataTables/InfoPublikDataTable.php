@@ -39,8 +39,18 @@ class InfoPublikDataTable extends DataTable
              return $btn;
              
         })
-            ->addColumn('status', function($row){
+            ->editColumn('status', function($row){
                 return   $row->is_show?'ditampilkan':'disembunyikan';
+            })
+            ->filterColumn('status', function($query, $keyword) {
+                if($keyword=='ditampilkan'){
+                    $k = 1;
+                }
+                else{
+                    $k=0;
+                }
+                $sql = "info_publik.is_show  like ?";
+                $query->whereRaw($sql, ["%{$k}%"]);
             })
             ->addIndexColumn() 
             ->rawColumns(['action'])    
@@ -76,10 +86,12 @@ class InfoPublikDataTable extends DataTable
                         'dom'          => 'Blfrtip',
                         'buttons'      => ['excel', 'print', 'reload'],
                         'initComplete' => "function () {
+                            var r = $('#infopublik-table tfoot tr');
+                             $('#infopublik-table thead').append(r);
                             this.api()
                                 .columns()
                                 .every(function (index) {
-                                    if (index < 3) return;
+                                    if (index < 2) return;
                                     let column = this;
                      
                                     // Create select element
@@ -125,14 +137,15 @@ class InfoPublikDataTable extends DataTable
                   ->exportable(false)
                   ->printable(false)
                   ->addClass('text-center'),
+                  Column::computed('status'),
             Column::make('judul'),
             Column::make('kategori'),
             Column::make('tahun'),
             Column::make('penguasaan')->title('perjabat penguasa'),
             Column::make('penanggung_jawab')->title('penanggung jawab'),
-            Column::make('retensi'),
+            Column::make('retensi')->title('retensi (tahun)'),
             Column::make('waktu')->title('waktu pembuatan'),
-            Column::computed('status'),
+            
         ];
     }
 

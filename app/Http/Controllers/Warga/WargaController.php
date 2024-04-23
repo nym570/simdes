@@ -20,6 +20,7 @@ use App\Notifications\Message;
 use Illuminate\Support\Facades\Notification;
 use Jenssegers\Date\Date;
 use App\Helper\wilayahHelper;
+use Illuminate\Support\Facades\DB;
 
 
 class WargaController extends Controller
@@ -30,7 +31,29 @@ class WargaController extends Controller
     public function index(WargaDataTable $dataTable)
     {
         $title = 'Manajemen Warga';
-		 return $dataTable->render('menu.warga.index',compact('title'));
+        $cakupan = auth()->user()->getRoleNames()->toArray(); 
+        if(!empty(array_intersect(['kependudukan','kepala desa'],$cakupan))){
+            $data = Warga::select('status', DB::raw('count(*) as total'))->groupBy('status')->pluck('total','status')->all();
+        }
+            else if(in_array('kepala dusun',$cakupan)){
+                $data = Warga::select('status', DB::raw('count(*) as total'))->whereHas("rt.rw.dusun", function(Builder $builder) {
+                     $builder->where('pemimpin', '=', auth()->user()->id);
+                 })->groupBy('status')->pluck('total','status')->all();
+                
+            }
+            else if(in_array('ketua rw',$cakupan)){
+                $data = Warga::select('status', DB::raw('count(*) as total'))->whereHas("rt.rw", function(Builder $builder) {
+                    $builder->where('pemimpin', '=', auth()->user()->id);
+                })->groupBy('status')->pluck('total','status')->all();
+                
+            }
+            else if(in_array('ketua rt',$cakupan)){
+                $data = Warga::select('status', DB::raw('count(*) as total'))->whereHas("rt", function(Builder $builder) {
+                    $builder->where('pemimpin', '=', auth()->user()->id);
+                })->groupBy('status')->pluck('total','status')->all();
+                
+            }
+		 return $dataTable->render('menu.warga.index',compact(['title','data']));
     }
     public function get(Warga $warga)
     {

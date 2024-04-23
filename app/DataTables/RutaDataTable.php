@@ -42,6 +42,9 @@ class RutaDataTable extends DataTable
                 $kepala = $row->anggota_ruta->where('hubungan','Kepala Keluarga')->first()->warga;
                 return $kepala->nama.' ['.$kepala->nik.']';
             })
+            ->filterColumn('kepala ruta', function($query, $keyword) {
+                $query->whereHas('anggota_ruta.warga', fn($q) => $q->whereRaw("CONCAT(nama,' [',nik,']')  like ?", ["%{$keyword}%"]));
+            })
             ->addIndexColumn() 
             ->setRowId('id');
     }
@@ -89,10 +92,44 @@ class RutaDataTable extends DataTable
                     ->parameters([
                         'lengthMenu' => [
                             [ -1, 10, 25, 50 ],
-                            [ 'all', '10','25', '50'  ]
+                            ['all', '10','25', '50'  ]
                     ],    
                         'dom'          => 'Blfrtip',
                         'buttons'      => ['excel', 'print', 'reload'],
+                        'initComplete' => "function () {
+                            var r = $('#ruta-table tfoot tr');
+                             $('#ruta-table thead').append(r);
+                            this.api()
+                                .columns()
+                                .every(function (index) {
+                                    if (index <= 1) return;
+                                    let column = this;
+                     
+                                    // Create select element
+                                    let select = document.createElement('select');
+                                    select.add(new Option(''));
+                                    column.footer().replaceChildren(select);
+                     
+                                    // Apply listener for user change in value
+                                    select.addEventListener('change', function () {
+                                        column
+                                            .search(select.value, false, false, true)
+                                            .draw();
+                                    });
+                     
+                                    // Add list of options
+                                    column
+                                    .data()
+                                    .unique()
+                                    .sort()
+                                    .each(function (d, j) {
+                                       select.add(new Option(d));
+                                    });
+
+                                    
+
+                                });
+                        }",
                     ]);
     }
 
@@ -112,7 +149,8 @@ class RutaDataTable extends DataTable
                 ->addClass('text-center'),
             Column::make('rt.name')->title('RT')->data('rt.name'),
             Column::make('alamat_domisili')->title('Alamat Domisili'),
-            Column::computed('kepala ruta'),
+            Column::computed('kepala ruta')
+            ->searchable(true),
             Column::make('jumlah_art')->title('Jumlah Anggota'),
             
         ];

@@ -24,7 +24,8 @@ class PengajuanInfoPublikDataTable extends DataTable
         return (new EloquentDataTable($query))
         ->addColumn('action', function($row){
    
-            $btn = '<button class="btn btn-sm btn-success my-1 mx-1 open_modal_info" value="'.route('info-publik.get',$row).'" data-pdf="'.asset('/laraview/#../storage/'.$row->lampiran).'"> Lihat</button>';
+            $btn = '<a class="btn btn-sm btn-success my-1 mx-1" href="'.route('pengajuan-info-manajemen.show',$row).'"> Lihat</a>';
+            if($row->status!='ditolak'&&$row->status!='selesai'){
             $btn = $btn.'<div class="btn-group me-3">
                 <button class="btn btn-sm btn-warning dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   Aksi
@@ -34,30 +35,36 @@ class PengajuanInfoPublikDataTable extends DataTable
                 $btn = $btn.'<li><a class="dropdown-item open_modal_tolak" data-link="'.route('pengajuan-info.tolak',$row).'">Tolak</a></li>';
                 $btn = $btn.'<li><a class="dropdown-item open_modal_setuju" data-link="'.route('pengajuan-info.setuju',$row).'">Terima & Proses</a></li>';
             }
-            if($row->is_verified==true){
-                $btn = $btn.'<li><a class="dropdown-item open_modal_selesai" data-link="'.route('pengajuan-info.selesai',$row).'">Selesai</a></li>';
+            if($row->is_verified==1){
+                if($row->status=='diproses' && $row->biaya > 0){
+                    $btn = $btn.'<li><a class="dropdown-item open_modal_bayar" data-link="'.route('pengajuan-info.bayar',$row).'">Pembayaran</a></li>';
+                }
+                else{
+                    $btn = $btn.'<li><a class="dropdown-item open_modal_verif_selesai" data-link="'.route('pengajuan-info.selesai',$row).'">Selesai</a></li>';
+                }
+               
             }
                   
              $btn = $btn.'</ul></div>';
-
+        }
              return $btn;
              
         })
             ->addColumn('identitas', function($row){
-                return   $row->nama.'<br>('.$row->nik_pengaju.')';
+                return   $row->nama.' ['.$row->nik_pengaju.']';
+            })
+            ->filterColumn('identitas', function($query, $keyword) {
+                $query->whereRaw("CONCAT(pengajuan_info_publik.nama,' [',pengajuan_info_publik.nik_pengaju,']')  like ?", ["%{$keyword}%"]);
             })
             ->addColumn('kontak', function($row){
-                return   'Email:'.$row->email.'<br>Telp: '.$row->no_telp;
+                return   'Email: '.$row->email.' / Telp: '.$row->no_telp;
+            })
+            ->filterColumn('kontak', function($query, $keyword) {
+                $query->whereRaw("CONCAT('Email: ',pengajuan_info_publik.email,' / Telp: ',pengajuan_info_publik.no_telp)  like ?", ["%{$keyword}%"]);
             })
             ->addColumn('pembiayaan', function($row){
                 if($row->biaya&&$row->cara_bayar){
-                    return   $row->biaya.'<br>('.$row->cara_bayar.')';
-                }
-                
-            })
-            ->addColumn('waktu permohonan', function($row){
-                if($row->biaya&&$row->cara_bayar){
-                    return   $row->biaya.'<br>('.$row->cara_bayar.')';
+                    return   $row->biaya.'('.$row->cara_bayar.')';
                 }
                 
             })
@@ -84,7 +91,7 @@ class PengajuanInfoPublikDataTable extends DataTable
                     ->columns($this->getColumns())
                     ->minifiedAjax()
                     //->dom('Bfrtip')
-                    ->orderBy(1)
+                    ->orderBy(2)
                     ->selectStyleSingle()
                     ->paging(true)
                     ->parameters([
@@ -95,6 +102,8 @@ class PengajuanInfoPublikDataTable extends DataTable
                         'dom'          => 'Blfrtip',
                         'buttons'      => ['excel', 'print', 'reload'],
                         'initComplete' => "function () {
+                            var r = $('#pengajuaninfopublik-table tfoot tr');
+                             $('#pengajuaninfopublik-table thead').append(r);
                             this.api()
                                 .columns()
                                 .every(function (index) {
@@ -147,9 +156,11 @@ class PengajuanInfoPublikDataTable extends DataTable
             Column::make('created_at')->title('waktu permohonan'),
             Column::make('status'),
             Column::make('no_pendaftaran')->title('nomor'),
-            Column::computed('identitas'),
+            Column::computed('identitas')
+            ->searchable(true),
             Column::make('alamat')->title('alamat'),
-            Column::computed('kontak'),
+            Column::computed('kontak')
+            ->searchable(true),
             Column::make('tujuan'),
             Column::make('rincian'),
             Column::make('cara_perolehan')->title('Cara Perolehan'),
