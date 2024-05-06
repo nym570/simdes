@@ -61,6 +61,15 @@ class WargaController extends Controller
         $warga['kode_lahir'] = wilayahHelper::getKode($warga['tempat_lahir']);
 		return json_encode($warga);
     }
+    public function getWargaRuta()
+    {
+        $warga = Warga::whereIn('status',['warga','sementara tidak berdomisili'])->has('anggota_ruta')->get();
+        if($warga){
+            foreach($warga as $item){
+                echo "<option data-tokens='".$item['nik'].$item['nama']."' value='".$item['nik']."'>".$item['nik'].' | '.$item['nama']."</option>";
+            }
+        }
+    }
     public function getWargaHidup(Request $request){
         if(isset($request['tujuan'])){
             $data = Warga::doesntHave($request['tujuan'])->where('status','warga')->get();

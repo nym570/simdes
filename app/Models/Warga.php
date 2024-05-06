@@ -53,6 +53,9 @@ class Warga extends Model
     {
         return $this->hasMany(Dinamika::class,'nik', 'nik');
     }
-    
+    public function surat_keterangan()
+    {
+        return $this->hasMany(SuratKeterangan::class,'nik', 'nik');
+    }
     
 }

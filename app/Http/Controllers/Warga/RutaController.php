@@ -37,6 +37,7 @@ class RutaController extends Controller
             }
         }
     }
+   
     public function getKepalaRuta()
     {
         $kepala = AnggotaRuta::where('hubungan','Kepala Keluarga')->with(['warga','warga.anggota_ruta'])->whereHas("ruta.rt", function(Builder $builder) {

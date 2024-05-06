@@ -222,7 +222,16 @@
 		</li>
 		
 		
-
+		@if(auth()->user()->hasRole(['layanan','ketua rt','ketua rw','kepala desa']))
+		<li class="menu-item {{ menuIsActive('suket.*') }}">
+			<a href="{{ route('suket.index') }}" class="menu-link">
+				<i class="menu-icon tf-icons bx bx-file"></i>
+				<div data-i18n="Suket">
+					{{ __('Surat Keterangan') }}
+				</div>
+			</a>
+		</li>
+		@endif
 		
 		@if(auth()->user()->hasRole(['bpd','ketua rt','ketua rw','kepala desa','kepala dusun']))
 		
@@ -239,7 +248,7 @@
 		@if(auth()->user()->hasRole(['ppid','kepala desa']))
 		
 		<li class="menu-item">
-			<a class="menu-link menu-toggle" href="javascript:void(0)"><i class="menu-icon tf-icons bx bx-file"></i>
+			<a class="menu-link menu-toggle" href="javascript:void(0)"><i class="menu-icon tf-icons bx bx-file-find"></i>
 			<div>
 			  Informasi Publik
 			</div></a>
@@ -282,6 +291,14 @@
 		</a>
 	</li>
 	@endif
+	<li class="menu-item {{ menuIsActive('pengajuan.warga.suket.*') }}">
+		<a href="{{ route('pengajuan.warga.suket.index') }}" class="menu-link">
+			<i class="menu-icon tf-icons bx bx-file"></i>
+			<div data-i18n="Suket">
+				{{ __('Surat Keterangan') }}
+			</div>
+		</a>
+	</li>
 	<li class="menu-item {{ menuIsActive('pengajuan.warga.aspirasi.*') }}">
 		<a href="{{ route('pengajuan.warga.aspirasi.index') }}" class="menu-link">
 			<i class="menu-icon tf-icons bx bx-chat"></i>

@@ -18,10 +18,12 @@ use App\Http\Controllers\Warga\Dinamika\KepindahanController;
 use App\Http\Controllers\Warga\Dinamika\KedatanganController;
 use App\Http\Controllers\Pengajuan\PengajuanDinamika;
 use App\Http\Controllers\Pengajuan\PengajuanAspirasi;
+use App\Http\Controllers\Pengajuan\PengajuanSuket;
 use App\Http\Controllers\Layanan\AspirasiController;
 use App\Http\Controllers\Layanan\BalasAspirasiController;
 use App\Http\Controllers\Layanan\InfoPublikController;
 use App\Http\Controllers\Layanan\PengajuanInfoPublikController;
+use App\Http\Controllers\Layanan\SuratKeteranganController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MasterController;
 use App\Http\Controllers\StatistikWargaController;
@@ -37,7 +39,6 @@ use App\Http\Controllers\Auth\ProfilController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
 
 
 Route::get('/', [DashboardController::class,'index'])->name('home');
@@ -172,6 +173,18 @@ Route::middleware(['admin.auth','admin.verified'])->group(function () {
 });
 
 Route::middleware(['auth','verified'])->group(function () {
+	Route::middleware(['role:ketua rt|ketua rw|layanan|kepala desa'])->group(function () {
+		Route::controller(SuratKeteranganController::class)->name('suket.')->group(function () {
+			Route::get('/suket', 'index')->name('index');
+			Route::put('/suket/{suket}/verifikasi', 'verifikasi')->name('verifikasi');
+			Route::post('/suket/{suket}/tolak', 'tolak')->name('tolak');
+			Route::post('/suket/{suket}/setuju', 'setuju')->name('setuju');
+			Route::put('/suket/{suket}/selesai', 'selesai')->name('selesai');
+			Route::post('/suket/domisili', 'store')->name('domisili.store');
+			Route::post('/suket/umum', 'store')->name('umum.store');
+		});
+		
+	});
 	Route::middleware(['role:ppid|kepala desa'])->group(function () {
 		Route::controller(InfoPublikController::class)->name('info-publik.')->group(function () {
 			Route::get('/info-publik', 'index')->name('index');
@@ -200,7 +213,6 @@ Route::middleware(['auth','verified'])->group(function () {
 			Route::get('/warga', 'index')->name('index');
 			Route::get('warga/get-warga', 'getWargaHidup')->name('get-warga');
 			Route::get('/warga/{warga}', 'show')->name('show');
-			Route::post('/warga/get-dokumen', 'getDokumen')->name('get-dokumen');
 			Route::post('/warga/{warga}/message', 'message')->name('message');
 			Route::post('/warga/{warga}/message-rt', 'messageRT')->name('message.rt');
 			
@@ -288,6 +300,12 @@ Route::middleware(['auth','verified'])->group(function () {
 	});
 
 	Route::middleware(['role:warga'])->name('pengajuan.warga.')->group(function () {
+		Route::controller(PengajuanSuket::class)->name('suket.')->group(function () {
+			Route::get('/pengajuan/suket', 'index')->name('index');
+			Route::post('/pengajuan/suket/domisili', 'store')->name('domisili.store');
+			Route::post('/pengajuan/suket/umum', 'store')->name('umum.store');
+			
+		});
 		Route::controller(PengajuanAspirasi::class)->name('aspirasi.')->group(function () {
 			Route::get('/pengajuan/aspirasi', 'index')->name('index');
 			Route::post('/pengajuan/aspirasi', 'store')->name('store');
@@ -370,6 +388,8 @@ Route::controller(UserController::class)->name('users.')->group(function () {
 });
 Route::controller(WargaController::class)->group(function () {
 	Route::get('/get-warga', 'getWargaHidup')->name('get-warga');
+	Route::get('/get-warga-ruta', 'getWargaRuta')->name('get-warga-ruta');
+	Route::post('/warga/get-dokumen', 'getDokumen')->name('warga.get-dokumen');
 });
 
 

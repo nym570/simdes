@@ -20,6 +20,7 @@ use App\Models\Aspirasi;
 use App\Models\BalasAspirasi;
 use App\Models\InfoPublik;
 use App\Models\PengajuanInfoPublik;
+use App\Models\SuratKeterangan;
 
 return [
 
@@ -133,6 +134,10 @@ return [
         PengajuanInfoPublik::class => [
             'salt' => PengajuanInfoPublik::class.'mohon-info',
             'length' => 7,
+        ],
+        SuratKeterangan::class => [
+            'salt' => SuratKeterangan::class.'suket',
+            'length' => 10,
         ],
 
         // 'alternative' => [

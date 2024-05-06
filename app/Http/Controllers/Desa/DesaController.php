@@ -66,6 +66,8 @@ class DesaController extends Controller
 		]);
         $data['name'] = 'Dusun '.$data['name'];
         $dusun = Dusun::create($data);
+
+        
         
         return back()->withSuccess('Dusun berhasil ditambahkan');
     }
