@@ -39,10 +39,33 @@ class UsersDataTable extends DataTable
             return $btn;
              
         })
-        ->addColumn('status', function($row){
+        ->editColumn('status', function($row){
             return $row->is_active==true?'<span class="badge bg-info">Aktif</span>':'<span class="badge bg-secondary">Nonaktif</span>';
     })
-        ->rawColumns(['action','status'])    
+    ->filterColumn('status', function($query, $keyword) {
+        if(stripos('Aktif',$keyword)!==false){
+            $k = 1;
+        }
+        else{
+            $k=0;
+        }
+        $sql = "users.is_active  like ?";
+        $query->whereRaw($sql, ["%{$k}%"]);
+    })
+    ->addColumn('roles', function($row){
+        $role = $row->getRoleNames();
+        $data = '';
+        foreach($role as $item){
+            $data .= '<small><span class="badge bg-primary">'.$item.'</span></small>';
+        }
+        return $data;
+})
+->filterColumn('roles', function($query, $keyword) {
+    $query->whereHas('roles', function($q) use ($keyword) {
+        $q->where('roles.name','LIKE','%'.$keyword.'%');
+    })->get();
+})
+        ->rawColumns(['action','status','roles'])    
         ->addIndexColumn() 
         ->setRowId('id');
     }
@@ -74,10 +97,12 @@ class UsersDataTable extends DataTable
                         'dom'          => 'Blfrtip',
                         'buttons'      => ['excel', 'print', 'reload'],
                         'initComplete' => "function () {
+                            var r = $('#users-table tfoot tr');
+                            $('#users-table thead').append(r);
                             this.api()
                                 .columns()
                                 .every(function (index) {
-                                    if (index == 0 || index == 1) return;
+                                    if (index <= 2) return;
                                     let column = this;
                      
                                     // Create select element
@@ -119,11 +144,16 @@ class UsersDataTable extends DataTable
                   ->exportable(false)
                   ->printable(false)
                   ->addClass('text-center'),
+                  Column::computed('roles')
+                  ->exportable(true)
+                  ->printable(true)
+                  ->searchable(true),
             Column::make('username'),
             Column::make('nik'),
             Column::make('warga.nama')->title('nama')->data('warga.nama'),
             Column::make('email'),
-            Column::computed('status'),
+            Column::make('status'),
+            
             
             
         ];

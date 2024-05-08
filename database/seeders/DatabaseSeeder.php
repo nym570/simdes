@@ -193,15 +193,6 @@ class DatabaseSeeder extends Seeder
 			]);
 		$admin2->assignRole('admin');
 
-		$kades = User::updateOrCreate
-			([
-				'username' => 'laili',
-				'nik' => Warga::factory(1)->create()->value('nik'),
-				'email' => 'laililili45@gmail.com',
-				'password' => Hash::make('password12345'),
-			]);
-		$kades->assignRole(['warga']);
-
 		// $users = User::factory(18)->create()->each(function ($user) {
         //     $user->assignRole('Warga'); 
         // });

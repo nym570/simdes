@@ -313,7 +313,6 @@
 				url: "{{route('roles.user-list.pemimpin')}}",
 				data: {kode:kode, name:name},
 				success: function(msg){
-console.log(msg);
 					$('#selectpickerLiveSearch').selectpicker('destroy');
 					$('#selectpickerLiveSearch').html(msg);
 					$('#selectpickerLiveSearch').selectpicker('render');

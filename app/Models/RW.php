@@ -13,7 +13,7 @@ class RW extends Model
     use HasFactory,Hashidable,LogsActivity;
     protected $table = 'rw';
     protected $guarded = ['id'];
-    protected $with = ['pemimpin'];
+    protected $with = ['pemimpin','dusun'];
 
     public function getActivitylogOptions(): LogOptions
     {

@@ -70,6 +70,8 @@ class PemerintahanDataTable extends DataTable
                         'dom'          => 'Blfrtip',
                         'buttons'      => ['excel', 'print', 'reload'],
                         'initComplete' => "function () {
+                            var r = $('#pemerintahan-table tfoot tr');
+                            $('#pemerintahan-table thead').append(r);
                             this.api()
                                 .columns()
                                 .every(function (index) {

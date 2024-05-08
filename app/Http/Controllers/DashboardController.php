@@ -13,6 +13,9 @@ use App\Models\Kedatangan;
 use App\Models\Kepindahan;
 use App\Models\Dinamika;
 use Illuminate\Support\Facades\DB;
+use App\DataTables\DusunBootDataTable;
+use App\DataTables\RWBootDataTable;
+use App\DataTables\RTBootDataTable;
 
 class DashboardController extends Controller
 {
@@ -29,8 +32,10 @@ class DashboardController extends Controller
             return view('not-boot', ["title"=> 'Sistem belum dapat diakses']);
         }
 	}
-    public function config(){
-        return view('boot', ["title"=> 'Konfigurasi Awal']);
+    public function config(DusunBootDataTable $dusunDT, RWBootDataTable $rwDT, RTBootDataTable $rtDT){
+        return view('boot', ["title"=> 'Konfigurasi Awal','dusunDT' => $dusunDT->html(),
+		'rwDT' => $rwDT->html(),
+		'rtDT' => $rtDT->html(),]);
     }
     public function index()
 	{
@@ -68,6 +73,22 @@ class DashboardController extends Controller
         return view('home', ["title"=> $title,"data" => $data]);
 		
 	}
+
+	public function getDusun(DusunBootDataTable $dusunDT)
+    {
+        return $dusunDT->render('boot');
+    }
+
+    public function getRW(RWBootDataTable $rwDT)
+    {
+        return $rwDT->render('boot');
+    }
+
+    public function getRT(RTBootDataTable $rtDT)
+    {
+        return $rtDT->render('boot');
+    }
+
 
     public function rwCount(Request $request){
 		if($request['id'] != 'all'){

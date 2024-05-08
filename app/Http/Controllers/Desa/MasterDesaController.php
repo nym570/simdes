@@ -12,12 +12,14 @@ class MasterDesaController extends Controller
 {
     public function getDusun()
     {
+        
         $data = Dusun::all();
         if($data){
             foreach($data as $item){
                 echo "<option data-tokens='".$item['name']."' value='".$item['id']."'>".$item['name']."</option>";
             }
         }
+        
     }
      public function getRW(Request $request)
     {

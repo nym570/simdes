@@ -40,8 +40,18 @@ class AdminDataTable extends DataTable
                 return $btn;
              
         })
-        ->addColumn('status', function($row){
+        ->editColumn('status', function($row){
                 return $row->is_active==true?'<span class="badge bg-info">Aktif</span>':'<span class="badge bg-secondary">Nonaktif</span>';
+        })
+        ->filterColumn('status', function($query, $keyword) {
+            if(stripos('Aktif',$keyword)!==false){
+                $k = 1;
+            }
+            else{
+                $k=0;
+            }
+            $sql = "admin.is_active  like ?";
+            $query->whereRaw($sql, ["%{$k}%"]);
         })
         ->rawColumns(['action','status'])    
         ->addIndexColumn() 
@@ -75,6 +85,8 @@ class AdminDataTable extends DataTable
                         'dom'          => 'Blfrtip',
                         'buttons'      => ['excel', 'print', 'reload'],
                         'initComplete' => "function () {
+                            var r = $('#admin-table tfoot tr');
+                            $('#admin-table thead').append(r);
                             this.api()
                                 .columns()
                                 .every(function (index) {

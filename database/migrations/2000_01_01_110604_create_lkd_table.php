@@ -20,14 +20,14 @@ return new class extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->unsignedBigInteger('dusun_id');
-            $table->foreign('dusun_id')->references('id')->on('dusun')->constrained();
+            $table->foreign('dusun_id')->references('id')->on('dusun')->cascadeOnDelete();
             $table->timestamps();
         });
         Schema::create('rt', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->unsignedBigInteger('rw_id');
-            $table->foreign('rw_id')->references('id')->on('rw')->constrained();
+            $table->foreign('rw_id')->references('id')->on('rw')->cascadeOnDelete();
 
             $table->timestamps();
             $table->unique(['rw_id', 'name']);

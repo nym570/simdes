@@ -3,6 +3,7 @@
 namespace App\DataTables;
 
 use Spatie\Permission\Models\Role;
+use App\Models\User;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Services\DataTable;
@@ -29,7 +30,26 @@ class RolesDataTable extends DataTable
              return $btn;
              
         })
-        ->rawColumns(['action'])    
+        ->addColumn('users', function($row){
+            $user = User::role($row->name)->pluck('username');
+            if($user){
+                $data = '<ul>';
+                foreach($user as $item){
+                    $data .= '<li>'.$item.'</li>';
+                }
+                
+                $data .= '</ul>';
+                return $data;
+            }
+            
+    })
+    ->filterColumn('users', function($query, $keyword) {
+        $query->whereHas('users', function($q) use ($keyword) {
+            $q->where('users.username','LIKE','%'.$keyword.'%');
+        })->get();
+    })
+       
+        ->rawColumns(['action','users'])    
         ->addIndexColumn() 
         ->setRowId('id');
     }
@@ -39,7 +59,7 @@ class RolesDataTable extends DataTable
      */
     public function query(Role $model): QueryBuilder
     {
-        return $model->newQuery()->where('guard_name','web')->whereNotIn('name',['ketua rt','ketua rw','kepala dusun','kepala desa','warga'])->withCount('users');
+        return $model->newQuery()->where('guard_name','web')->whereNotIn('name',['ketua rt','ketua rw','kepala dusun','kepala desa','warga'])->withCount('users')->with('users');
     }
 
     /**
@@ -62,10 +82,12 @@ class RolesDataTable extends DataTable
                         'dom'          => 'Blfrtip',
                         'buttons'      => ['excel', 'print', 'reload'],
                         'initComplete' => "function () {
+                            var r = $('#roles-table tfoot tr');
+                            $('#roles-table thead').append(r);
                             this.api()
                                 .columns()
                                 .every(function (index) {
-                                    if (index == 0 || index == 1) return;
+                                    if (index>=0) return;
                                     let column = this;
                      
                                     // Create select element
@@ -86,7 +108,9 @@ class RolesDataTable extends DataTable
                                         .unique()
                                         .sort()
                                         .each(function (d, j) {
-                                            select.add(new Option(d));
+                                            if(d!=null){
+                                                select.add(new Option(d.replace(/<(\/)?([a-zA-Z]*)(\s[a-zA-Z]*=[^>]*)?(\s)*(\/)?>/g, '')));
+                                            }
                                         });
                                 });
                         }",
@@ -109,7 +133,11 @@ class RolesDataTable extends DataTable
                     ->addClass('text-center'),
             Column::make('name')
                     ->title('nama'),
-            Column::make('users_count')->title('jumlah')->data('users_count')
+            Column::make('users_count')->title('jumlah')->data('users_count')->searchable(false),
+            Column::computed('users')
+            ->exportable(true)
+                  ->printable(true)
+                  ->searchable(true),
            
             
         ];

@@ -18,7 +18,7 @@ class BootDesa
     public function handle(Request $request, Closure $next)
     {
         $desa = Desa::get()->first();
-        if(is_null($desa->kode_wilayah)&&(!(Route::is('admin.*')||Route::is('m.desa.*')||Route::is('wilayah.*')))){
+        if(is_null($desa->kode_wilayah)&&(!(Route::is('admin.*')||Route::is('m.lkd.*')||Route::is('m.desa.*')||Route::is('wilayah.*')||Route::is('master-desa.*')))){
             return  redirect(route('admin.boot'));
         
         }

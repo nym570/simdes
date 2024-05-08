@@ -1,6 +1,108 @@
 @extends('admin.layouts.app')
 @section('container')
+<div class="card mb-3">
+	<div class="card-header text-center">
+		<h4>Panduan Konfigurasi</h4>
+	</div>
+	<div class="card-body">
+		<div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 g-5">
+			
+			<div class="col d-inline p-0">
+				<button class="btn text-center " type="button" data-bs-toggle="collapse" data-bs-target="#collapse1" aria-expanded="true" aria-controls="collapseExample">
+					<i class='bx bx-cog bx-lg '></i>
+				<p>Konfigurasi Awal</p>
+				</button>
+					<i class="bx bx-chevron-right bx-lg"></i>
+			 </div>
+			 <div class="col d-inline p-0">
+				<button class="btn text-center" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapseExample">
+					<i class='bx bx-user bx-lg'></i>
+				<p>Buat Pengguna</p>
+				</button>
+					<i class="bx bx-chevron-right bx-lg"></i>
+			 </div>
+			 <div class="col d-inline p-0">
+				<button class="btn text-center" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3" aria-expanded="false" aria-controls="collapseExample">
+					<i class="bx bx-body bx-lg"></i>
+				<p>Pengaturan Role</p>
+				</button>
+				<i class="bx bx-chevron-right bx-lg"></i>
+			 </div>
+			 <div class="col d-inline p-0">
+				<button class="btn text-center" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4" aria-expanded="false" aria-controls="collapseExample">
+					<i class='bx bx-home-circle bx-lg'></i>
+				<p>Detail Info Desa</p>
+				</button>
+					<i class="bx bx-chevron-right bx-lg"></i>
+			 </div>
+			 <div class="col d-inline p-0">
+				<button class="btn text-center" type="button" data-bs-toggle="collapse" data-bs-target="#collapse5" aria-expanded="false" aria-controls="collapseExample">
+					<i class='bx bx-data bx-lg' ></i>
+				<p>Pengaturan Master Data</p>
+				</button>
+					
+			 </div>
+		</div>
 
+		<div id="myGroup">
+			<div class="collapse" id="collapse1">
+				<div class="d-flex p-3 border">
+				  
+				  <span>
+					Konfigurasi awal telah diselesaikan, data desa dan wilayah kemasyarakatan telah disimpan
+				  </span>
+				</div>
+			  </div>
+			  <div class="collapse" id="collapse2">
+				<div class="d-flex p-3 border">
+				  
+				  <span>
+					Silahkan buat pengguna awal <em> (pengguna yang akan menjadi petugas pengoperasian sistem seperti perangkat desa & perangkat lembaga kemasyarakatan) </em> dengan melakukan <strong>import</strong> pada <a href="{{route('users.index')}}">halaman user</a>
+				  </span>
+				</div>
+			  </div>
+			  <div class="collapse" id="collapse3">
+				<div class="d-flex p-3 border">
+				  
+				  <span>
+					Berikan pengguna yang telah dibuat peran/role. Peran yang dapat ditambahkan sebagai berikut
+					<ul>
+						<li><a href="{{route('m.desa.index')}}">Kepala Desa</a></li>
+						<li><a href="{{route('m.lkd.index')}}">Ketua Lembaga Kemasyarakatan (dusun/rw/rt)</a></li>
+						<li><a href="{{route('roles.index')}}">Peran Lainnya</a></li>
+					</ul>
+				  </span>
+				</div>
+			  </div>
+			  <div class="collapse" id="collapse4">
+				<div class="d-flex p-3 border">
+				  
+				  <span>
+					Berikan informasi untuk desa yang dapat diakses secara umum. Informasi yang dapat ditambahkan :
+					<ul>
+						<li><a href="{{route('m.desa.index')}}">Deskripsi desa</a></li>
+						<li><a href="{{route('m.pemerintahan.index')}}">Perangkat Desa</a></li>
+					</ul>
+				  </span>
+				</div>
+			  </div>
+			  <div class="collapse" id="collapse5">
+				<div class="d-flex p-3 border">
+				  
+				  <span>
+					Berikan informasi untuk desa yang dapat diakses secara umum. Informasi yang dapat ditambahkan :
+					<ul>
+						<li><a href="{{route('m.desa.index')}}">Deskripsi desa</a></li>
+						<li><a href="{{route('m.pemerintahan.index')}}">Perangkat Desa</a></li>
+					</ul>
+				  </span>
+				</div>
+			  </div>
+		</div>
+		
+	</div>
+	
+</div>
 <!-- Card Border Shadow -->
 <div class="row">
 	<div class="col-sm-6 col-lg-3 mb-4">
@@ -540,6 +642,12 @@
   var url_base64jp = document.getElementById("barChart").toDataURL("image/jpg");
   var a =  document.getElementById("download-image");
   a.href = url_base64jp;
+});
+
+var myGroup = $('#myGroup');
+
+myGroup.on('show.bs.collapse','.collapse', function() {
+   myGroup.find('.collapse.show').collapse('hide');
 });
 
 });

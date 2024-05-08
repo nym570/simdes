@@ -5,7 +5,9 @@
 	  <div class="card h-100">
 		<div class="card-body row widget-separator">
 		  <div class="col-sm-5 border-shift border-end">
+			@if(isset($data['warga']['status']['warga']))
 			<h1 class="text-primary text-center mb-0">{{$data['warga']['status']['warga']}}</h1>
+			@endif
 			<h5 class=" text-center">Warga Desa berdomisili di Desa {{$desa['desa']}}</h5>
 
 		  </div>

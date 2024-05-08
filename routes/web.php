@@ -99,7 +99,15 @@ Route::get('/boot', [DashboardController::class,'boot'])->name('admin.boot');
 
 Route::middleware(['admin.auth','admin.verified'])->group(function () {
 	Route::get('/admin', [AdminHomeController::class,'index'])->name('admin.home');
-	Route::get('/boot/config', [DashboardController::class,'config'])->name('admin.boot.config');
+
+	Route::controller(DashboardController::class)->name('admin.boot.')->group(function () {
+		Route::get('/boot/config', 'config')->name('config');
+		Route::get('/boot/dusun-list', 'getDusun')->name('getDusun');
+	Route::get('/boot/rw-list', 'getRW')->name('getRW');
+	Route::get('/boot/rt-list', 'getRT')->name('getRT');
+	});
+	
+	
 	Route::controller(AdminController::class)->name('admin-list.')->group(function () {
 		Route::get('/admin/admin', 'index')->name('index');
 		Route::post('/admin/admin', 'store')->name('store');
@@ -134,6 +142,10 @@ Route::middleware(['admin.auth','admin.verified'])->group(function () {
 		Route::post('/admin/desa/kemasyarakatan/dusun', 'storeDusun')->name('dusun.store');
 		Route::post('/admin/desa/kemasyarakatan/rw', 'storeRW')->name('rw.store');
 		Route::post('/admin/desa/kemasyarakatan/rt', 'storeRT')->name('rt.store');
+		Route::delete('/admin/desa/kemasyarakatan/dusun/delete/{dusun}', 'destroyDusun')->name('dusun.destroy');
+		Route::delete('/admin/desa/kemasyarakatan/rw/delete/{rw}', 'destroyRW')->name('rw.destroy');
+		Route::delete('/admin/desa/kemasyarakatan/rt/delete/{rt}', 'destroyRT')->name('rt.destroy');
+
 	});
 	Route::controller(PemerintahanController::class)->name('m.pemerintahan.')->group(function () {
 		Route::get('/admin/pemerintahan', 'index')->name('index');

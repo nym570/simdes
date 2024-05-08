@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Desa;
 
 use App\Models\Desa;
+use Illuminate\Support\Str;
 use App\Models\Dusun;
 use App\Models\RW;
 use App\Models\RT;
@@ -340,5 +341,21 @@ class DesaController extends Controller
     public function destroy(Desa $desa)
     {
         //
+    }
+    public function destroyDusun(Dusun $dusun)
+    {
+        $cob=$dusun->delete();
+        
+		return back()->withSuccess('Dusun Berhasil dihapus');
+    }
+    public function destroyRW(RW $rw)
+    {
+        $rw->delete();
+		return back()->withSuccess('RW Berhasil dihapus');
+    }
+    public function destroyRT(RT $rt)
+    {
+        $rt->delete();
+		return back()->withSuccess('RT Berhasil dihapus');
     }
 }

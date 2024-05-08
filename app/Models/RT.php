@@ -13,7 +13,7 @@ class RT extends Model
     use HasFactory,Hashidable,LogsActivity;
     protected $table = 'rt';
     protected $guarded = ['id'];
-    protected $with = ['pemimpin'];
+    protected $with = ['pemimpin','rw'];
 
     public function rw()
     {

@@ -68,8 +68,11 @@ class PengajuanInfoPublikDataTable extends DataTable
                 }
                 
             })
+            ->editColumn('status', function($row){
+                return ($row->status=='diajukan'?'<span class="badge bg-dark">':($row->status=='diproses'?'<span class="badge bg-success">':($row->status=='dibayar'?'<span class="badge bg-primary">':($row->status=='selesai'?'<span class="badge bg-secondary">':'<span class="badge bg-danger">')))).$row->status.'</span>';
+        })
             ->addIndexColumn() 
-            ->rawColumns(['action','identitas','kontak','pembiayaan'])    
+            ->rawColumns(['action','identitas','kontak','pembiayaan','status'])    
             ->setRowId('id');
     }
 
@@ -128,7 +131,9 @@ class PengajuanInfoPublikDataTable extends DataTable
                                     .unique()
                                     .sort()
                                     .each(function (d, j) {
-                                       select.add(new Option(d));
+                                        if(d!=null){
+                                            select.add(new Option(d.replace(/<(\/)?([a-zA-Z]*)(\s[a-zA-Z]*=[^>]*)?(\s)*(\/)?>/g, '')));
+                                        }
                                     });
 
                                     

@@ -46,6 +46,8 @@
 	<link rel="stylesheet" href="{{ asset('assets/vendor/css/pages/page-auth.css') }}" />
 	<!-- Helpers -->
 	<script src="{{ asset('assets/vendor/js/helpers.js') }}"></script>
+	<link rel="stylesheet" href="{{ asset('assets/vendor/libs/bs-stepper/bs-stepper.css') }}" />
+	
 
 	<!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
 	<!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
@@ -90,6 +92,7 @@
 	<script src="{{ asset('assets/vendor/libs/popper/popper.js') }}"></script>
 	<script src="{{ asset('assets/vendor/js/bootstrap.js') }}"></script>
 	<script src="{{ asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js') }}"></script>
+	<script src="{{ asset('assets/vendor/libs/bs-stepper/bs-stepper.js') }}"></script> 
 
 	<script src="{{ asset('assets/vendor/js/menu.js') }}"></script>
 	<!-- endbuild -->

@@ -16,14 +16,14 @@
 			@auth('admin')
 			<!-- User -->
 			<li class="nav-item navbar-dropdown dropdown-user dropdown">
-				<a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
+				<div class="nav-link dropdown-toggle hide-arrow"  data-bs-toggle="dropdown">
 					<div class="avatar avatar-online">
 						<img src="{{ asset('assets/img/avatars/profile.png') }}" alt class="w-px-40 h-auto rounded-circle" />
 					</div>
-				</a>
+				</div>
 				<ul class="dropdown-menu dropdown-menu-end">
 					<li>
-						<a class="dropdown-item" href="#">
+						<div class="dropdown-item" >
 							<div class="d-flex">
 								<div class="flex-shrink-0 me-3">
 									<div class="avatar avatar-online">
@@ -39,20 +39,12 @@
 									</small>
 								</div>
 							</div>
-						</a>
+						</div>
 					</li>
 					<li>
 						<div class="dropdown-divider"></div>
 					</li>
-					<li>
-						<a class="dropdown-item" href="#">
-							<i class="bx bx-cog me-2"></i>
-							<span class="align-middle">Settings</span>
-						</a>
-					</li>
-					<li>
-						<div class="dropdown-divider"></div>
-					</li>
+					
 					<li>
 						<a class="dropdown-item" href="javascript:;" onclick="logout()">
 							<i class="bx bx-power-off me-2"></i>
