@@ -28,6 +28,7 @@ use App\Models\BalasAspirasi;
 use App\Models\InfoPublik;
 use App\Models\PengajuanInfoPublik;
 use App\Models\SuratKeterangan;
+use App\Models\Panduan;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -120,6 +121,9 @@ class RouteServiceProvider extends ServiceProvider
         });
         Route::bind('suket', function ($value, $route) {
             return $this->getModel(SuratKeterangan::class, $value);
+        });
+        Route::bind('panduan', function ($value, $route) {
+            return $this->getModel(Panduan::class, $value);
         });
     }
 

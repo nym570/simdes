@@ -1,5 +1,5 @@
 <?php
-
+use App\Http\Controllers\PanduanController;
 use App\Http\Controllers\User_Role\UserController;
 use App\Http\Controllers\User_Role\AdminController;
 use App\Http\Controllers\User_Role\RoleController;
@@ -107,7 +107,14 @@ Route::middleware(['admin.auth','admin.verified'])->group(function () {
 	Route::get('/boot/rt-list', 'getRT')->name('getRT');
 	});
 	
-	
+	Route::controller(PanduanController::class)->name('admin.panduan.')->group(function () {
+		Route::get('/panduan', 'index')->name('index');
+		Route::get('/panduan/{panduan}/get', 'get')->name('get');
+		Route::put('/panduan/{panduan}/status', 'status')->name('status');
+		Route::delete('/panduan/{info}/delete', 'delete')->name('delete');
+		Route::post('/panduan', 'store')->name('store');
+	});
+
 	Route::controller(AdminController::class)->name('admin-list.')->group(function () {
 		Route::get('/admin/admin', 'index')->name('index');
 		Route::post('/admin/admin', 'store')->name('store');
@@ -419,6 +426,10 @@ Route::controller(InfoPublikController::class)->name('info.')->group(function ()
 	Route::get('/info', 'show')->name('show');
 	Route::get('/info/{info}/get', 'get')->name('get');
 });
+Route::controller(PanduanController::class)->name('panduan.')->group(function () {
+	Route::get('/help', 'show')->name('show');
+	Route::get('/panduan/{panduan}/get', 'get')->name('get');
+});
 Route::controller(PengajuanInfoPublikController::class)->name('pengajuan-info.')->group(function () {
 	Route::get('/pengajuan-info', 'index')->name('index');
 	Route::post('/pengajuan-info/store', 'store')->name('buat');
@@ -452,8 +463,12 @@ Route::controller(MasterController::class)->name('master.')->group(function () {
 	Route::get('/master/get-hubungan', 'getHubungan')->name('ruta.get-hubungan');
 	Route::get('/master/get-pendidikan', 'getPendidikan')->name('identitas.get-pendidikan');
 	Route::get('/master/get-pekerjaan', 'getPekerjaan')->name('identitas.get-pekerjaan');
-	Route::get('/master/get-kategori', 'getKategori')->name('aspirasi.get-kategori');
+	Route::get('/master/get-kategori-aspirasi', 'getKategori')->name('aspirasi.get-kategori');
 	Route::get('/master/get-kategori-info', 'getInfo')->name('info-publik.get-kategori');
+	Route::get('/master/get-kategori-panduan', 'getPanduan')->name('panduan.get-kategori');
+	Route::get('/master/panduan', 'indexPanduan')->name('panduan');
+	Route::post('/master/panduan/store', 'storePanduan')->name('panduan.store');
+	Route::delete('/master/panduan/delete/{id}', 'deletePanduan')->name('panduan.delete');
 });
 
 

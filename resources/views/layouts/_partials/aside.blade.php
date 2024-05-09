@@ -56,6 +56,7 @@
 						</div>
 					</a>
 				  </li>
+				
 			  
 			  
 			</ul>
@@ -135,6 +136,14 @@
 			  
 			  
 			</ul>
+		</li>
+		<li class="menu-item {{ menuIsActive('panduan.*') }}">
+			<a href="{{ route('panduan.show') }}" class="menu-link">
+				<i class="menu-icon tf-icons bx bx-help-circle"></i>
+				<div data-i18n="Panduan">
+					{{ __('Panduan') }}
+				</div>
+			</a>
 		</li>
 		
 @auth

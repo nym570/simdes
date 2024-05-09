@@ -15,31 +15,34 @@
 					<i class="bx bx-chevron-right bx-lg"></i>
 			 </div>
 			 <div class="col d-inline p-0">
+				<button class="btn text-center" type="button" data-bs-toggle="collapse" data-bs-target="#collapse5" aria-expanded="false" aria-controls="collapseExample">
+					<i class='bx bx-data bx-lg' ></i>
+				<p>Master Data</p>
+				</button>
+				
+					<i class="bx bx-chevron-right bx-lg"></i>
+			 </div>
+			 <div class="col d-inline p-0">
 				<button class="btn text-center" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapseExample">
 					<i class='bx bx-user bx-lg'></i>
 				<p>Buat Pengguna</p>
 				</button>
-					<i class="bx bx-chevron-right bx-lg"></i>
+				
+				<i class="bx bx-chevron-right bx-lg"></i>
 			 </div>
 			 <div class="col d-inline p-0">
 				<button class="btn text-center" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3" aria-expanded="false" aria-controls="collapseExample">
 					<i class="bx bx-body bx-lg"></i>
 				<p>Pengaturan Role</p>
 				</button>
-				<i class="bx bx-chevron-right bx-lg"></i>
-			 </div>
-			 <div class="col d-inline p-0">
-				<button class="btn text-center" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4" aria-expanded="false" aria-controls="collapseExample">
-					<i class='bx bx-home-circle bx-lg'></i>
-				<p>Detail Info Desa</p>
+				
 				</button>
 					<i class="bx bx-chevron-right bx-lg"></i>
 			 </div>
 			 <div class="col d-inline p-0">
-				<button class="btn text-center" type="button" data-bs-toggle="collapse" data-bs-target="#collapse5" aria-expanded="false" aria-controls="collapseExample">
-					<i class='bx bx-data bx-lg' ></i>
-				<p>Pengaturan Master Data</p>
-				</button>
+				<button class="btn text-center" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4" aria-expanded="false" aria-controls="collapseExample">
+					<i class='bx bx-home-circle bx-lg'></i>
+				<p>Detail Desa & Panduan</p>
 					
 			 </div>
 		</div>
@@ -83,6 +86,7 @@
 						<li><a href="{{route('m.desa.index')}}">Deskripsi desa</a></li>
 						<li><a href="{{route('m.pemerintahan.index')}}">Perangkat Desa</a></li>
 					</ul>
+					Untuk memberikan bantuan kepada pengguna dalam mempelajari sistem, silahkan <a href="{{route('admin.panduan.index')}}">atur panduan pengguna</a>  
 				  </span>
 				</div>
 			  </div>

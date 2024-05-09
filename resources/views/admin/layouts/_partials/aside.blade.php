@@ -102,8 +102,89 @@
 			  
 			</ul>
 		</li>
+		<li class="menu-item {{ menuIsActive('admin.panduan.index') }}">
+			<a href="{{ route('admin.panduan.index') }}" class="menu-link">
+				<i class="menu-icon tf-icons bx bx-note"></i>
+				<div data-i18n="Analytics">
+					{{ __('Panduan') }}
+				</div>
+			</a>
+		</li>
 
+		<li class="menu-header small text-uppercase">
+			<span class="menu-header-text">
+				{{ __('Manajemen Master Data') }}
+			</span>
+		</li>
 		
+
+		<li class="menu-item">
+			<a class="menu-link menu-toggle" href="javascript:void(0)"><i class="menu-icon tf-icons bx bx-group"></i>
+			<div>
+			  Master Kependudukan
+			</div></a>
+			<ul class="menu-sub">
+				<li class="menu-item {{ menuIsActive('admin-list.*') }}">
+					<a href="{{ route('admin-list.index') }}" class="menu-link">
+						
+						<div data-i18n="Hubungan">
+							{{ __('Hubungan') }}
+						</div>
+					</a>
+				</li>
+				<li class="menu-item {{ menuIsActive('users.*') }}">
+					<a href="{{ route('users.index') }}" class="menu-link">
+						
+						<div data-i18n="Pekerjaan">
+							{{ __('Pekerjaan') }}
+						</div>
+					</a>
+				</li>
+				<li class="menu-item {{ menuIsActive('roles.*') }}">
+					<a href="{{ route('roles.index') }}" class="menu-link">
+						<div data-i18n="Pendidikan">
+							{{ __('Pendidikan') }}
+						</div>
+					</a>
+				  </li>
+			  
+			  
+			</ul>
+		</li>
+		
+		<li class="menu-item">
+			<a class="menu-link menu-toggle" href="javascript:void(0)"><i class="menu-icon tf-icons bx bx-category"></i>
+			<div>
+			  Master Kategori
+			</div></a>
+			<ul class="menu-sub">
+				<li class="menu-item {{ menuIsActive('admin-list.*') }}">
+					<a href="{{ route('admin-list.index') }}" class="menu-link">
+						
+						<div data-i18n="Aspirasi">
+							{{ __('Aspirasi') }}
+						</div>
+					</a>
+				</li>
+				<li class="menu-item {{ menuIsActive('users.*') }}">
+					<a href="{{ route('users.index') }}" class="menu-link">
+						
+						<div data-i18n="Informasi Publik">
+							{{ __('Informasi Publik') }}
+						</div>
+					</a>
+				</li>
+				<li class="menu-item {{ menuIsActive('master.panduan') }}">
+					<a href="{{ route('master.panduan') }}" class="menu-link">
+						<div data-i18n="Panduan">
+							{{ __('Panduan') }}
+						</div>
+					</a>
+				  </li>
+			  
+			  
+			</ul>
+		</li>
 
 		<li class="menu-header small text-uppercase">
 			<span class="menu-header-text">
