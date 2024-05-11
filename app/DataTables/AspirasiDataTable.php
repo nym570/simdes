@@ -58,25 +58,25 @@ class AspirasiDataTable extends DataTable
     {
         $cakupan = auth()->user()->getRoleNames()->toArray(); 
         if(in_array('bpd',$cakupan)){
-            return $model->newQuery()->with('user')->where('tingkat','desa');
+            return $model::join('master_category','kategori','=','master_category.id')->select('aspirasi.*','master_category.name')->newQuery()->with('user')->where('tingkat','desa');
         }
         if(in_array('kepala desa',$cakupan)){
-            return $model->newQuery()->with('user');
+            return $model::join('master_category','kategori','=','master_category.id')->select('aspirasi.*','master_category.name')->newQuery()->with('user');
         }
             else if(in_array('kepala dusun',$cakupan)){
-                   return $model->newQuery()->where('tingkat','dusun')->with('user')->whereHas("user.warga.rt.rw.dusun", function(Builder $builder) {
+                   return $model::join('master_category','kategori','=','master_category.id')->select('aspirasi.*','master_category.name')->newQuery()->where('tingkat','dusun')->with('user')->whereHas("user.warga.rt.rw.dusun", function(Builder $builder) {
                      $builder->where('pemimpin', '=', auth()->user()->id);
                  });
                 
             }
             else if(in_array('ketua rw',$cakupan)){
-                return $model->newQuery()->with('user')->where('tingkat','rw')->whereHas("user.warga.rt.rw", function(Builder $builder) {
+                return $model::join('master_category','kategori','=','master_category.id')->select('aspirasi.*','master_category.name')->newQuery()->with('user')->where('tingkat','rw')->whereHas("user.warga.rt.rw", function(Builder $builder) {
                     $builder->where('pemimpin', '=', auth()->user()->id);
                 });
                 
             }
             else if(in_array('ketua rt',$cakupan)){
-                return $model->newQuery()->with('user')->where('tingkat','rt')->whereHas("user.warga.rt", function(Builder $builder) {
+                return $model::join('master_category','kategori','=','master_category.id')->select('aspirasi.*','master_category.name')->newQuery()->with('user')->where('tingkat','rt')->whereHas("user.warga.rt", function(Builder $builder) {
                     $builder->where('pemimpin', '=', auth()->user()->id);
                 });
                 
@@ -160,7 +160,7 @@ class AspirasiDataTable extends DataTable
                   ->printable(false),
             Column::make('user.username')->title('pengaju'),
             Column::make('judul'),
-            Column::make('kategori'),
+            Column::make('name')->title('kategori'),
             Column::make('tingkat'),
             Column::computed('status'),
         ];

@@ -13,7 +13,7 @@ use Yajra\DataTables\Html\Builder as HtmlBuilder;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\QueryDataTable;
 
-class MasterPanduanDataTable extends DataTable
+class MasterAspirasiDataTable extends DataTable
 {
     /**
      * Build the DataTable class.
@@ -21,7 +21,7 @@ class MasterPanduanDataTable extends DataTable
      * @param QueryBuilder $query Results from query() method.
      */
     public function dataTable(): QueryDataTable
-    { $query = DB::table('master_category_panduan');
+    { $query = DB::table('master_category');
         return (new QueryDataTable($query))
         ->addColumn('action', function($row){
    
@@ -30,8 +30,8 @@ class MasterPanduanDataTable extends DataTable
               Aksi
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">';      
-            $btn = $btn.' <li><a class="dropdown-item open_modal" data-link="'.route('master.panduan.edit',$row->id).'">Update</a></li>';
-            $btn = $btn.' <li><a class="dropdown-item" onclick="del(this)" href="'.route('master.panduan.delete',$row->id).'">Hapus</a></li>';
+            $btn = $btn.' <li><a class="dropdown-item open_modal" data-link="'.route('master.aspirasi.edit',$row->id).'">Update</a></li>';
+            $btn = $btn.' <li><a class="dropdown-item" onclick="del(this)" href="'.route('master.aspirasi.delete',$row->id).'">Hapus</a></li>';
             $btn = $btn.'</ul></div>';
              return $btn;
              
@@ -92,6 +92,6 @@ class MasterPanduanDataTable extends DataTable
      */
     protected function filename(): string
     {
-        return 'MasterPanduan_' . date('YmdHis');
+        return 'MasterAspirasi_' . date('YmdHis');
     }
 }

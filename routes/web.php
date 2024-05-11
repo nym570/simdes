@@ -106,10 +106,26 @@ Route::middleware(['admin.auth','admin.verified'])->group(function () {
 	Route::get('/boot/rw-list', 'getRW')->name('getRW');
 	Route::get('/boot/rt-list', 'getRT')->name('getRT');
 	});
-	
+	Route::controller(MasterController::class)->name('master.')->group(function () {
+		Route::get('/master/panduan', 'indexPanduan')->name('panduan');
+		Route::post('/master/panduan/store', 'storePanduan')->name('panduan.store');
+		Route::delete('/master/panduan/delete/{id}', 'deletePanduan')->name('panduan.delete');
+		Route::get('/master/panduan/edit/{id}', 'editPanduan')->name('panduan.edit');
+		Route::put('/master/panduan/update/{id}', 'updatePanduan')->name('panduan.update');
+		Route::get('/master/aspirasi', 'indexaspirasi')->name('aspirasi');
+		Route::post('/master/aspirasi/store', 'storeaspirasi')->name('aspirasi.store');
+		Route::delete('/master/aspirasi/delete/{id}', 'deleteaspirasi')->name('aspirasi.delete');
+		Route::get('/master/aspirasi/edit/{id}', 'editaspirasi')->name('aspirasi.edit');
+		Route::put('/master/aspirasi/update/{id}', 'updateaspirasi')->name('aspirasi.update');
+		Route::get('/master/info', 'indexinfo')->name('info');
+		Route::post('/master/info/store', 'storeinfo')->name('info.store');
+		Route::delete('/master/info/delete/{id}', 'deleteinfo')->name('info.delete');
+		Route::get('/master/info/edit/{id}', 'editinfo')->name('info.edit');
+		Route::put('/master/info/update/{id}', 'updateinfo')->name('info.update');
+	});
 	Route::controller(PanduanController::class)->name('admin.panduan.')->group(function () {
 		Route::get('/panduan', 'index')->name('index');
-		Route::get('/panduan/{panduan}/get', 'get')->name('get');
+		Route::get('/admin/panduan/{panduan}/get', 'get')->name('get');
 		Route::put('/panduan/{panduan}/status', 'status')->name('status');
 		Route::delete('/panduan/{info}/delete', 'delete')->name('delete');
 		Route::post('/panduan', 'store')->name('store');
@@ -466,9 +482,7 @@ Route::controller(MasterController::class)->name('master.')->group(function () {
 	Route::get('/master/get-kategori-aspirasi', 'getKategori')->name('aspirasi.get-kategori');
 	Route::get('/master/get-kategori-info', 'getInfo')->name('info-publik.get-kategori');
 	Route::get('/master/get-kategori-panduan', 'getPanduan')->name('panduan.get-kategori');
-	Route::get('/master/panduan', 'indexPanduan')->name('panduan');
-	Route::post('/master/panduan/store', 'storePanduan')->name('panduan.store');
-	Route::delete('/master/panduan/delete/{id}', 'deletePanduan')->name('panduan.delete');
+
 });
 
 

@@ -17,12 +17,14 @@ return new class extends Migration
         });
         Schema::create('panduan', function (Blueprint $table) {
             $table->id();
-            $table->string('kategori');
+            $table->UnsignedBigInteger('kategori');
             $table->string('judul');
             $table->text('keterangan');
             $table->string('lampiran')->nullable();
             $table->boolean('is_show')->default(true);
             $table->timestamps();
+            $table->foreign('kategori')->references('id')->on('master_category_panduan')->cascadeOnDelete();
+            
         });
     }
 

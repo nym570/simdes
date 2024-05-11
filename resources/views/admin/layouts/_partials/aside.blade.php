@@ -117,40 +117,6 @@
 			</span>
 		</li>
 		
-
-		<li class="menu-item">
-			<a class="menu-link menu-toggle" href="javascript:void(0)"><i class="menu-icon tf-icons bx bx-group"></i>
-			<div>
-			  Master Kependudukan
-			</div></a>
-			<ul class="menu-sub">
-				<li class="menu-item {{ menuIsActive('admin-list.*') }}">
-					<a href="{{ route('admin-list.index') }}" class="menu-link">
-						
-						<div data-i18n="Hubungan">
-							{{ __('Hubungan') }}
-						</div>
-					</a>
-				</li>
-				<li class="menu-item {{ menuIsActive('users.*') }}">
-					<a href="{{ route('users.index') }}" class="menu-link">
-						
-						<div data-i18n="Pekerjaan">
-							{{ __('Pekerjaan') }}
-						</div>
-					</a>
-				</li>
-				<li class="menu-item {{ menuIsActive('roles.*') }}">
-					<a href="{{ route('roles.index') }}" class="menu-link">
-						<div data-i18n="Pendidikan">
-							{{ __('Pendidikan') }}
-						</div>
-					</a>
-				  </li>
-			  
-			  
-			</ul>
-		</li>
 		
 		<li class="menu-item">
 			<a class="menu-link menu-toggle" href="javascript:void(0)"><i class="menu-icon tf-icons bx bx-category"></i>
@@ -158,16 +124,16 @@
 			  Master Kategori
 			</div></a>
 			<ul class="menu-sub">
-				<li class="menu-item {{ menuIsActive('admin-list.*') }}">
-					<a href="{{ route('admin-list.index') }}" class="menu-link">
+				<li class="menu-item {{ menuIsActive('master.aspirasi') }}">
+					<a href="{{ route('master.aspirasi') }}" class="menu-link">
 						
 						<div data-i18n="Aspirasi">
 							{{ __('Aspirasi') }}
 						</div>
 					</a>
 				</li>
-				<li class="menu-item {{ menuIsActive('users.*') }}">
-					<a href="{{ route('users.index') }}" class="menu-link">
+				<li class="menu-item {{ menuIsActive('master.info') }}">
+					<a href="{{ route('master.info') }}" class="menu-link">
 						
 						<div data-i18n="Informasi Publik">
 							{{ __('Informasi Publik') }}

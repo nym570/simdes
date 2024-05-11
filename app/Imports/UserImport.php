@@ -60,7 +60,7 @@ class UserImport implements ToModel , WithUpserts, WithHeadingRow, WithBatchInse
            'email'    => $row['email'], 
            'password' => Hash::make($row['password']),
         ])->assignRole('warga');
-        // Notification::send($user, new PasswordSend($row['password'],route('login')));
+        Notification::send($user, new PasswordSend($row['password'],route('login')));
         return $user;
     }
     public function batchSize(): int
@@ -95,7 +95,7 @@ class UserImport implements ToModel , WithUpserts, WithHeadingRow, WithBatchInse
             'domisili' => ['required'],
             'status' => ['required'],
              'no_telp' => ['required','regex:/62[0-9]+$/u'],
-            'email' => ['required','string','email'],
+            'email' => ['required','string','email','unique:users,email'],
 			'username' => ['required', 'string'],
 			'password' => ['required', 'string',Password::min(8)->letters()->numbers()],
         ];

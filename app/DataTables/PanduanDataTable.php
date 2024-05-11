@@ -40,7 +40,7 @@ class PanduanDatatable extends DataTable
              
         })
             ->editColumn('status', function($row){
-                return   $row->is_show?'ditampilkan':'disembunyikan';
+                return $row->is_show==true?'<span class="badge bg-info">ditampilkan</span>':'<span class="badge bg-secondary">disembunyikan</span>';
             })
             ->filterColumn('status', function($query, $keyword) {
                 if($keyword=='ditampilkan'){
@@ -53,7 +53,7 @@ class PanduanDatatable extends DataTable
                 $query->whereRaw($sql, ["%{$k}%"]);
             })
             ->addIndexColumn() 
-            ->rawColumns(['action'])    
+            ->rawColumns(['action','status'])    
             ->setRowId('id');
     }
 
@@ -62,7 +62,7 @@ class PanduanDatatable extends DataTable
      */
     public function query(Panduan $model): QueryBuilder
     {
-        return $model->newQuery();
+        return $model::join('master_category_panduan','kategori','=','master_category_panduan.id')->select('panduan.*','master_category_panduan.name')->newQuery();
     }
 
     /**
@@ -112,7 +112,7 @@ class PanduanDatatable extends DataTable
                                     .unique()
                                     .sort()
                                     .each(function (d, j) {
-                                       select.add(new Option(d));
+                                        select.add(new Option(d.replace(/<(\/)?([a-zA-Z]*)(\s[a-zA-Z]*=[^>]*)?(\s)*(\/)?>/g, '')));
                                     });
 
                                     
@@ -139,7 +139,7 @@ class PanduanDatatable extends DataTable
                   ->addClass('text-center'),
                   Column::computed('status'),
             Column::make('judul'),
-            Column::make('kategori'),
+            Column::make('name')->title('kategori'),
             
         ];
     }

@@ -218,7 +218,7 @@ class RutaController extends Controller
      */
     public function update(Request $request, Ruta $ruta)
     {
-        $validated = $validated =$request->validate([
+        $validated = $request->validate([
 			'alamat_domisili' => ['required','string'],
             
 		]);
