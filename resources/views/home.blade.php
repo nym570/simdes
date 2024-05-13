@@ -138,15 +138,20 @@
 					
 				</select>
 			</div>
-
+			<div class="col mb-3">
+				<select id="rt" class="selectpicker w-100" data-style="btn-default" data-live-search="true" title="RT" name="rt_id" required>
+					
+				</select>
+			</div>
 			<div class="col mb-3">
 				<div class="btn-group ">
 					<button class="btn  btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					  Download
 					</button>
 					<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-					  <li><a class="dropdown-item" download="warga-agama-barchart.jpg" href="" id="download-bar">Barchart</a></li>
-					  <li><a class="dropdown-item" download="warga-agama-doughnut.jpg" href="" id="download-dou">Doughnutchart</a></li>
+						<li><a class="dropdown-item" download="warga-piramida.jpg" href="" id="download-piramid">Piramida</a></li>
+					  <li><a class="dropdown-item" download="warga-barchart.jpg" href="" id="download-bar">Barchart</a></li>
+					  <li><a class="dropdown-item" download="warga-doughnut.jpg" href="" id="download-dou">Doughnutchart</a></li>
 					  <li><a class="dropdown-item" id="download-tab">Tabel</a></li>
 					</ul>
 				  </div>
@@ -154,7 +159,21 @@
 
 		</div>
 
-		
+		<div class="mb-3">
+				<div class="card h-100">
+					<div class="card-header text-center">
+					  <h5>Piramida Penduduk</h5>
+
+					</div>
+				  <div class="card-body">
+					  
+					<div id="pyramidChartCon">
+						<canvas id="pyramidChart" class="chartjs" data-height="500"></canvas>
+					  </div>
+					
+				  </div>
+				</div>
+		</div>
 		<div class="row">
 			<!-- Delivery Performance -->
 			<div class="col-lg-6 col-xxl-4 mb-4 order-2 order-xxl-2">
@@ -240,7 +259,21 @@
 	<script src="{{ asset('assets/vendor/libs/chartjs/chartjs.js') }}"></script>
 	<script src="https://cdn.jsdelivr.net/gh/linways/table-to-excel@v1.0.4/dist/tableToExcel.js"></script>
 <script>
-	
+	document.getElementById("download-bar").addEventListener('click', function(){
+  var url_base64jp = document.getElementById("barChart").toDataURL("image/jpg");
+  var a =  document.getElementById("download-bar");
+  a.href = url_base64jp;
+});
+document.getElementById("download-dou").addEventListener('click', function(){
+  var url_base64jp = document.getElementById("doughnutChart").toDataURL("image/jpg");
+  var a =  document.getElementById("download-dou");
+  a.href = url_base64jp;
+});
+document.getElementById("download-piramid").addEventListener('click', function(){
+  var url_base64jp = document.getElementById("pyramidChart").toDataURL("image/jpg");
+  var a =  document.getElementById("download-piramid");
+  a.href = url_base64jp;
+});
 	'use strict';
 	$( document ).ready(function() {
 			
@@ -381,7 +414,8 @@ const doughnutChart = document.getElementById('doughnutChart');
   // Bar Chart
   // --------------------------------------------------------------------
   const barChart = document.getElementById('barChart');
-  if (barChart&&doughnutChart) {
+  const pyramidChart = document.getElementById('pyramidChart');
+  if (barChart&&doughnutChart&&pyramidChart) {
 	var nama ="<?=$desa->desa?>";
     const barChartVar = new Chart(barChart, {
       type: 'bar',
@@ -488,6 +522,91 @@ const doughnutChart = document.getElementById('doughnutChart');
       }
     });
 
+	const pyramidChartVar = new Chart(pyramidChart, {
+      type: 'bar',
+      data: {
+        labels: ["70+", "65-69","60-64" , "55-59",  "50-54","45-49" , "40-44","35-39","30-34","25-29","20-24","15-19","10-14","5-9","0-4" ],
+        datasets: [
+          {
+            data: [],
+			label: "Laki-laki",
+			stack: "Stack 0",
+            backgroundColor: [config.colors.info],
+            borderColor: 'transparent',
+            maxBarThickness: 15,
+           
+          },
+		  {
+            data: [].map((k) => -k),
+			label: "Perempuan",
+			stack: "Stack 0",
+            backgroundColor: [config.colors.danger],
+            borderColor: 'transparent',
+            maxBarThickness: 15,
+            
+          }
+        ]
+      },
+      options: {
+		indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: {
+          duration: 500,
+		  
+		  
+        },
+        plugins: {
+			title: {
+                display: true,
+                text: 'Piramida Penduduk Desa '+nama+' Berdasarkan Wilayah'
+            },
+			tooltip: {
+      callbacks: {
+        label: (c) => {          
+          const value = Number(c.raw);
+          const positiveOnly = value < 0 ? -value : value;
+          return `${c.dataset.label}: ${positiveOnly.toString()}`;
+        },
+      },
+    },
+		  
+        },},
+        scales: {
+
+			x: {
+			min :-1000,
+				max:1000,
+            grid: {
+				
+              color: borderColor,
+              drawBorder: false,
+              borderColor: borderColor
+            },
+            ticks: {
+				stepSize:	 50,
+              color: labelColor,
+			  callback: (v) => v < 0 ? -v : v,
+			  precision: 0
+            }
+          },
+          y: {
+            grid: {
+              color: borderColor,
+              drawBorder: false,
+              borderColor: borderColor
+            },
+            ticks: {
+              
+              color: labelColor,
+			  
+            }
+          }
+			
+  },
+          
+    });
+
 	const doughnutChartVar = new Chart(doughnutChart, {
     type: 'doughnut',
     data: {
@@ -580,7 +699,12 @@ const doughnutChart = document.getElementById('doughnutChart');
 					url:  "{{route('warga-dusun-count')}}",
 					
 					data : {id:'all'},
-
+					beforeSend: function(){
+						$('#loading').show();
+					},
+					complete: function(){
+						$('#loading').hide();
+					},
 					success: function(msg){
 						let hasil = JSON.parse(msg);
 						barChartVar.data.labels = hasil['label'];
@@ -611,10 +735,41 @@ const doughnutChart = document.getElementById('doughnutChart');
 					}
 					
 				})
-
+				$.ajax({
+					type : 'GET',
+					url:  "{{route('pyramid-dusun-count')}}",
+					
+					data : {id:'all'},
+					beforeSend: function(){
+						$('#loading').show();
+					},
+					complete: function(){
+						$('#loading').hide();
+					},
+					success: function(msg){
+						let hasil = JSON.parse(msg);
+						pyramidChartVar.data.datasets[0].data = hasil['laki'];
+						pyramidChartVar.data.datasets[1].data = hasil['perempuan'];
+						pyramidChartVar.options.scales.x.max = Math.max(...hasil['laki'])+5;
+						pyramidChartVar.options.scales.x.min = Math.min(...hasil['perempuan'])-5;
+						pyramidChartVar.options.scales.y.ticks.stepSize = (Math.max(...hasil['laki'])+Math.max(...hasil['perempuan']))%50;
+						pyramidChartVar.update();
+					},
+					error: function (xhr) {
+						var err = JSON.parse(xhr.responseText);
+						alert(err.message);
+					}
+					
+				})
 	$.ajax({
 					type : 'GET',
 					url: "{{route('master-desa.get-dusun')}}",
+					beforeSend: function(){
+						$('#loading').show();
+					},
+					complete: function(){
+						$('#loading').hide();
+					},
 					success: function(msg){
 						msg = "<option data-tokens='all' value='all'>All Dusun</option>" + msg;
 						$('#dusun').selectpicker('destroy');
@@ -640,7 +795,12 @@ const doughnutChart = document.getElementById('doughnutChart');
 					url: "{{route('master-desa.get-rw')}}",
 					
 					data : {id:id_dusun},
-
+					beforeSend: function(){
+						$('#loading').show();
+					},
+					complete: function(){
+						$('#loading').hide();
+					},
 					success: function(msg){
 						msg = "<option data-tokens='all' value='all'>All RW</option>" + msg
 						$('#rw').selectpicker('destroy');
@@ -659,6 +819,9 @@ const doughnutChart = document.getElementById('doughnutChart');
 					$('#rw').selectpicker('destroy');
 					$('#rw').html('');
 					$('#rw').selectpicker('refresh');
+					$('#rt').selectpicker('destroy');
+					$('#rt').html('');
+					$('#rt').selectpicker('refresh');
 
 				}
 				$.ajax({
@@ -666,7 +829,12 @@ const doughnutChart = document.getElementById('doughnutChart');
 					url:  "{{route('warga-dusun-count')}}",
 					
 					data : {id:id_dusun},
-
+					beforeSend: function(){
+						$('#loading').show();
+					},
+					complete: function(){
+						$('#loading').hide();
+					},
 					success: function(msg){
 						let hasil = JSON.parse(msg);
 						barChartVar.data.labels = hasil['label'];
@@ -696,20 +864,81 @@ const doughnutChart = document.getElementById('doughnutChart');
 						alert(err.message);
 					}
 					
-				})
+				});
+				$.ajax({
+					type : 'GET',
+					url:  "{{route('pyramid-dusun-count')}}",
+					
+					data : {id:id_dusun},
+					beforeSend: function(){
+						$('#loading').show();
+					},
+					complete: function(){
+						$('#loading').hide();
+					},
+					success: function(msg){
+						let hasil = JSON.parse(msg);
+						pyramidChartVar.data.datasets[0].data = hasil['laki'];
+						pyramidChartVar.data.datasets[1].data = hasil['perempuan'];
+						pyramidChartVar.options.scales.x.max = Math.max(...hasil['laki'])+5;
+						pyramidChartVar.options.scales.x.min = Math.min(...hasil['perempuan'])-5;
+						pyramidChartVar.options.scales.y.ticks.stepSize = (Math.max(...hasil['laki'])+Math.max(...hasil['perempuan']))%50;
+						pyramidChartVar.update();
+					},
+					error: function (xhr) {
+						var err = JSON.parse(xhr.responseText);
+						alert(err.message);
+					}
+					
+				});
 				
 			});
 			$('#rw').on('change',function(){
 				$('#rw').selectpicker('render');
 				let id_rw = $('#rw').val();
 				let id_dusun = $('#dusun').val();
+				if(id_rw != 'all'){
+					$.ajax({
+					type : 'GET',
+					url: "{{route('master-desa.get-rt')}}",
+					
+					data : {id:id_rw},
+					beforeSend: function(){
+						$('#loading').show();
+					},
+					complete: function(){
+						$('#loading').hide();
+					},
+					success: function(msg){
+						msg = "<option data-tokens='all' value='all'>All RT</option>" + msg
+						$('#rt').selectpicker('destroy');
+						$('#rt').html(msg);
+						$('#rt').selectpicker('render');
+					},
+					error: function (xhr) {
+						var err = JSON.parse(xhr.responseText);
+						alert(err.message);
+					}
+					
+				})
+				}
+				else{
+					$('#rt').selectpicker('destroy');
+					$('#rt').html('');
+					$('#rt').selectpicker('refresh');
 
+				}
 				$.ajax({
 					type : 'GET',
 					url:  "{{route('warga-rw-count')}}",
 					
 					data : {id:id_rw,dusun_id:id_dusun},
-
+					beforeSend: function(){
+						$('#loading').show();
+					},
+					complete: function(){
+						$('#loading').hide();
+					},
 					success: function(msg){
 						let hasil = JSON.parse(msg);
 						barChartVar.data.labels = hasil['label'];
@@ -733,6 +962,59 @@ const doughnutChart = document.getElementById('doughnutChart');
 						}
 						
 						$('tbody').html(tabel);
+					},
+					error: function (xhr) {
+						var err = JSON.parse(xhr.responseText);
+						alert(err.message);
+					}
+					
+				});
+				$.ajax({
+					type : 'GET',
+					url:  "{{route('pyramid-rw-count')}}",
+					
+					data : {id:id_rw,dusun_id:id_dusun},
+					beforeSend: function(){
+						$('#loading').show();
+					},
+					complete: function(){
+						$('#loading').hide();
+					},
+					success: function(msg){
+						let hasil = JSON.parse(msg);
+						pyramidChartVar.data.datasets[0].data = hasil['laki'];
+						pyramidChartVar.data.datasets[1].data = hasil['perempuan'];
+						pyramidChartVar.options.scales.x.max = Math.max(...hasil['laki'])+5;
+						pyramidChartVar.options.scales.x.min = Math.min(...hasil['perempuan'])-5;
+						pyramidChartVar.options.scales.y.ticks.stepSize = (Math.max(...hasil['laki'])+Math.max(...hasil['perempuan']))%50;
+						pyramidChartVar.update();
+					},
+					error: function (xhr) {
+						var err = JSON.parse(xhr.responseText);
+						alert(err.message);
+					}
+					
+				})
+			});
+			$('#rt').on('change',function(){
+				$('#rt').selectpicker('render');
+				let id_rt = $('#rt').val();
+				let id_rw = $('#rw').val();
+				
+				$.ajax({
+					type : 'GET',
+					url:  "{{route('pyramid-rt-count')}}",
+					
+					data : {id:id_rt,rw_id:id_rw},
+
+					success: function(msg){
+						let hasil = JSON.parse(msg);
+						pyramidChartVar.data.datasets[0].data = hasil['laki'];
+						pyramidChartVar.data.datasets[1].data = hasil['perempuan'];
+						pyramidChartVar.options.scales.x.max = Math.max(...hasil['laki'])+5;
+						pyramidChartVar.options.scales.x.min = Math.min(...hasil['perempuan'])-5;
+						pyramidChartVar.options.scales.y.ticks.stepSize = (Math.max(...hasil['laki'])+Math.max(...hasil['perempuan']))%50;
+						pyramidChartVar.update();
 					},
 					error: function (xhr) {
 						var err = JSON.parse(xhr.responseText);

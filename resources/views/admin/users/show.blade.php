@@ -23,7 +23,7 @@
 
   
   <div class="text-center mb-3">
-	<h4 >Pengguna {{$user->username}}}</h4>
+	<h4 >Pengguna {{$user->username}}</h4>
 	@forelse ($user->roles as $item)
 		<span class="badge bg-primary">{{$item->name}}</span>
 	@empty

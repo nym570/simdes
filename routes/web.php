@@ -44,6 +44,9 @@ use App\Http\Controllers\Auth\ProfilController;
 Route::get('/', [DashboardController::class,'index'])->name('home');
 Route::get('/dusun-count', [DashboardController::class,'dusunCount'])->name('warga-dusun-count');
 Route::get('/rw-count', [DashboardController::class,'rwCount'])->name('warga-rw-count');
+Route::get('/pyramid/dusun-count', [DashboardController::class,'pyramidDusun'])->name('pyramid-dusun-count');
+Route::get('/pyramid/rw-count', [DashboardController::class,'pyramidRW'])->name('pyramid-rw-count');
+Route::get('/pyramid/rt-count', [DashboardController::class,'pyramidRT'])->name('pyramid-rt-count');
 
 
 
@@ -127,7 +130,7 @@ Route::middleware(['admin.auth','admin.verified'])->group(function () {
 		Route::get('/panduan', 'index')->name('index');
 		Route::get('/admin/panduan/{panduan}/get', 'get')->name('get');
 		Route::put('/panduan/{panduan}/status', 'status')->name('status');
-		Route::delete('/panduan/{info}/delete', 'delete')->name('delete');
+		Route::delete('/panduan/{panduan}/delete', 'delete')->name('delete');
 		Route::post('/panduan', 'store')->name('store');
 	});
 

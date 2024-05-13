@@ -77,7 +77,6 @@ class KematianDataTable extends DataTable
                 
             }
             else if(in_array('ketua rt',$cakupan)){
-                
                 return $model->newQuery()->with(['dinamika.warga'])->whereHas("dinamika.warga.rt", function(Builder $builder) {
                     $builder->where('pemimpin', '=', auth()->user()->id);
                 });

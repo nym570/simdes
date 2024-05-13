@@ -118,7 +118,7 @@
 		<h4 class="text-center">Perangkat Desa {{$desa->desa}}</h4>
 	</div>
 	<div class="card-body">
-				@if(!$pemerintahan->empty())
+				@if(!$pemerintahan->isEmpty())
 				<div class="slider-container swiper">
 					<div class="slider-content">
 					  <div class="card-wrapper swiper-wrapper">
@@ -228,6 +228,12 @@
 					type : 'GET',
 					url: "{{route('pemerintahan.get')}}",
 					data : {id:id},
+					beforeSend: function(){
+						$('#loading').show();
+					},
+					complete: function(){
+						$('#loading').hide();
+					},
 					success: function(msg){
 						let data = JSON.parse(msg);
 						$('#jabatan').append(data.jabatan);

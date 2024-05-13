@@ -500,6 +500,7 @@ class StatistikWargaController extends Controller
 
 	public function umur(){
 
+		
         $title = 'Statistik Kelompok Umur Warga Desa';
 		$route = [
 			'dusun' => route('statistik.warga.umur.dusun-count'),
@@ -511,21 +512,22 @@ class StatistikWargaController extends Controller
     }
 	public function umurDusun(Request $request){
 		$ranges = [ // the start of each age-range.
-			'0-4' => 0,
-			'5-9' => 5,
-			'10-14' => 10,
-			'15-19' => 15,
-			'20-24' => 20,
-			'25-29' => 25,
-			'30-34' => 30,
-			'35-39' => 35,
-			'40-44' => 40,
-			'45-49' => 45,
-			'50-54' => 50,
-			'55-59' => 55,
-			'60-64' => 60,
-			'65-69' => 65,
 			'70+' => 70,
+			'65-69' => 65,
+			'60-64' => 60,
+			'55-59' => 55,
+			'50-54' => 50,
+			'45-49' => 45,
+			'40-44' => 40,
+			'35-39' => 35,
+			'30-34' => 30,
+			'25-29' => 25,
+			'20-24' => 20,
+			'15-19' => 15,
+			'10-14' => 10,
+			'05-09' => 5,
+			'00-04' => 0,
+
 		];
 		if($request['id'] != 'all'){
 			
@@ -539,16 +541,16 @@ class StatistikWargaController extends Controller
 				$age =  Date::parse($item->tanggal_lahir)->diffInYears(Date::now());
 				foreach($ranges as $key => $breakpoint)
 				{
-					if ($breakpoint >= $age)
+					if ($breakpoint <= $age)
 					{
-						$item->range = $key;
+						$item->tanggal_lahir = $key;
 						break;
 					}
 				}
 				return $item;
 			})
 			->mapToGroups(function ($item, $key) {
-				return [$item->range => $item];
+				return [$item->tanggal_lahir => $item];
 			})
 			->map(function ($group) {
 				return count($group);
@@ -561,21 +563,22 @@ class StatistikWargaController extends Controller
 			->join('rt', 'rt.id', '=', 'warga.rt_id')
 			->join('rw', 'rw.id', '=', 'rt.rw_id')
 			->where('status', 'warga')
+			->select('tanggal_lahir')
 			->get()
 			->map(function ($item) use ($ranges) {
 				$age =  Date::parse($item->tanggal_lahir)->diffInYears(Date::now());
 				foreach($ranges as $key => $breakpoint)
 				{
-					if ($breakpoint >= $age)
+					if ($breakpoint <= $age)
 					{
-						$item->range = $key;
+						$item->tanggal_lahir= $key;
 						break;
 					}
 				}
 				return $item;
 			})
 			->mapToGroups(function ($item, $key) {
-				return [$item->range => $item];
+				return [$item->tanggal_lahir => $item];
 			})
 			->map(function ($group) {
 				return count($group);
@@ -595,21 +598,22 @@ class StatistikWargaController extends Controller
 	}
 	public function umurRW(Request $request){
 		$ranges = [ // the start of each age-range.
-			'0-4' => 0,
-			'5-9' => 5,
-			'10-14' => 10,
-			'15-19' => 15,
-			'20-24' => 20,
-			'25-29' => 25,
-			'30-34' => 30,
-			'35-39' => 35,
-			'40-44' => 40,
-			'45-49' => 45,
-			'50-54' => 50,
-			'55-59' => 55,
-			'60-64' => 60,
-			'65-69' => 65,
 			'70+' => 70,
+			'65-69' => 65,
+			'60-64' => 60,
+			'55-59' => 55,
+			'50-54' => 50,
+			'45-49' => 45,
+			'40-44' => 40,
+			'35-39' => 35,
+			'30-34' => 30,
+			'25-29' => 25,
+			'20-24' => 20,
+			'15-19' => 15,
+			'10-14' => 10,
+			'05-09' => 5,
+			'00-04' => 0,
+
 		];
 		if($request['id'] != 'all'){
 			
@@ -621,18 +625,18 @@ class StatistikWargaController extends Controller
 			->get()
 			->map(function ($item) use ($ranges) {
 				$age =  Date::parse($item->tanggal_lahir)->diffInYears(Date::now());
-				foreach($ranges as $key => $breakpoint)
+				foreach($range as $key => $breakpoint)
 				{
-					if ($breakpoint >= $age)
+					if ($breakpoint <= $age)
 					{
-						$item->range = $key;
+						$item->tanggal_lahir = $key;
 						break;
 					}
 				}
 				return $item;
 			})
 			->mapToGroups(function ($item, $key) {
-				return [$item->range => $item];
+				return [$item->tanggal_lahir => $item];
 			})
 			->map(function ($group) {
 				return count($group);
@@ -651,16 +655,16 @@ class StatistikWargaController extends Controller
 				$age =  Date::parse($item->tanggal_lahir)->diffInYears(Date::now());
 				foreach($ranges as $key => $breakpoint)
 				{
-					if ($breakpoint >= $age)
+					if ($breakpoint <= $age)
 					{
-						$item->range = $key;
+						$item->tanggal_lahir = $key;
 						break;
 					}
 				}
 				return $item;
 			})
 			->mapToGroups(function ($item, $key) {
-				return [$item->range => $item];
+				return [$item->tanggal_lahir => $item];
 			})
 			->map(function ($group) {
 				return count($group);
@@ -680,21 +684,22 @@ class StatistikWargaController extends Controller
 	}
 	public function umurRT(Request $request){
 		$ranges = [ // the start of each age-range.
-			'0-4' => 0,
-			'5-9' => 5,
-			'10-14' => 10,
-			'15-19' => 15,
-			'20-24' => 20,
-			'25-29' => 25,
-			'30-34' => 30,
-			'35-39' => 35,
-			'40-44' => 40,
-			'45-49' => 45,
-			'50-54' => 50,
-			'55-59' => 55,
-			'60-64' => 60,
-			'65-69' => 65,
 			'70+' => 70,
+			'65-69' => 65,
+			'60-64' => 60,
+			'55-59' => 55,
+			'50-54' => 50,
+			'45-49' => 45,
+			'40-44' => 40,
+			'35-39' => 35,
+			'30-34' => 30,
+			'25-29' => 25,
+			'20-24' => 20,
+			'15-19' => 15,
+			'10-14' => 10,
+			'05-09' => 5,
+			'00-04' => 0,
+
 		];
 		if($request['id'] != 'all'){
 			
@@ -708,16 +713,16 @@ class StatistikWargaController extends Controller
 				$age =  Date::parse($item->tanggal_lahir)->diffInYears(Date::now());
 				foreach($ranges as $key => $breakpoint)
 				{
-					if ($breakpoint >= $age)
+					if ($breakpoint <= $age)
 					{
-						$item->range = $key;
+						$item->tanggal_lahir= $key;
 						break;
 					}
 				}
 				return $item;
 			})
 			->mapToGroups(function ($item, $key) {
-				return [$item->range => $item];
+				return [$item->tanggal_lahir => $item];
 			})
 			->map(function ($group) {
 				return count($group);
@@ -736,16 +741,16 @@ class StatistikWargaController extends Controller
 				$age =  Date::parse($item->tanggal_lahir)->diffInYears(Date::now());
 				foreach($ranges as $key => $breakpoint)
 				{
-					if ($breakpoint >= $age)
+					if ($breakpoint <= $age)
 					{
-						$item->range = $key;
+						$item->tanggal_lahir = $key;
 						break;
 					}
 				}
 				return $item;
 			})
 			->mapToGroups(function ($item, $key) {
-				return [$item->range => $item];
+				return [$item->tanggal_lahir => $item];
 			})
 			->map(function ($group) {
 				return count($group);

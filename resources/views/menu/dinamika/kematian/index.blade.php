@@ -89,7 +89,7 @@
 				
 				  <div class="row">
 					<div class="col mb-3">
-						<x-label for="bukti" :value="__('Bukti* (.pdf/.jpg/.png)')"/>
+						<x-label for="bukti" :value="__('Bukti* (.jpg/.png)')"/>
 						<x-input class="form-control" type="file" id="bukti" name="bukti" required/>
 						<x-invalid error="bukti" />
 					  </div>
@@ -172,6 +172,7 @@
 				$.ajax({
 					type : 'GET',
 					url: "{{route('warga.get-warga')}}",
+					data: {auth:"rt"},
 					success: function(msg){
 						$('#nik').selectpicker('destroy');
 						$('#nik').html(msg);

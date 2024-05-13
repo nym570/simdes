@@ -34,6 +34,7 @@ class UserController extends Controller
 		$title = 'Manajemen Pengguna';
 		$import = [
 			'format' => '/import_format/user.xlsx',
+			'csv' => '/import_format/user.csv',
 			'link' => route('users.import'),
 		   ];
 		 return $dataTable->render('admin.users.index',compact(['title','import']));

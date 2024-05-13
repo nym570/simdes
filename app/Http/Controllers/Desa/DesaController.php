@@ -132,6 +132,7 @@ class DesaController extends Controller
             }
         }
         $title = 'Profil Desa';
+      
         $pemerintahan = Pemerintahan::with('warga')->get();
         $agregate = [
             'dusun' => Dusun::count(),
@@ -319,6 +320,7 @@ class DesaController extends Controller
         if($desa->kode_wilayah != $request->kode_wilayah){
             $desa->update([
                 'kode_wilayah' => $request['kode_wilayah'],
+                'sebutan' => $request['sebutan'],
                 'desa' => $request['desa'],
                 'kecamatan' => $request['kecamatan'],
                 'kabupaten' => Str::replace('Kab.', 'Kabupaten', $request['kabupaten']),

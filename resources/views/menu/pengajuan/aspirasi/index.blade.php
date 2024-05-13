@@ -25,7 +25,7 @@
 				
 				<div class="row ">
 				  <div class="col mb-3">
-					<x-label for="judul" :value="__('Judul')" />
+					<x-label for="judul" :value="__('Judul*')" />
 					<x-input type="text" name="judul" id="judul" :placeholder="__('Judul')" :value="old('judul')" autofocus />
 					<x-invalid error="judul" />
 				  </div>
@@ -33,7 +33,7 @@
 				  
 				</div>
 				<div class="row g-2 mb-3">
-					<label class="form-label">Kategori & Tujuan</label>
+					<label class="form-label">Kategori & Tujuan*</label>
 					<div class="col">
 						<select id="category" class="selectpicker w-100" data-style="btn-default" data-live-search="false" title="Pilih Kategori" name="kategori" required>
 							
@@ -52,14 +52,14 @@
 				</div>
 				<div class="row ">
 					<div class="col mb-3">
-						<x-label for="isi" :value="__('Isi Aspirasi')" />
+						<x-label for="isi" :value="__('Isi Aspirasi*')" />
 						<input id="isi" type="hidden" name="isi" required :value="old('isi')">
 						<trix-editor input="isi"></trix-editor>
 					</div>
 				</div>
 				<div class="row ">
 					<div class="col mb-3">
-						<x-label for="lampiran" :value="__('Lampiran')" />
+						<x-label for="lampiran" :value="__('Lampiran (.pdf/.jpg/.png)')" />
 						<input type="file" class="form-control" id="lampiran" name="lampiran">
 						<x-invalid error="lampiran" />
 					</div>

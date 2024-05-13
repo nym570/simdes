@@ -94,7 +94,7 @@ class WargaDataTable extends DataTable
                 $query->whereRaw($sql, ["%{$k}%"]);
             })
             ->addIndexColumn() 
-            ->rawColumns(['action','ttl','domisili','updated'])
+            ->rawColumns(['action','ttl','domisili','updated','status'])
             ->setRowId('id');
     }
 
@@ -202,12 +202,13 @@ class WargaDataTable extends DataTable
             Column::computed('updated')
                 ->exportable(false)
                   ->printable(false),
+                  Column::make('status'),
             Column::make('nik'),
             Column::make('no_kk')->title('No KK'),
             Column::make('nama'),
             Column::computed('domisili')
             ->searchable(true),
-            Column::make('status'),
+            
             Column::computed('ktp')
             ->searchable(true),
             Column::make('alamat_ktp')->title('alamat ktp'),

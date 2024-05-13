@@ -289,7 +289,7 @@
 					</div>
 					<div class="row">
 						<div class="col mb-3">
-							<x-label for="bukti" :value="__('Bukti Kelahiran* (.pdf/.jpg/.png)')"/>
+							<x-label for="bukti" :value="__('Bukti Kelahiran* (.jpg/.png)')"/>
 							<x-input class="" type="file" id="bukti" name="bukti" required/>
 							<x-invalid error="bukti" />
 						  </div>
@@ -406,7 +406,7 @@
 				$.ajax({
 					type : 'GET',
 					url: "{{route('master.ruta.get-hubungan')}}",
-					data:{uncheck:[1,2,4,6,7]},
+					data:{uncheck:[1,2,3,5,7]},
 					success: function(msg){
 						$('#hubungan_ruta').html(msg);
 						$('#hubungan_ruta').selectpicker('refresh');

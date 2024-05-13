@@ -74,6 +74,14 @@ class WargaController extends Controller
         if(isset($request['tujuan'])){
             $data = Warga::doesntHave($request['tujuan'])->where('status','warga')->get();
         }
+        else if(isset($request['auth'])){
+            if($request['auth']=="rt"){
+                $data = Warga::where('status','warga')->whereHas("rt", function(Builder $builder) {
+                    $builder->where('pemimpin', '=', auth()->user()->id);
+                })->get();
+            }
+            
+        }
         else {
             $data = Warga::where('status','warga')->get();
         }

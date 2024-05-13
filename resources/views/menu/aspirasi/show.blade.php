@@ -41,10 +41,12 @@
                                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
+                                  @if(!is_null($aspirasi->lampiran))
                                     @if(pathinfo($aspirasi->lampiran)['extension']==="pdf")
                                         <iframe src ="{{ asset('/laraview/#../storage/'.$aspirasi->lampiran) }}" width="100%" height="600px"></iframe>
                                     @else
                                         <img src="{{asset('/storage/'.$aspirasi->lampiran)}}" class="img-thumbnail" alt="lampiran" width="100%">
+                                    @endif
                                     @endif
                                 </div>
                                 

@@ -9,16 +9,18 @@
 		
 			<div class="modal-body">
 				<a href="/import_format/warga.xlsx" download>Download Format Excel</a>
+				<a href="/import_format/warga.csv" download>Download Format csv</a>
 				<form id="formAuthentication" class="mb-3" action="{{ route('warga.import') }}" data-remote="true" method="POST" enctype="multipart/form-data">
 					@csrf
 					<input type="hidden" id="token" value="{{ csrf_token() }}">
 					<div class="row">
 						<div class="col mt-3">
-							<x-label for="import" :value="__('Upload File .xlsx')"/>
+							<x-label for="import" :value="__('Upload File .xlsx/.csv')"/>
 							<x-input class="form-control" type="file" id="import" name="import" required/>
 							<x-invalid error="import" />
 						  </div>
 					</div>
+					<small>Disarankan menggunakan .csv untuk import lebih cepat</small>
 				
 			  </div>
 			  <div class="modal-footer">

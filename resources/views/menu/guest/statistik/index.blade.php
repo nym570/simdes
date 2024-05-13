@@ -192,7 +192,7 @@ const doughnutChart = document.getElementById('doughnutChart');
         datasets: [
           {
             data: [],
-            backgroundColor: [purpleColor,yellowColor,orangeColor, cyanColor, orangeLightColor,oceanBlueColor, greyColor,greyLightColor,blueColor, blueLightColor,config.colors.primary],
+            backgroundColor: [purpleColor,yellowColor,orangeColor, cyanColor, orangeLightColor,oceanBlueColor, greyColor,greyLightColor,blueColor, blueLightColor,config.colors.success,config.colors.danger,config.colors.warning,config.colors.secondary,config.colors.info,config.colors.dark],
             borderColor: 'transparent',
             maxBarThickness: 15,
             borderRadius: {
@@ -298,7 +298,7 @@ const doughnutChart = document.getElementById('doughnutChart');
         {
           data: [],
 		  
-          backgroundColor: [purpleColor,yellowColor,orangeColor, cyanColor, orangeLightColor,oceanBlueColor, greyColor,greyLightColor,blueColor, blueLightColor,config.colors.primary],
+          backgroundColor: [purpleColor,yellowColor,orangeColor, cyanColor, orangeLightColor,oceanBlueColor, greyColor,greyLightColor,blueColor, blueLightColor,config.colors.success,config.colors.danger,config.colors.warning,config.colors.secondary,config.colors.info,config.colors.dark],
           borderWidth: 0,
           pointStyle: 'rectRounded'
         }
@@ -382,7 +382,12 @@ const doughnutChart = document.getElementById('doughnutChart');
 					url: route.dusun,
 					
 					data : {id:'all'},
-
+					beforeSend: function(){
+						$('#loading').show();
+					},
+					complete: function(){
+						$('#loading').hide();
+					},
 					success: function(msg){
 						let hasil = JSON.parse(msg);
 						barChartVar.data.labels = hasil['label'];
@@ -417,6 +422,12 @@ const doughnutChart = document.getElementById('doughnutChart');
 	$.ajax({
 					type : 'GET',
 					url: "{{route('master-desa.get-dusun')}}",
+					beforeSend: function(){
+						$('#loading').show();
+					},
+					complete: function(){
+						$('#loading').hide();
+					},
 					success: function(msg){
 						msg = "<option data-tokens='all' value='all'>All Dusun</option>" + msg;
 						$('#dusun').selectpicker('destroy');
@@ -442,7 +453,12 @@ const doughnutChart = document.getElementById('doughnutChart');
 					url: "{{route('master-desa.get-rw')}}",
 					
 					data : {id:id_dusun},
-
+					beforeSend: function(){
+						$('#loading').show();
+					},
+					complete: function(){
+						$('#loading').hide();
+					},
 					success: function(msg){
 						msg = "<option data-tokens='all' value='all'>All RW</option>" + msg
 						$('#rw').selectpicker('destroy');
@@ -470,7 +486,12 @@ const doughnutChart = document.getElementById('doughnutChart');
 					url: route.dusun,
 					
 					data : {id:id_dusun},
-
+					beforeSend: function(){
+						$('#loading').show();
+					},
+					complete: function(){
+						$('#loading').hide();
+					},
 					success: function(msg){
 						let hasil = JSON.parse(msg);
 						barChartVar.data.labels = hasil['label'];
@@ -514,7 +535,12 @@ const doughnutChart = document.getElementById('doughnutChart');
 					url: "{{route('master-desa.get-rt')}}",
 					
 					data : {id:id_rw},
-
+					beforeSend: function(){
+						$('#loading').show();
+					},
+					complete: function(){
+						$('#loading').hide();
+					},
 					success: function(msg){
 						msg = "<option data-tokens='all' value='all'>All RT</option>" + msg
 						$('#rt').selectpicker('destroy');
@@ -539,7 +565,12 @@ const doughnutChart = document.getElementById('doughnutChart');
 					url: route.rw,
 					
 					data : {id:id_rw,dusun_id:id_dusun},
-
+					beforeSend: function(){
+						$('#loading').show();
+					},
+					complete: function(){
+						$('#loading').hide();
+					},
 					success: function(msg){
 						let hasil = JSON.parse(msg);
 						barChartVar.data.labels = hasil['label'];
@@ -581,7 +612,12 @@ const doughnutChart = document.getElementById('doughnutChart');
 					url: route.rt,
 					
 					data : {id:id_rt,rw_id:id_rw,dusun_id:id_dusun},
-
+					beforeSend: function(){
+						$('#loading').show();
+					},
+					complete: function(){
+						$('#loading').hide();
+					},
 					success: function(msg){
 						let hasil = JSON.parse(msg);
 						barChartVar.data.labels = hasil['label'];

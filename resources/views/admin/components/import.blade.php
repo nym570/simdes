@@ -9,6 +9,7 @@
 		
 			<div class="modal-body">
 				<a href="{{$import['format']}}" download>Download Format Excel</a>
+				<a href="{{$import['csv']}}" download>Download Format csv</a>
 				<form id="formAuthentication" class="mb-3" action="{{ $import['link'] }}" data-remote="true" method="POST" enctype="multipart/form-data">
 					@csrf
 					<input type="hidden" id="token" value="{{ csrf_token() }}">
@@ -19,7 +20,7 @@
 							<x-invalid error="import" />
 						  </div>
 					  </div>
-				
+					  <small>Disarankan menggunakan .csv untuk import lebih cepat</small>
 			  </div>
 			  <div class="modal-footer">
 				<x-button type="submit" class="btn btn-primary d-grid w-100" :value="__('Import')"/>
