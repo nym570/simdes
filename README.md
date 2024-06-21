@@ -5,13 +5,17 @@ Project ini untuk sistem informasi manajemen desa yang meliputi
 - User Pane
 - Desa Management
 - Role/User Management
-- Dusun/RW/RT Management
+- Dusun/RW/RT (LKD) Management
 - Kependudukan Management
     - Warga
     - Kelompok Rumah Tangga
     - Dinamika Kependudukan
-
-
+- Layanan Management
+    - Permohonan Informasi & Informasi Publik
+    - Surat Keterangan
+    - Aspirasi
+- Statistik Desa
+  
 ## Tentang Sistem
 
 -   PHP 8.2
@@ -47,14 +51,3 @@ $ php artisan key:generate
 # laravel migrate
 $ php artisan migrate:fresh --seed
 ```
-
-## How does it look?
-
-<p align="center">
-    <img src="https://telegra.ph/file/3c19fae0ff36051fde740.png" width="80%" height="auto" />
-    <img src="https://telegra.ph/file/255420697bc627c4ecd95.png" width="80%" height="auto" />
-    <img src="https://telegra.ph/file/f70bdaf1a2184a4c95e32.png" width="80%" height="auto" />
-    <img src="https://telegra.ph/file/faadaa93f402cf174d5d5.png" width="80%" height="auto" />
-</p>
-
-190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
